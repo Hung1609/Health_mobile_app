@@ -1,10 +1,19 @@
-import { Text, View, Image, ImageBackground, TouchableOpacity, StatusBar } from "react-native"
+import { Text, View, Image, ImageBackground, TouchableOpacity } from "react-native"
 import React from "react"
+import { StatusBar } from "expo-status-bar"
 import { useRouter } from "expo-router"
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context"
+import * as NavigationBar from "expo-navigation-bar"
 
 const OnBoarding = () => {
   const router = useRouter()
+
+  React.useEffect(() => {
+    NavigationBar.setPositionAsync("absolute");
+    NavigationBar.setBackgroundColorAsync("#00000000");
+    NavigationBar.setButtonStyleAsync("dark");
+    
+  }, [])
 
   return (
     <SafeAreaProvider>
@@ -13,7 +22,10 @@ const OnBoarding = () => {
           source={require("../assets/images/boarding-bg.jpg")}
           className="flex-1 justify-center items-center"
         >
-          <StatusBar barStyle="dark-content" />
+          <StatusBar 
+            style="dark" 
+            backgroundColor="#ffffff"
+          />
           <View className="w-full h-full flex-1 justify-center items-center">
             <Text className="text-center text-3xl font-bold">Welcome to</Text>
             <Image 
@@ -22,11 +34,11 @@ const OnBoarding = () => {
             />
           </View>
           <TouchableOpacity 
-            onPress={() => router.push('/sign-in')} 
+            onPress={() => router.push('/Log In/log-in')} 
             className="bg-blue-500 mb-32 px-5 py-3 rounded-lg"
             activeOpacity={0.7} 
           >
-            <Text className="text-white font-bold">Get Started</Text>
+            <Text className="text-white font-bold text-xl">Get Started</Text>
           </TouchableOpacity>
         </ImageBackground>
       </SafeAreaView>
