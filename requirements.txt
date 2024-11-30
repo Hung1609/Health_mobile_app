@@ -1,0 +1,9 @@
+langchain
+langchain-google-genai
+langchain-ollama
+langchain-chroma
+langchainhub
+langchain_community
+sentence_transformers
+langchain-huggingface
+qdrant_client
