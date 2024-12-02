@@ -3,12 +3,10 @@ import React, { useState } from 'react';
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/Ionicons";
-
 const LogIn = () => {
   const router = useRouter();
   const [isChecked, setIsChecked] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   }
@@ -16,7 +14,6 @@ const LogIn = () => {
   const toggleSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   }
-
   return (
     <SafeAreaProvider>
       <SafeAreaView className='flex-1'>
@@ -65,15 +62,13 @@ const LogIn = () => {
             </View>
             
             <TouchableOpacity 
-              onPress={() => router.push('/Home/home')} 
+              onPress={() => router.push('/Main Tabs/home')} 
               className="bg-blue-500 py-3 rounded-lg mt-5"
               activeOpacity={0.7} 
             >
               <Text className="text-white font-bold text-xl text-center">Log In</Text>
             </TouchableOpacity>
-
             <Text className='mt-5 text-center'>or continue with</Text>
-
             <View className='mt-5 flex-row justify-between'>
               <TouchableOpacity 
                 activeOpacity={0.7} 
@@ -107,5 +102,4 @@ const LogIn = () => {
     </SafeAreaProvider>
   )
 }
-
 export default LogIn;

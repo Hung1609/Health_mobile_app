@@ -30,7 +30,8 @@ const RootLayout = () => {
         }}
         />
         
-        <Stack.Screen name="Home/home" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Main Tabs" options={{ headerShown: false }}></Stack.Screen>
+
     </Stack>
   )
 }

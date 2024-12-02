@@ -71,7 +71,7 @@ const SignUp = () => {
             </View>
             
             <TouchableOpacity 
-              onPress={() => router.push('/Home/home')} 
+              onPress={() => router.push('/Main Tabs/home')} 
               className="bg-blue-500 py-3 rounded-lg mt-7"
               activeOpacity={0.7} 
             >
