@@ -20,7 +20,7 @@ const OnBoarding = () => {
       <SafeAreaView className="flex-1">
         <ImageBackground
           source={require("../assets/images/boarding-bg.jpg")}
-          className="flex-1 justify-center items-center"
+          className="flex-1 justify-center items-center px-7"
         >
           <StatusBar 
             style="dark" 
@@ -35,10 +35,10 @@ const OnBoarding = () => {
           </View>
           <TouchableOpacity 
             onPress={() => router.push('/Log In/log-in')} 
-            className="bg-blue-500 mb-32 px-5 py-3 rounded-lg"
+            className="bg-blue-500 mb-5 px-5 py-3 rounded-lg w-full"
             activeOpacity={0.7} 
           >
-            <Text className="text-white font-bold text-xl">Get Started</Text>
+            <Text className="text-white font-bold text-xl text-center">Get Started</Text>
           </TouchableOpacity>
         </ImageBackground>
       </SafeAreaView>
