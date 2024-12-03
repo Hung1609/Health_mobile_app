@@ -16,9 +16,9 @@ const RootLayout = () => {
             fontWeight: 'semibold',
           },
         }}
-        />
+      />
         
-        <Stack.Screen 
+      <Stack.Screen 
         name="Log In/sign-up" 
         options={{ 
           headerTitleAlign: 'center',
@@ -28,9 +28,52 @@ const RootLayout = () => {
             fontWeight: 'semibold',
           },
         }}
-        />
+      />
+
+      <Stack.Screen 
+        name="Log In/Forgot Password/forgot-password" 
+        options={{ 
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          headerTitle: 'Forgotten Password',
+          headerTitleStyle: {
+            fontWeight: 'semibold',
+          },
+        }}
+      />
+
+      <Stack.Screen 
+        name="Log In/Forgot Password/otp-verify" 
+        options={{ 
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          headerTitle: 'Verification',
+          headerTitleStyle: {
+            fontWeight: 'semibold',
+          },
+        }}
+      />
+
+      <Stack.Screen 
+        name="Log In/Forgot Password/set-password" 
+        options={{ 
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          headerTitle: 'Set Password',
+          headerTitleStyle: {
+            fontWeight: 'semibold',
+          },
+        }}
+      />
+
+      <Stack.Screen 
+        name="Log In/success-screen" 
+        options={{ 
+          headerShown: false,
+        }}
+      />
         
-        <Stack.Screen name="Home/home" options={{ headerShown: false }}></Stack.Screen>
+      <Stack.Screen name="Home/home" options={{ headerShown: false }}></Stack.Screen>
     </Stack>
   )
 }
