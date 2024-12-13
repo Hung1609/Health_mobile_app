@@ -1,8 +1,8 @@
 1. Install Expo CLI (Must have Node.js)
-npm install -g expo-cli
+- npm install -g expo-cli
 
 2. Install Project Dependencies
-npm install
+- npm install
 
 3. Start the Expo Project
 - Default: npm start
@@ -13,6 +13,6 @@ npm install
 - On an Emulator: If you have an iOS simulator or Android emulator installed, you can run the app on it by pressing the appropriate option in the terminal (usually 'i' for iOS and 'a' for Android).
 
 5. Install NativeWind
-npx expo install nativewind tailwindcss react-native-reanimated react-native-safe-area-context 
+- npx expo install nativewind tailwindcss react-native-reanimated react-native-safe-area-context 
 
 Note: Make sure to install some additional libraries which are used in the project.
