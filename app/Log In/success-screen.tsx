@@ -16,13 +16,13 @@ const SuccessScreen = () => {
         <View className="w-full h-full flex-1 justify-center items-center">
           <Image 
             source={require("../../assets/images/heart-beat.png")}
-            className="size-60"
+            className="size-60 mr-5"
           />
           <Text className='font-bold text-4xl'>Congratulations!</Text>
           <Text>Your account is ready to use</Text>
         </View>
         <TouchableOpacity 
-          onPress={() => router.push('/Log In/success-screen')} 
+          onPress={() => router.push('/Main Tabs/home')} 
           className="bg-blue-500 mb-5 py-3 rounded-lg w-full"
           activeOpacity={0.7} 
         >

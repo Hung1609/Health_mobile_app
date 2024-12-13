@@ -73,7 +73,23 @@ const RootLayout = () => {
         }}
       />
         
-      <Stack.Screen name="Home/home" options={{ headerShown: false }}></Stack.Screen>
+      <Stack.Screen name="Main Tabs" options={{ headerShown: false }}></Stack.Screen>
+
+      <Stack.Screen 
+        name="Set Up/gender"
+        options={{
+          headerTitle: 'Back',
+          headerShadowVisible: false,
+        }}
+      />
+
+      <Stack.Screen 
+        name="Set Up/age"
+        options={{
+          headerTitle: 'Back',
+          headerShadowVisible: false,
+        }}
+      />
     </Stack>
   )
 }

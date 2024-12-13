@@ -72,11 +72,11 @@ const SignUp = () => {
               </View>
               
               <TouchableOpacity 
-                onPress={() => router.push('/Home/home')} 
+                onPress={() => router.push('/Set Up/gender')} 
                 className="bg-blue-500 py-3 rounded-lg mt-7"
                 activeOpacity={0.7} 
               >
-                <Text className="text-white font-bold text-xl text-center">Sign Up</Text>
+                <Text className="text-white font-bold text-xl text-center">Continue</Text>
               </TouchableOpacity>
 
               <Text className='mt-5 text-center'>or sign up with</Text>
@@ -98,7 +98,7 @@ const SignUp = () => {
                 </TouchableOpacity>
               </View>
               
-              <View className='flex-row mt-5 justify-center items-center'>
+              <View className='flex-row mt-5 justify-center items-center mb-5'>
                 <Text>Already have an account? </Text>
                 <TouchableOpacity 
                   onPress={() => router.push('/Log In/log-in')} 

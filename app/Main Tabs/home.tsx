@@ -5,7 +5,6 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native";
 
-
 const handlePress = () => {
   Alert.alert('Button Pressed', 'You just clicked the button!');
 };

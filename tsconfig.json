@@ -13,6 +13,6 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "nativewind-env.d.ts"
-, "app/Main Tabs/navbar.js", "app/Main Tabs/MainLayout.tsx", "app/_layout.tsx", "app/Log In/log-in.tsx"  ]
+    "nativewind-env.d.ts",
+ ]
 }

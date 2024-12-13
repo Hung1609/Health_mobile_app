@@ -6,15 +6,13 @@ import Icon2 from "react-native-vector-icons/FontAwesome5";
 
 const TabLayout = () => {
     return (
-        <>
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: '#4CC9FE',
                     tabBarInactiveTintColor: 'white',
                     tabBarStyle: {
-                        borderRadius: 10,
+                        height: 60,
                         backgroundColor: '#3C3D37',
-                        margin: 8,
                     }
                 }}>
                 <Tabs.Screen
@@ -23,7 +21,7 @@ const TabLayout = () => {
                         title: 'Home',
                         headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
-                            <Icon className="justify-center align-middle" name={"home"} size={20} color="white" />
+                            <Icon className="justify-center align-middle" name={"home"} size={20} color={color} />
                         )
                     }} />
                 <Tabs.Screen
@@ -32,7 +30,7 @@ const TabLayout = () => {
                         title: 'Resources',
                         headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
-                            <Icon className="justify-center align-middle" name={"bookmarks"} size={20} color="white" />
+                            <Icon className="justify-center align-middle" name={"bookmarks"} size={20} color={color} />
                         )
                     }} />
                 <Tabs.Screen
@@ -41,7 +39,7 @@ const TabLayout = () => {
                         title: 'Favourites',
                         headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
-                            <Icon className="justify-center align-middle" name={"star"} size={20} color="white" />
+                            <Icon className="justify-center align-middle" name={"star"} size={20} color={color} />
                         )
                     }} />
                 <Tabs.Screen
@@ -50,11 +48,10 @@ const TabLayout = () => {
                         title: 'Chatbot',
                         headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
-                            <Icon2 className="justify-center align-middle" name={"comments"} size={20} color="white" />
+                            <Icon2 className="justify-center align-middle" name={"comments"} size={20} color={color} />
                         )
                     }} />
             </Tabs>
-        </>
     )
 }
 

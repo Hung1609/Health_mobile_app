@@ -4,10 +4,11 @@ module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
-    colors: {
-      'mau_sac1': '#697565',
-      'mau_sac2': '#3C3D37'
+    extend: {
+      colors: {
+        'mau_sac1': '#697565',
+        'mau_sac2': '#3C3D37'
+      },
     },
   },
   plugins: [],
