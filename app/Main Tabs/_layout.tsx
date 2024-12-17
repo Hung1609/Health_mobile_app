@@ -11,7 +11,7 @@ const TabLayout = () => {
                     tabBarActiveTintColor: '#4CC9FE',
                     tabBarInactiveTintColor: 'white',
                     tabBarStyle: {
-                        height: 60,
+                        height: 70,
                         backgroundColor: '#3C3D37',
                     }
                 }}>

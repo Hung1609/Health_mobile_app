@@ -33,7 +33,7 @@ const Old = () => {
                       key={age}
                       onPress={() => handleAgeSelect(age)}
                       className='rounded-full w-20 h-20 justify-center items-center mx-2'
-                      style={tw`${selectedAge === age ? 'bg-blue-500 border-white' : 'bg-white border-2'}`}
+                      style={tw`${selectedAge === age ? 'bg-blue-500 border-white' : 'bg-white border-gray-400 border-2'}`}
                     >
                       <Text 
                         className='text-2xl font-semibold'
@@ -48,7 +48,7 @@ const Old = () => {
             </View>
 
             <TouchableOpacity 
-              onPress={() => router.push('/Set Up/age')} 
+              onPress={() => router.push('/Log In/Set Up/stats')} 
               className="bg-blue-500 py-3 rounded-lg absolute bottom-5"
               activeOpacity={0.7} 
             >

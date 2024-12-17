@@ -3,19 +3,32 @@ import React, { useState } from 'react';
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useUser, UserProvider } from './UserContext';
 
 const SignUp = () => {
   const router = useRouter();
+  const { setUserData } = useUser();
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState(true);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const handleContinue = () => {
+    setUserData({ fullName, email });
+
+    router.push({
+      pathname: '/Log In/Set Up/gender',
+      params: { email, fullName },
+    });
+  };
 
   const toggleSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
-  }
+  };
 
   const toggleConfirmPassword = () => {
     setConfirmPassword(!confirmPassword);
-  }
+  };
 
   return (
     <SafeAreaProvider>
@@ -28,6 +41,8 @@ const SignUp = () => {
               <Text className='mb-2 font-semibold'>Full name</Text>
               <TextInput
                 placeholder='Enter your full name'
+                value={fullName}
+                onChangeText={setFullName}
                 className='bg-white py-5 px-3 rounded-lg border'
                 keyboardType='default'
                 autoCapitalize='words'
@@ -37,6 +52,8 @@ const SignUp = () => {
               <Text className='mb-2 font-semibold mt-5'>Email</Text>
               <TextInput
                 placeholder='Enter your email'
+                value={email}
+                onChangeText={setEmail}
                 className='bg-white py-5 px-3 rounded-lg border'
                 keyboardType='email-address'
                 autoCapitalize='none'
@@ -72,7 +89,7 @@ const SignUp = () => {
               </View>
               
               <TouchableOpacity 
-                onPress={() => router.push('/Set Up/gender')} 
+                onPress={handleContinue}
                 className="bg-blue-500 py-3 rounded-lg mt-7"
                 activeOpacity={0.7} 
               >
@@ -113,7 +130,7 @@ const SignUp = () => {
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
-  )
-}
+  );
+};
 
 export default SignUp;
