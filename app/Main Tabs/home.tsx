@@ -4,6 +4,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native";
+import { router } from "expo-router";
 
 const handlePress = () => {
   Alert.alert('Button Pressed', 'You just clicked the button!');
@@ -33,7 +34,7 @@ const Home = () => {
                   <Icon className="px-2" name={"notifications"} size={25} color="black" />
                 </Pressable>
 
-                <Pressable>
+                <Pressable onPress={() => router.push('/Other Tabs/profile')} >
                   <Icon className="px-2" name={"person"} size={25} color="black" />
                 </Pressable>
               </View>

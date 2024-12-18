@@ -92,12 +92,12 @@ const Chat = () => {
           className="flex-1"
           behavior="padding"
         >
-          <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}> 
+          <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
             <View className="w-full h-full bg-white flex-1">
               <Text className="text-center font-bold text-3xl mt-20">HealthCare Chatbot</Text>
-              
+
               <View className="flex-1">
-                <FlatList 
+                <FlatList
                   ref={flatListRef}
                   data={messages}
                   renderItem={renderItem}
@@ -119,9 +119,9 @@ const Chat = () => {
                       </TouchableOpacity>
                     )}
                   </View>
-                  
+
                   <View className="flex-row border-2 rounded-lg flex-grow items-center justify-between">
-                    <TextInput 
+                    <TextInput
                       placeholder="Ask me anything..."
                       value={textInputValue}
                       onChangeText={setTextInputValue}
@@ -135,20 +135,20 @@ const Chat = () => {
                     />
 
                     <View className="flex-row">
-                    <TouchableOpacity 
-                      activeOpacity={0.7}
-                      className="mr-3"
-                    >
-                      <Icon name="camera" size={20} color="dodgerblue" />
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        className="mr-3"
+                      >
+                        <Icon name="camera" size={20} color="dodgerblue" />
+                      </TouchableOpacity>
 
-                    <TouchableOpacity 
-                      activeOpacity={0.7}
-                      onPress={sendMessage}
-                      className="mr-3"
-                    >
-                      <Icon name="send" size={20} color="dodgerblue" />
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={sendMessage}
+                        className="mr-3"
+                      >
+                        <Icon name="send" size={20} color="dodgerblue" />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
