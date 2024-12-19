@@ -69,11 +69,17 @@ const Chat = () => {
   };
 
   const renderItem: ListRenderItem<ChatMessage> = ({ item }) => (
-    <View style={tw`my-2 flex-row justify-center items-center ${item.fromBot ? 'justify-start' : 'justify-end'}`}>
+    <View 
+      style={tw`${item.fromBot ? 'justify-start' : 'justify-end'}`}
+      className="my-3 flex-row items-center"
+    >
       {item.fromBot && (
         <Icon name="robot-excited-outline" size={24} color="dodgerblue" className="mr-3 bg-blue-50 rounded-full p-2" />
       )}
-      <View style={tw`${item.fromBot ? 'bg-gray-200' : 'bg-blue-500'} p-2 rounded-lg max-w-xs`}>
+      <View 
+        style={tw`${item.fromBot ? 'bg-gray-200' : 'bg-blue-500'}`} 
+        className="max-w-xs p-2 rounded-lg"  
+      >
         <Text style={tw`${item.fromBot ? 'text-black' : 'text-white'}`}>{item.text}</Text>
       </View>
     </View>

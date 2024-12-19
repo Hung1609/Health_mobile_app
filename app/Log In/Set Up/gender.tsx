@@ -23,9 +23,9 @@ const Gender = () => {
             <View className='items-center justify-center flex-1 mb-20'>
                 <TouchableOpacity  
                   activeOpacity={0.7} 
-                  className='border-2 bg-white rounded-full items-center justify-center p-8'
+                  className='bg-white rounded-full items-center justify-center p-8'
                   style={[
-                    selectedGender === 'male' ? tw`bg-blue-500 border-white` : tw`bg-white border-2`
+                    selectedGender === 'male' ? tw`bg-blue-500 border-white border-2` : tw`bg-white border-2 border-gray-400`
                   ]}
                   onPress={() => handleGenderSelect('male')}
                 >
@@ -35,9 +35,9 @@ const Gender = () => {
               
                 <TouchableOpacity  
                   activeOpacity={0.7} 
-                  className='border-2 bg-white rounded-full items-center justify-center p-8 mt-14'
+                  className='bg-white rounded-full items-center justify-center p-8 mt-14'
                   style={[
-                    selectedGender === 'female' ? tw`bg-blue-500 border-white` : tw`bg-white border-2`
+                    selectedGender === 'female' ? tw`bg-blue-500 border-white border-2` : tw`bg-white border-2 border-gray-400`
                   ]}
                   onPress={() => handleGenderSelect('female')}
                 >
@@ -47,7 +47,7 @@ const Gender = () => {
             </View>
 
             <TouchableOpacity 
-              onPress={() => router.push('/Set Up/age')} 
+              onPress={() => router.push('/Log In/Set Up/age')} 
               className="bg-blue-500 py-3 rounded-lg absolute bottom-5 w-full"
               activeOpacity={0.7} 
             >
