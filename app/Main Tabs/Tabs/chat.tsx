@@ -8,6 +8,7 @@ interface ChatMessage {
   id: number;
   text: string;
   fromBot: boolean;
+  timestamp: string;
 }
 
 const Chat = () => {
@@ -17,7 +18,8 @@ const Chat = () => {
     {
       id: 1,
       text: "Hello, I'm your personal assistant. How can I help you?",
-      fromBot: true
+      fromBot: true,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),
     }
   ]);
 
@@ -42,7 +44,8 @@ const Chat = () => {
       {
         id: 1,
         text: "Hello, I'm your personal assistant. How can I help you?",
-        fromBot: true
+        fromBot: true,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),
       }
     ]);
     setTextInputValue("");
@@ -55,11 +58,13 @@ const Chat = () => {
         id: messages.length + 1,
         text: textInputValue,
         fromBot: false,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),
       };
       const botReply = {
         id: messages.length + 2,
         text: "Toi bi ngu",
         fromBot: true,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),
       }
       setMessages((prevMessages) => [...prevMessages, newMessage, botReply]);
       setTextInputValue("");
@@ -68,19 +73,26 @@ const Chat = () => {
     }
   };
 
-  const renderItem: ListRenderItem<ChatMessage> = ({ item }) => (
-    <View 
-      style={tw`${item.fromBot ? 'justify-start' : 'justify-end'}`}
-      className="my-3 flex-row items-center"
-    >
-      {item.fromBot && (
-        <Icon name="robot-excited-outline" size={24} color="dodgerblue" className="mr-3 bg-blue-50 rounded-full p-2" />
+  const renderItem: ListRenderItem<ChatMessage> = ({ item, index }) => (
+    <View>
+      {index === 0 && (
+        <Text className="text-center text-gray-500 text-xs mb-3">
+          {item.timestamp}
+        </Text>
       )}
       <View 
-        style={tw`${item.fromBot ? 'bg-gray-200' : 'bg-blue-500'}`} 
-        className="max-w-xs p-2 rounded-lg"  
+        style={tw`${item.fromBot ? 'justify-start' : 'justify-end'}`}
+        className="my-3 flex-row items-center"
       >
-        <Text style={tw`${item.fromBot ? 'text-black' : 'text-white'}`}>{item.text}</Text>
+        {item.fromBot && (
+          <Icon name="robot-excited-outline" size={24} color="dodgerblue" className="mr-3 bg-blue-50 rounded-full p-2" />
+        )}
+        <View 
+          style={tw`${item.fromBot ? 'bg-gray-200' : 'bg-blue-500'}`} 
+          className="max-w-xs p-2 rounded-lg"  
+        >
+          <Text style={tw`${item.fromBot ? 'text-black' : 'text-white'}`}>{item.text}</Text>
+        </View>
       </View>
     </View>
   );
@@ -94,7 +106,7 @@ const Chat = () => {
         >
           <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}> 
             <View className="w-full h-full bg-white flex-1">
-              <Text className="text-center font-bold text-3xl mt-20">HealthCare Chatbot</Text>
+              <Text className="text-center font-bold text-3xl mt-20">Health Bot</Text>
               
               <View className="flex-1">
                 <FlatList 
@@ -135,20 +147,27 @@ const Chat = () => {
                     />
 
                     <View className="flex-row">
-                    <TouchableOpacity 
-                      activeOpacity={0.7}
-                      className="mr-3"
-                    >
-                      <Icon name="camera" size={20} color="dodgerblue" />
-                    </TouchableOpacity>
+                      <TouchableOpacity 
+                        activeOpacity={0.7}
+                        className="mr-2"
+                      >
+                        <Icon name="microphone" size={20} color="dodgerblue" />
+                      </TouchableOpacity>
 
-                    <TouchableOpacity 
-                      activeOpacity={0.7}
-                      onPress={sendMessage}
-                      className="mr-3"
-                    >
-                      <Icon name="send" size={20} color="dodgerblue" />
-                    </TouchableOpacity>
+                      <TouchableOpacity 
+                        activeOpacity={0.7}
+                        className="mr-3"
+                      >
+                        <Icon name="camera" size={20} color="dodgerblue" />
+                      </TouchableOpacity>
+
+                      <TouchableOpacity 
+                        activeOpacity={0.7}
+                        onPress={sendMessage}
+                        className="mr-3"
+                      >
+                        <Icon name="send" size={20} color="dodgerblue" />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>

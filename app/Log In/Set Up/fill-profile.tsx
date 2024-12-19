@@ -66,7 +66,7 @@ const FillProfile = () => {
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
-  )
-}
+  );
+};
 
 export default FillProfile;
