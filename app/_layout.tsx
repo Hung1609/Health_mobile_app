@@ -78,6 +78,12 @@ const RootLayout = () => {
         <Stack.Screen name="Main Tabs" options={{ headerShown: false }}></Stack.Screen>
         <Stack.Screen name="Other Tabs/profile" options={{ headerShown: false }}></Stack.Screen>
         <Stack.Screen name="Other Tabs/edit-profile" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/notification" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/setting" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/policy" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/notification-setting" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/account-setting" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/system-setting" options={{ headerShown: false }}></Stack.Screen>
 
         <Stack.Screen
           name="Log In/Set Up/gender"

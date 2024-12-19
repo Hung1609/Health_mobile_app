@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 
-const ProfileScreen = () => {
+const Notification = () => {
     const navigation = useNavigation();
 
     return (
@@ -19,7 +19,7 @@ const ProfileScreen = () => {
                             className="absolute flex-row items-center left-0 m-3"
                             onPress={() => navigation.goBack()}>
                             <Icon name="caret-back" size={20} color="black" />
-                            <Text className=''>My Profile</Text>
+                            <Text className=''>Home</Text>
                         </Pressable>
                         <Image
                             source={{ uri: 'https://via.placeholder.com/100' }}
@@ -60,25 +60,31 @@ const ProfileScreen = () => {
                             <Icon name="caret-forward" size={20} color="black" className='absolute right-0' />
                         </Pressable>
 
-                        <Pressable className='flex-row items-center mt-3 h-14'>
+                        <Pressable
+                            className='flex-row items-center mt-3 h-14'
+                            onPress={() => router.push('/Main Tabs/favourite')}>
                             <Icon name="star" size={20} color="black" className='mr-2' />
                             <Text>Favorite</Text>
                             <Icon name="caret-forward" size={20} color="black" className='absolute right-0' />
                         </Pressable>
 
-                        <Pressable className='flex-row items-center mt-3 h-14'>
+                        <Pressable
+                            className='flex-row items-center mt-3 h-14'
+                            onPress={() => router.push('/Other Tabs/policy')}>
                             <Icon name="shield-checkmark" size={20} color="black" className='mr-2' />
                             <Text>Privacy Policy</Text>
                             <Icon name="caret-forward" size={20} color="black" className='absolute right-0' />
                         </Pressable>
 
-                        <Pressable className='flex-row items-center mt-3 h-14'>
+                        <Pressable
+                            className='flex-row items-center mt-3 h-14'
+                            onPress={() => router.push('/Other Tabs/setting')}>
                             <Icon name="settings" size={20} color="black" className='mr-2' />
                             <Text>Settings</Text>
                             <Icon name="caret-forward" size={20} color="black" className='absolute right-0' />
                         </Pressable>
 
-                        <Pressable className='flex-row items-center mt-3 h-14 border-2'>
+                        <Pressable className='flex-row items-center mt-3 h-14'>
                             <Icon name="exit" size={20} color="black" className='mr-2' />
                             <Text>Logout</Text>
                             <Icon name="caret-forward" size={20} color="black" className='absolute right-0' />
@@ -90,4 +96,4 @@ const ProfileScreen = () => {
     );
 };
 
-export default ProfileScreen;
+export default Notification;

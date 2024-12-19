@@ -4,6 +4,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native";
+import { router } from "expo-router";
 
 const Favourite = () => {
     const [filter, setFilter] = useState("all"); // 'all', 'video', 'articles'
@@ -15,6 +16,15 @@ const Favourite = () => {
             title: "Upper Body",
             duration: "60 Minutes",
             calories: "1320 Kcal",
+            exercises: 5,
+            type: "video",
+        },
+
+        {
+            id: 2,
+            title: "Lower Body",
+            duration: "60 Minutes",
+            calories: "1120 Kcal",
             exercises: 5,
             type: "video",
         },
@@ -45,39 +55,39 @@ const Favourite = () => {
                                     <Icon className="px-2" name={"search"} size={25} color="black" />
                                 </Pressable>
 
-                                <Pressable>
+                                <Pressable onPress={() => router.push('/Other Tabs/notification')}>
                                     <Icon className="px-2" name={"notifications"} size={25} color="black" />
                                 </Pressable>
 
-                                <Pressable>
+                                <Pressable onPress={() => router.push('/Other Tabs/profile')}>
                                     <Icon className="px-2" name={"person"} size={25} color="black" />
                                 </Pressable>
                             </View>
                         </View>
 
                         <View className="flex-row justify-center items-center mt-10 w-full">
-                            <Text className="mr-5">Sort by: </Text>
+                            <Text className="mr-5 font-bold">Sort by: </Text>
 
                             {/* Filter */}
                             <Pressable
                                 onPress={() => setFilter('all')}
                                 className={`items-center w-1/5 border border-black py-2 rounded-full mx-2 ${filter === 'all' ? 'bg-mau_sac1' : 'bg-white'}`}
                             >
-                                <Text className="text-center">All</Text>
+                                <Text className={`text-center ${filter === "all" ? "text-white" : "text-black"}`}>All</Text>
                             </Pressable>
 
                             <Pressable
                                 onPress={() => setFilter('video')}
                                 className={`items-center w-1/5 border border-black py-2 rounded-full mx-2 ${filter === 'video' ? 'bg-mau_sac1' : 'bg-white'}`}
                             >
-                                <Text className="text-center">Video</Text>
+                                <Text className={`text-center ${filter === "video" ? "text-white" : "text-black"}`}>Video</Text>
                             </Pressable>
 
                             <Pressable
                                 onPress={() => setFilter('articles')}
                                 className={`items-center w-1/5 border border-black py-2 rounded-full mx-2 ${filter === 'articles' ? 'bg-mau_sac1' : 'bg-white'}`}
                             >
-                                <Text className="text-center">Articles</Text>
+                                <Text className={`text-center ${filter === "articles" ? "text-white" : "text-black"}`}>Articles</Text>
                             </Pressable>
 
                         </View>

@@ -7,7 +7,7 @@ import { ScrollView } from "react-native";
 import { router } from "expo-router";
 
 const handlePress = () => {
-  Alert.alert('Button Pressed', 'You just clicked the button!');
+  Alert.alert('Button Pressed', 'Search for something');
 };
 
 const Home = () => {
@@ -30,7 +30,7 @@ const Home = () => {
                   <Icon className="px-2" name={"search"} size={25} color="black" />
                 </Pressable>
 
-                <Pressable>
+                <Pressable onPress={() => router.push('/Other Tabs/notification')} >
                   <Icon className="px-2" name={"notifications"} size={25} color="black" />
                 </Pressable>
 
@@ -68,7 +68,9 @@ const Home = () => {
 
             <View className="flex-row justify-between items-center">
               <Text className="text-black text-lg font-bold mx-3">Recommendations</Text>
-              <Pressable className="flex-row justify-center items-center mx-3">
+              <Pressable
+                className="flex-row justify-center items-center mx-3"
+                onPress={() => router.push('/Main Tabs/resources')}>
                 <Text className="text-yellow-500 text-sm font-semibold mx-1">See All</Text>
                 <Icon name="play" size={15} color="#FFC107" />
               </Pressable>

@@ -1,70 +1,80 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { router } from 'expo-router';
+import React from 'react';
+import { View, Text, Image, TouchableOpacity, ScrollView, Pressable, TextInput } from 'react-native';
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 
-const FilterExample = () => {
-    const [filter, setFilter] = useState('all'); // 'all', 'typeA', 'typeB'
 
-    // Define all the views in a single array
-    const data = [
-        { id: 1, type: 'typeA', content: 'View 1 - Type A' },
-        { id: 2, type: 'typeA', content: 'View 2 - Type A' },
-        { id: 3, type: 'typeB', content: 'View 3 - Type B' },
-        { id: 4, type: 'typeB', content: 'View 4 - Type B' },
-    ];
-
-    // Filter the views based on the selected filter
-    const filteredData =
-        filter === 'all' ? data : data.filter((item) => item.type === filter);
+const Editprofile = () => {
+    const navigation = useNavigation();
 
     return (
-        <View className="flex-1 bg-white p-4">
-            {/* Filter Buttons */}
-            <View className="flex-row justify-around mb-4">
-                <Pressable
-                    className={`p-2 rounded ${filter === 'all' ? 'bg-purple-500' : 'bg-gray-200'
-                        }`}
-                    onPress={() => setFilter('all')}
-                >
-                    <Text className={`text-white ${filter !== 'all' && 'text-gray-700'}`}>
-                        Show All
-                    </Text>
-                </Pressable>
+        <SafeAreaProvider>
+            <SafeAreaView className='flex-1'>
+                <ScrollView className="flex-1 ">
+                    {/* Header Section */}
+                    <View className="p-4">
+                        <Pressable
+                            className="absolute flex-row items-center left-0 m-3"
+                            onPress={() => navigation.goBack()}>
+                            <Icon name="caret-back" size={20} color="black" />
+                            <Text className=''>My Profile</Text>
+                        </Pressable>
+                        <View className='my-8'>
+                            <Text className='font-semibold mt-5 mb-2'>Full Name</Text>
+                            <TextInput
+                                placeholder='Change your full name'
+                                className='bg-white py-5 px-3 rounded-lg border'
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                            />
 
-                <Pressable
-                    className={`p-2 rounded ${filter === 'typeA' ? 'bg-purple-500' : 'bg-gray-200'
-                        }`}
-                    onPress={() => setFilter('typeA')}
-                >
-                    <Text className={`text-white ${filter !== 'typeA' && 'text-gray-700'}`}>
-                        Show Type A
-                    </Text>
-                </Pressable>
+                            <Text className='font-semibold mt-5 mb-2'>Email</Text>
+                            <TextInput
+                                placeholder='Change your Email'
+                                className='bg-white py-5 px-3 rounded-lg border'
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                            />
 
-                <Pressable
-                    className={`p-2 rounded ${filter === 'typeB' ? 'bg-purple-500' : 'bg-gray-200'
-                        }`}
-                    onPress={() => setFilter('typeB')}
-                >
-                    <Text className={`text-white ${filter !== 'typeB' && 'text-gray-700'}`}>
-                        Show Type B
-                    </Text>
-                </Pressable>
-            </View>
+                            <Text className='font-semibold mt-5 mb-2'>Phone number</Text>
+                            <TextInput
+                                placeholder='Change your phone nuumber'
+                                className='bg-white py-5 px-3 rounded-lg border'
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                            />
 
-            {/* Render Views */}
-            <ScrollView className="flex-1">
-                {filteredData.map((item) => (
-                    <View
-                        key={item.id}
-                        className={`p-4 mb-2 rounded ${item.type === 'typeA' ? 'bg-blue-200' : 'bg-yellow-200'
-                            }`}
-                    >
-                        <Text className="text-black">{item.content}</Text>
+                            <Text className='font-semibold mt-5 mb-2'>Date of birth</Text>
+                            <TextInput
+                                placeholder='Change your full name'
+                                className='bg-white py-5 px-3 rounded-lg border'
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                            />
+
+                            <Text className='font-semibold mt-5 mb-2'>Weight</Text>
+                            <TextInput
+                                placeholder='Change your weight'
+                                className='bg-white py-5 px-3 rounded-lg border'
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                            />
+
+                            <Text className='font-semibold mt-5 mb-2'>Height</Text>
+                            <TextInput
+                                placeholder='Change your height'
+                                className='bg-white py-5 px-3 rounded-lg border'
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                            />
+                        </View>
                     </View>
-                ))}
-            </ScrollView>
-        </View>
+                </ScrollView>
+            </SafeAreaView>
+        </SafeAreaProvider>
     );
 };
 
-export default FilterExample;
+export default Editprofile;
