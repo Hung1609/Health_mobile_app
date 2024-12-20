@@ -47,7 +47,7 @@ const Resource = () => {
         <SafeAreaProvider>
             <SafeAreaView className="flex-1">
                 <ScrollView>
-                    <View className="w-full h-full bg-white flex-1 px-5">
+                    <View className="w-full h-fullflex-1 px-5">
                         <View className="flex-row items-center justify-between mt-10">
                             <View>
                                 <Text className="font-bold text-2xl">Resources</Text>
@@ -72,8 +72,8 @@ const Resource = () => {
                         <View className="flex-row justify-between items-center mt-10 w-full">
                             <Pressable
                                 onPress={() => setFilter("videos")}
-                                className={`items-center w-[48%] ${filter === "videos" ? 'bg-mau_sac1' : 'bg-white'
-                                    } items-center w-1/5 border border-black p-3 rounded-full mx-2`}
+                                className={`items-center w-[48%] ${filter === "videos" ? 'bg-blue-500' : 'bg-white'
+                                    } items-center w-1/5 border border-blue-500 p-3 rounded-full mx-2`}
                             >
                                 <Text className={`text-center ${filter === "videos" ? "text-white" : "text-black"}`}>
                                     Workout Videos
@@ -82,8 +82,8 @@ const Resource = () => {
 
                             <Pressable
                                 onPress={() => setFilter("articles")}
-                                className={`items-center w-[48%] ${filter === "articles" ? 'bg-mau_sac1' : 'bg-white'
-                                    } items-center w-1/5 border border-black p-3 rounded-full mx-2`}
+                                className={`items-center w-[48%] ${filter === "articles" ? 'bg-blue-500' : 'bg-white'
+                                    } items-center w-1/5 border border-blue-500 p-3 rounded-full mx-2`}
                             >
                                 <Text className={`text-center ${filter === "articles" ? "text-white" : "text-black"}`}>
                                     Articles & Tips
@@ -95,9 +95,9 @@ const Resource = () => {
                     {/* Content Section */}
                     <View className="mt-6">
                         {filter === "videos" && (
-                            <View className="flex-row">
+                            <View className="flex-row p-2">
                                 {videos.map((video) => (
-                                    <View key={video.id} className="w-[48%] bg-gray-100 rounded-lg p-3 ml-2">
+                                    <View key={video.id} className="w-[48%] bg-gray-100 border-blue-500 border-2 rounded-lg mr-4">
                                         <Image
                                             source={{ uri: video.image }}
                                             className="h-32 w-full rounded-lg"
@@ -121,9 +121,9 @@ const Resource = () => {
                         {filter === "articles" && (
                             <View>
                                 {articles.map((article) => (
-                                    <View key={article.id} className="flex-row bg-mau_sac1 rounded-lg p-1 m-2">
+                                    <View key={article.id} className="flex-row border-2 border-blue-600 bg-white rounded-lg p-1 m-2">
                                         <View className="flex-1 justify-center mx-3">
-                                            <Text className="text-white font-bold text-lg">{article.title}</Text>
+                                            <Text className="text-black font-bold text-lg">{article.title}</Text>
 
                                             <View className="flex-row items-center mt-2 space-x-2">
                                                 <Text numberOfLines={3}>{article.description}</Text>

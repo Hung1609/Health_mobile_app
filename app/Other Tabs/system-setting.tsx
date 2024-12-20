@@ -50,7 +50,7 @@ const SystemSettings = () => {
             <SafeAreaView className="flex-1">
                 <View>
                     <Pressable
-                        className="flex-row items-center my-3"
+                        className="flex-row items-center m-3"
                         onPress={() => navigation.goBack()}>
                         <Icon name="caret-back" size={20} color="black" />
                         <Text className='font-bold text-xl'>Settings</Text>
@@ -64,9 +64,9 @@ const SystemSettings = () => {
                             <Switch
                                 trackColor={{
                                     false: "#767577",
-                                    true: "purple",
+                                    true: "#3b82f6",
                                 }}
-                                thumbColor={settings[option.key] ? "#FFFFFF" : "#767577"}
+                                thumbColor="#FFFFFF"
                                 ios_backgroundColor="#3e3e3e"
                                 onValueChange={() => toggleSwitch(option.key)}
                                 value={settings[option.key]}

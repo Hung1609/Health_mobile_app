@@ -74,11 +74,11 @@ const Notification = () => {
     return (
         <SafeAreaProvider>
             <SafeAreaView className="flex-1 px-4">
-                <View className="flex-row items-center mt-5">
+                <View className="flex-row mt-5">
                     <Pressable
-                        className="flex-row"
+                        className="flex-row items-center"
                         onPress={() => navigation.goBack()}>
-                        <Icon name="arrow-back" size={24} color="black" />
+                        <Icon name="arrow-back" size={20} color="black" />
                         <Text
                             className=" font-bold text-xl mx-2">Notifications</Text>
                     </Pressable>
@@ -88,8 +88,8 @@ const Notification = () => {
                 <View className="flex-row justify-between items-center mt-5 p-1">
                     <Pressable
                         onPress={() => setTab("reminders")}
-                        className={`flex-1 items-center py-2 rounded-full ${tab === "reminders" ? 'bg-mau_sac1' : 'bg-white'
-                            } items-center border border-black py-3 rounded-full mx-2`}
+                        className={`flex-1 items-center py-2 rounded-full ${tab === "reminders" ? 'bg-blue-500' : 'bg-white'
+                            } items-center border border-blue-500 py-3 rounded-full mx-2`}
                     >
                         <Text
                             className={`${tab === "reminders" ? "text-white" : "text-black"
@@ -100,8 +100,8 @@ const Notification = () => {
                     </Pressable>
                     <Pressable
                         onPress={() => setTab("system")}
-                        className={`flex-1 items-center py-2 rounded-full ${tab === "system" ? 'bg-mau_sac1' : 'bg-white'
-                            } items-center border border-black py-3 rounded-full mx-2`}
+                        className={`flex-1 items-center py-2 rounded-full ${tab === "system" ? 'bg-blue-500' : 'bg-white'
+                            } items-center border border-blue-500 py-3 rounded-full mx-2`}
                     >
                         <Text
                             className={`${tab === "system" ? "text-white" : "text-black"
@@ -122,17 +122,17 @@ const Notification = () => {
                         return (
                             <View key={item.id}>
                                 {showDay && (
-                                    <Text className="text-gray-400 font-bold mt-5">
+                                    <Text className="text-gray-600 font-bold mt-5">
                                         {item.day}
                                     </Text>
                                 )}
-                                <View className="flex-row items-center bg-mau_sac2 my-2 rounded-lg p-3">
-                                    <View className="bg-mau_sac1 rounded-full h-10 w-10 justify-center items-center">
+                                <View className="flex-row items-center border-blue-500 border-2 bg-white my-2 rounded-lg p-3">
+                                    <View className="bg-blue-500 rounded-full h-10 w-10 justify-center items-center">
                                         <Icon name={item.icon} size={20} color="white" />
                                     </View>
                                     <View className="ml-3 flex-1">
-                                        <Text className="text-white font-bold">{item.title}</Text>
-                                        <Text className="text-gray-400 text-sm">{item.time}</Text>
+                                        <Text className="text-black font-bold">{item.title}</Text>
+                                        <Text className="text-gray-500 text-sm">{item.time}</Text>
                                     </View>
                                 </View>
                             </View>

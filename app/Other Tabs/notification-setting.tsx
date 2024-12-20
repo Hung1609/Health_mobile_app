@@ -64,9 +64,9 @@ const NotificationSettings = () => {
                             <Switch
                                 trackColor={{
                                     false: "#767577",
-                                    true: "purple",
+                                    true: "#3b82f6",
                                 }}
-                                thumbColor={settings[option.key] ? "#FFFFFF" : "#767577"}
+                                thumbColor="#FFFFFF"
                                 ios_backgroundColor="#3e3e3e"
                                 onValueChange={() => toggleSwitch(option.key)}
                                 value={settings[option.key]}
