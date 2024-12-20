@@ -19,7 +19,7 @@ const Chat = () => {
       id: 1,
       text: "Hello, I'm your personal assistant. How can I help you?",
       fromBot: true,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     }
   ]);
 
@@ -45,7 +45,7 @@ const Chat = () => {
         id: 1,
         text: "Hello, I'm your personal assistant. How can I help you?",
         fromBot: true,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }
     ]);
     setTextInputValue("");
@@ -58,13 +58,13 @@ const Chat = () => {
         id: messages.length + 1,
         text: textInputValue,
         fromBot: false,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       const botReply = {
         id: messages.length + 2,
         text: "Toi bi ngu",
         fromBot: true,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }
       setMessages((prevMessages) => [...prevMessages, newMessage, botReply]);
       setTextInputValue("");
@@ -80,16 +80,16 @@ const Chat = () => {
           {item.timestamp}
         </Text>
       )}
-      <View 
+      <View
         style={tw`${item.fromBot ? 'justify-start' : 'justify-end'}`}
         className="my-3 flex-row items-center"
       >
         {item.fromBot && (
           <Icon name="robot-excited-outline" size={24} color="dodgerblue" className="mr-3 bg-blue-50 rounded-full p-2" />
         )}
-        <View 
-          style={tw`${item.fromBot ? 'bg-gray-200' : 'bg-blue-500'}`} 
-          className="max-w-xs p-2 rounded-lg"  
+        <View
+          style={tw`${item.fromBot ? 'bg-gray-200' : 'bg-blue-500'}`}
+          className="max-w-xs p-2 rounded-lg"
         >
           <Text style={tw`${item.fromBot ? 'text-black' : 'text-white'}`}>{item.text}</Text>
         </View>
@@ -104,12 +104,12 @@ const Chat = () => {
           className="flex-1"
           behavior="padding"
         >
-          <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}> 
+          <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
             <View className="w-full h-full bg-white flex-1">
               <Text className="text-center font-bold text-3xl mt-20">Health Bot</Text>
-              
+
               <View className="flex-1">
-                <FlatList 
+                <FlatList
                   ref={flatListRef}
                   data={messages}
                   renderItem={renderItem}
@@ -131,9 +131,9 @@ const Chat = () => {
                       </TouchableOpacity>
                     )}
                   </View>
-                  
+
                   <View className="flex-row border-2 rounded-lg flex-grow items-center justify-between">
-                    <TextInput 
+                    <TextInput
                       placeholder="Ask me anything..."
                       value={textInputValue}
                       onChangeText={setTextInputValue}
@@ -147,21 +147,21 @@ const Chat = () => {
                     />
 
                     <View className="flex-row">
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         activeOpacity={0.7}
                         className="mr-2"
                       >
                         <Icon name="microphone" size={20} color="dodgerblue" />
                       </TouchableOpacity>
 
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         activeOpacity={0.7}
                         className="mr-3"
                       >
                         <Icon name="camera" size={20} color="dodgerblue" />
                       </TouchableOpacity>
 
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         activeOpacity={0.7}
                         onPress={sendMessage}
                         className="mr-3"

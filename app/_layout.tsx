@@ -7,10 +7,10 @@ const RootLayout = () => {
     <UserProvider>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }}></Stack.Screen>
-        
-        <Stack.Screen 
-          name="Log In/log-in" 
-          options={{ 
+
+        <Stack.Screen
+          name="Log In/log-in"
+          options={{
             headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTitle: 'Log In',
@@ -19,10 +19,10 @@ const RootLayout = () => {
             },
           }}
         />
-          
-        <Stack.Screen 
-          name="Log In/sign-up" 
-          options={{ 
+
+        <Stack.Screen
+          name="Log In/sign-up"
+          options={{
             headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTitle: 'Create Account',
@@ -32,9 +32,9 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen 
-          name="Log In/Forgot Password/forgot-password" 
-          options={{ 
+        <Stack.Screen
+          name="Log In/Forgot Password/forgot-password"
+          options={{
             headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTitle: 'Forgotten Password',
@@ -44,9 +44,9 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen 
-          name="Log In/Forgot Password/otp-verify" 
-          options={{ 
+        <Stack.Screen
+          name="Log In/Forgot Password/otp-verify"
+          options={{
             headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTitle: 'Verification',
@@ -56,9 +56,9 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen 
-          name="Log In/Forgot Password/set-password" 
-          options={{ 
+        <Stack.Screen
+          name="Log In/Forgot Password/set-password"
+          options={{
             headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTitle: 'Set Password',
@@ -68,16 +68,24 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen 
-          name="Log In/success-screen" 
-          options={{ 
+        <Stack.Screen
+          name="Log In/success-screen"
+          options={{
             headerShown: false,
           }}
         />
-          
-        <Stack.Screen name="Main Tabs/Tabs" options={{ headerShown: false }}></Stack.Screen>
 
-        <Stack.Screen 
+        <Stack.Screen name="Main Tabs/Tabs" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/profile" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/edit-profile" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/notification" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/setting" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/policy" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/notification-setting" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/account-setting" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Other Tabs/system-setting" options={{ headerShown: false }}></Stack.Screen>
+
+        <Stack.Screen
           name="Log In/Set Up/gender"
           options={{
             headerTitle: 'Back',
@@ -85,7 +93,7 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen 
+        <Stack.Screen
           name="Log In/Set Up/age"
           options={{
             headerTitle: 'Back',
@@ -93,7 +101,7 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen 
+        <Stack.Screen
           name="Log In/Set Up/stats"
           options={{
             headerTitle: 'Back',
@@ -101,7 +109,7 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen 
+        <Stack.Screen
           name="Log In/Set Up/goal"
           options={{
             headerTitle: 'Back',
@@ -109,7 +117,7 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen 
+        <Stack.Screen
           name="Log In/Set Up/level"
           options={{
             headerTitle: 'Back',
@@ -117,7 +125,7 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen 
+        <Stack.Screen
           name="Log In/Set Up/fill-profile"
           options={{
             headerTitle: 'Back',
