@@ -75,7 +75,7 @@ const RootLayout = () => {
           }}
         />
 
-        <Stack.Screen name="Main Tabs" options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="Main Tabs/Tabs" options={{ headerShown: false }}></Stack.Screen>
         <Stack.Screen name="Other Tabs/profile" options={{ headerShown: false }}></Stack.Screen>
         <Stack.Screen name="Other Tabs/edit-profile" options={{ headerShown: false }}></Stack.Screen>
         <Stack.Screen name="Other Tabs/notification" options={{ headerShown: false }}></Stack.Screen>

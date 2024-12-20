@@ -22,7 +22,7 @@ const SuccessScreen = () => {
           <Text>Your account is ready to use</Text>
         </View>
         <TouchableOpacity 
-          onPress={() => router.push('/Main Tabs/home')} 
+          onPress={() => router.push('/Main Tabs/Tabs/home')} 
           className="bg-blue-500 mb-5 py-3 rounded-lg w-full"
           activeOpacity={0.7} 
         >

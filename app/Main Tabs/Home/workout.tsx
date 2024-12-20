@@ -1,76 +1,30 @@
 import React from "react";
-import { StyleSheet, Text, View, Pressable, Alert, Image } from "react-native";
+import { StyleSheet, Text, View, Pressable, Alert, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
+import { useRoute } from "@react-navigation/native";
+
+
 
 const handlePress = () => {
-  Alert.alert('Button Pressed', 'Search for something');
+  Alert.alert('Button Pressed', 'You just clicked the button!');
 };
 
-const Home = () => {
+const Workout = () => {
+  const router = useRouter();
+
   return (
     <SafeAreaProvider>
       <SafeAreaView className='flex-1'>
         <ScrollView>
-
-          <View className='w-full h-full bg-white flex-1 px-5'>
-            <View className='flex-row items-center justify-between mt-10'>
-
-              <View>
-                <Text className='font-bold text-2xl'>Welcome, username</Text>
-                <Text className='text-blue-500 text-lg font-semibold'>It's time to change your lifestyle</Text>
-              </View>
-
-              <View className='flex-row space-x-1'>
-
-                <Pressable onPress={handlePress}>
-                  <Icon className="px-2" name={"search"} size={25} color="black" />
-                </Pressable>
-
-                <Pressable onPress={() => router.push('/Other Tabs/notification')} >
-                  <Icon className="px-2" name={"notifications"} size={25} color="black" />
-                </Pressable>
-
-                <Pressable onPress={() => router.push('/Other Tabs/profile')} >
-                  <Icon className="px-2" name={"person"} size={25} color="black" />
-                </Pressable>
-              </View>
-            </View>
-
-            <View className="flex-row justify-between items-center mt-10 w-full">
-
-              <Pressable onPress={handlePress} className="items-center w-1/4">
-                <Icon2 name={"dumbbell"} size={25} color="#FFC107" />
-                <Text className="text-center">Workout</Text>
-              </Pressable>
-
-              <Pressable className="items-center w-1/4">
-                <Icon2 name={"clipboard-list"} size={25} color="black" />
-                <Text className="text-center">Progress Tracking</Text>
-              </Pressable>
-
-              <Pressable className="items-center w-1/4">
-                <Icon2 name={"apple-alt"} size={25} color="black" />
-                <Text className="text-center">Nutrition</Text>
-              </Pressable>
-
-              <Pressable className="items-center w-1/4">
-                <Icon name={"people"} size={25} color="black" />
-                <Text className="text-center">Community</Text>
-              </Pressable>
-            </View>
-          </View>
-
           <View className="mt-6">
 
             <View className="flex-row justify-between items-center">
               <Text className="text-black text-lg font-bold mx-3">Recommendations</Text>
-              <Pressable
-                className="flex-row justify-center items-center mx-3"
-                onPress={() => router.push('/Main Tabs/resources')}>
+              <Pressable className="flex-row justify-center items-center mx-3">
                 <Text className="text-yellow-500 text-sm font-semibold mx-1">See All</Text>
                 <Icon name="play" size={15} color="#FFC107" />
               </Pressable>
@@ -167,4 +121,4 @@ const Home = () => {
   );
 }
 
-export default Home;
+export default Workout;
