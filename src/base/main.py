@@ -1,0 +1,70 @@
+import uvicorn
+from fastapi import FastAPI, HTTPException
+from agent import get_retriever, get_llm_and_agent
+import logging
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+
+# Logging configuration
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Initialize FastAPI application
+app = FastAPI()
+
+@app.on_event("startup")
+async def startup_event():
+    """
+    Perform startup tasks such as validating environment variables and connections.
+    """
+    logger.info("Starting application...")
+    # Validate required environment variables
+    required_vars = ["GOOGLE_API_KEY", "MONGO_URI"]
+    missing_vars = [var for var in required_vars if not os.getenv(var)]
+    if missing_vars:
+        logger.error(f"Missing environment variables: {missing_vars}")
+        raise RuntimeError(f"Missing required environment variables: {missing_vars}")
+    logger.info("All required environment variables are set.")
+
+@app.post("/query")
+def query_endpoint(data: dict):
+    """
+    API endpoint for querying the agent.
+    Args:
+        data (dict): Input containing the user query.
+    Returns:
+        dict: Response from the agent.
+    """
+    question = data.get("question", "")
+    if not question:
+        logger.warning("Received empty question.")
+        raise HTTPException(status_code=400, detail="Question is required")
+
+    try:
+        logger.info(f"Received question: {question}")
+        retriever = get_retriever(None, question)
+        agent = get_llm_and_agent(retriever)
+        response = agent.invoke({"input": question})
+        logger.info(f"Response generated: {response}")
+        return {"response": response}
+    except Exception as e:
+        logger.error(f"Error processing query: {str(e)}")
+        raise HTTPException(status_code=500, detail="An internal error occurred. Please try again later.")
+
+@app.get("/")
+def root_endpoint():
+    """
+    Root endpoint to confirm that the application is running.
+    Returns:
+        dict: Confirmation message.
+    """
+    logger.info("Root endpoint accessed.")
+    return {"message": "CareAI API is running."}
+
+if __name__ == "__main__":
+    # Run the application
+    logger.info("Starting server...")
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
