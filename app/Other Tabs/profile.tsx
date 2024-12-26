@@ -11,7 +11,7 @@ const Notification = () => {
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView className='flex-1'>
+            <SafeAreaView className='flex-1 bg-white'>
                 <ScrollView className="flex-1 ">
                     {/* Header Section */}
                     <View className="bg-blue-600 p-4 items-center m-2 border-2 border-white rounded-3xl">
@@ -19,7 +19,7 @@ const Notification = () => {
                             className="absolute flex-row items-center left-0 m-3"
                             onPress={() => navigation.goBack()}>
                             <Icon name="caret-back" size={20} color="white" />
-                            <Text className='font-bold text-xl text-white'>Home</Text>
+                            <Text className='font-bold text-xl text-white'>My Profile</Text>
                         </Pressable>
                         <Image
                             source={{ uri: 'https://via.placeholder.com/100' }}

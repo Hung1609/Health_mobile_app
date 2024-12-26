@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Pressable, Alert, Image } from "react-native";
+import { StyleSheet, Text, View, Pressable, Alert, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import { ScrollView } from "react-native";
@@ -45,26 +45,26 @@ const Resource = () => {
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView className="flex-1">
+            <SafeAreaView className="flex-1 bg-white">
                 <ScrollView>
                     <View className="w-full h-fullflex-1 px-5">
                         <View className="flex-row items-center justify-between mt-10">
                             <View>
-                                <Text className="font-bold text-2xl">Resources</Text>
+                                <Text className="font-bold text-3xl">Resources</Text>
                             </View>
 
                             <View className="flex-row space-x-1">
-                                <Pressable onPress={handlePress}>
+                                <TouchableOpacity  onPress={handlePress}>
                                     <Icon className="px-2" name={"search"} size={25} color="black" />
-                                </Pressable>
+                                </TouchableOpacity>
 
-                                <Pressable onPress={() => router.push('/Other Tabs/notification')}>
+                                <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('/Other Tabs/notification')}>
                                     <Icon className="px-2" name={"notifications"} size={25} color="black" />
-                                </Pressable>
+                                </TouchableOpacity>
 
-                                <Pressable onPress={() => router.push('/Other Tabs/profile')}>
+                                <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('/Other Tabs/profile')}>
                                     <Icon className="px-2" name={"person"} size={25} color="black" />
-                                </Pressable>
+                                </TouchableOpacity>
                             </View>
                         </View>
 

@@ -13,7 +13,9 @@ const TabLayout = () => {
                 tabBarStyle: {
                     height: 70,
                     backgroundColor: '#ffffff',
-                    borderColor: '#112D4E'
+                    shadowColor: 'transparent',
+                    borderTopWidth: 0,
+                    shadowOffset: { width: 0, height: 0 }
                 }
             }}>
             <Tabs.Screen

@@ -132,6 +132,14 @@ const RootLayout = () => {
             headerShadowVisible: false,
           }}
         />
+
+        <Stack.Screen
+          name="Main Tabs/Home/nutrition-details"
+          options={{
+            headerTitle: 'Nutrition',
+            headerShadowVisible: false,
+          }}
+        />
       </Stack>
     </UserProvider>
   );

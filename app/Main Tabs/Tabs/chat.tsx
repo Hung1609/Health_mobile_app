@@ -3,6 +3,9 @@ import { Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Touchabl
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import tw from "tailwind-react-native-classnames";
+import Icon2 from "react-native-vector-icons/Ionicons";
+import { router } from "expo-router";
+import { useRoute } from "@react-navigation/native";
 
 interface ChatMessage {
   id: number;
@@ -106,7 +109,30 @@ const Chat = () => {
         >
           <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
             <View className="w-full h-full bg-white flex-1">
-              <Text className="text-center font-bold text-3xl mt-20">Health Bot</Text>
+              <View className="flex-row justify-between items-center px-5 mt-10">
+                <Text className="font-bold text-3xl">Health Bot</Text>
+                <View className="flex-row">
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                  >
+                    <Icon2 name="search" size={25} className="px-2"/>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => router.push("/Other Tabs/notification")}
+                  >
+                    <Icon2 name="notifications" size={25} className="px-2"/>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => router.push("/Other Tabs/profile")}
+                  >
+                    <Icon2 name="person" size={25} className="px-2"/>
+                  </TouchableOpacity>
+                </View>
+              </View>
 
               <View className="flex-1">
                 <FlatList

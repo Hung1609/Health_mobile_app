@@ -26,7 +26,7 @@ const OtpVerify = () => {
         <View className='w-full h-full bg-white flex-1 px-7 items-center'>
           <Text className='font-bold text-center mt-12 text-3xl'>OTP Verification</Text>
           <Text className='text-center mt-6 text-blue-500 text-lg font-semibold'>Enter the OTP sent to {"\n"}
-            <Text className='text-center mt-6 text-orange-500 text-lg font-semibold'>{email}</Text>
+            <Text className='text-center mt-6 text-yellow-500 text-lg font-semibold'>{email}</Text>
           </Text>
 
           <View className='flex-row justify-around mt-14 w-full px-7'>
