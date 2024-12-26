@@ -9,6 +9,7 @@ import logging
 from dotenv import load_dotenv
 import os
 import boto3 # Thư viện để upload S3
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = FastAPI()
 
@@ -34,8 +35,10 @@ class User(BaseModel):
     username: str
     password: str
     email: str
-    facebook: str
-    google: str
+
+class LoginUser(BaseModel):
+    email: str
+    password: str
 
 class Recommendation(BaseModel):
     title: str
@@ -129,21 +132,34 @@ async def create_article_for_admin(
 # [POST] Đăng ký user
 @app.post("/register")
 def register(user: User):
-    existing_user = users_collection.find_one({"username": user.username})
+    existing_user = users_collection.find_one({"username": user.email})
     if existing_user:
-        raise HTTPException(status_code=400, detail="Username already exists")
+        raise HTTPException(status_code=400, detail="User already exists")
     
+    # hash password
+    hashed_password = generate_password_hash(user.password)
+
     user_doc = {
         "username": user.username,
-        "password": user.password,
         "email": user.email,
-        "facebook": user.facebook,
-        "google": user.google
+        "password": user.password
     }
     result = users_collection.insert_one(user_doc)
-    new_user = users_collection.find_one({"_id": result.inserted_id})
-    convert_id(new_user)
-    return new_user
+    return {"message": "User registered successfully!"}
+
+# [POST] login
+@app.post("/login")
+def Login(user: LoginUser):
+    existing_user = users_collection.find_one({"email": user.email})
+    if not existing_user or not check_password_hash(existing_user["password"], user.password):
+        raise HTTPException(status_code=401, detail="Invalid email or password!")
+    return {
+        "message": "Login successful!", 
+        "user": { 
+            "email": existing_user["email"], 
+            "username": existing_user["username"]
+        }
+    }
 
 # [GET] Lấy thông tin user qua query param ?username=
 @app.get("/user")
