@@ -7,3 +7,6 @@ langchain_community
 sentence_transformers
 langchain-huggingface
 qdrant_client
+flask
+pymongo
+flask-cors
