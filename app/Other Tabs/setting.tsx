@@ -32,17 +32,6 @@ const Setting = () => {
 
                         <Pressable
                             className="flex-row items-center mb-5"
-                            onPress={() => router.push('/Other Tabs/account-setting')}>
-
-                            <View className="bg-blue-500 rounded-full h-12 w-12 justify-center items-center">
-                                <Icon name="person" size={20} color="white" />
-                            </View>
-                            <Text className="flex-1 ml-4 font-bold text-lg">Account Setting</Text>
-                            <Icon name="caret-forward" size={20} color="black" />
-                        </Pressable>
-
-                        <Pressable
-                            className="flex-row items-center mb-5"
                             onPress={() => router.push('/Other Tabs/system-setting')}>
                             <View className="bg-blue-500 rounded-full h-12 w-12 justify-center items-center">
                                 <Icon name="hardware-chip" size={20} color="white" />

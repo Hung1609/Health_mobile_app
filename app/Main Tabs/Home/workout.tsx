@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, Text, View, Pressable, Alert, Image, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { Text, View, Pressable, Alert, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
@@ -7,9 +7,7 @@ import { ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { useRoute } from "@react-navigation/native";
 
-
-
-const recommendations = [
+const workouts = [
   {
     id: "1",
     title: "Squat Exercise",
@@ -53,6 +51,10 @@ const articles = [
 
 const Workout = () => {
   const router = useRouter();
+  const [Favourite, setFavourite] = useState(true);
+  const toggleFavourite = () => {
+    setFavourite(!Favourite);
+  }
 
   return (
     <SafeAreaProvider>
@@ -63,7 +65,7 @@ const Workout = () => {
               <Text className="text-black text-lg font-bold mx-3">Recommendations</Text>
               <Pressable
                 className="flex-row justify-center items-center mx-3"
-                onPress={() => router.push("/Main Tabs/Tabs/resources")}
+                onPress={() => router.push("/Main Tabs/Home/WorkoutLibrary/workout-main")}
               >
                 <Text className="text-blue-500 text-sm font-semibold mx-1">See All</Text>
                 <Icon name="play" size={15} color="#3B82F6" />
@@ -71,7 +73,7 @@ const Workout = () => {
             </View>
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
-              {recommendations.map((item) => (
+              {workouts.map((item) => (
                 <View key={item.id} className="w-60 bg-gray-100 border-blue-500 border-2 rounded-lg mr-4">
                   <Image source={{ uri: item.imageUri }} className="h-36 w-full rounded-lg" />
                   <Text className="text-black font-bold mx-2">{item.title}</Text>
@@ -102,9 +104,9 @@ const Workout = () => {
                 <View key={item.id} className="w-1/2 bg-gray-100 border-blue-500 border-2 rounded-lg mr-4">
                   <Image source={{ uri: item.imageUri }} className="h-32 w-full rounded-lg" />
                   <Text className="text-black font-bold mt-2">{item.title}</Text>
-                  <Pressable className="absolute top-3 right-3">
+                  <Pressable onPress={toggleFavourite} className="absolute top-3 right-3">
                     <Icon
-                      name={item.isFavorite ? "star" : "star-outline"}
+                      name={Favourite ? "star" : "star-outline"}
                       size={24}
                       color="#FFC107"
                     />

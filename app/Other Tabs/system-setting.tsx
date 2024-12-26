@@ -10,23 +10,13 @@ interface NotificationOption {
 }
 
 interface SettingsState {
-    generalNotification: boolean;
-    sound: boolean;
-    doNotDisturb: boolean;
-    vibrate: boolean;
-    lockScreen: boolean;
-    reminders: boolean;
+    access: boolean;
 }
 
 const SystemSettings = () => {
     const navigation = useNavigation();
     const [settings, setSettings] = useState<SettingsState>({
-        generalNotification: true,
-        sound: true,
-        doNotDisturb: false,
-        vibrate: true,
-        lockScreen: true,
-        reminders: true,
+        access: true,
     });
 
     const toggleSwitch = (key: keyof SettingsState) => {
@@ -37,12 +27,7 @@ const SystemSettings = () => {
     };
 
     const options: NotificationOption[] = [
-        { key: "generalNotification", title: "General Notification" },
-        { key: "sound", title: "Sound" },
-        { key: "doNotDisturb", title: "Don’t Disturb Mode" },
-        { key: "vibrate", title: "Vibrate" },
-        { key: "lockScreen", title: "Lock Screen" },
-        { key: "reminders", title: "Reminders" },
+        { key: "access", title: "Allow access to Photos" },
     ];
 
     return (

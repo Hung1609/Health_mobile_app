@@ -15,7 +15,7 @@ const CustomTopTabBar = ({ state, descriptors, navigation }: any) => {
   type TabName = "Workout" | "Progress" | "Nutrition" | "Community";
 
   return (
-    <View className="mt-10 w-full px-5">
+    <View className="mt-5 w-full px-5">
       <View className='flex-row items-center justify-between mt-10'>
 
         <View>

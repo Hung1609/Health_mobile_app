@@ -46,52 +46,51 @@ const Resource = () => {
     return (
         <SafeAreaProvider>
             <SafeAreaView className="flex-1">
-                <ScrollView>
-                    <View className="w-full h-fullflex-1 px-5">
-                        <View className="flex-row items-center justify-between mt-10">
-                            <View>
-                                <Text className="font-bold text-2xl">Resources</Text>
-                            </View>
-
-                            <View className="flex-row space-x-1">
-                                <Pressable onPress={handlePress}>
-                                    <Icon className="px-2" name={"search"} size={25} color="black" />
-                                </Pressable>
-
-                                <Pressable onPress={() => router.push('/Other Tabs/notification')}>
-                                    <Icon className="px-2" name={"notifications"} size={25} color="black" />
-                                </Pressable>
-
-                                <Pressable onPress={() => router.push('/Other Tabs/profile')}>
-                                    <Icon className="px-2" name={"person"} size={25} color="black" />
-                                </Pressable>
-                            </View>
+                <View className="w-full h-fullflex-1 px-5">
+                    <View className="flex-row items-center justify-between mt-10">
+                        <View>
+                            <Text className="font-bold text-2xl">Resources</Text>
                         </View>
 
-                        {/* Filter Buttons */}
-                        <View className="flex-row justify-between items-center mt-10 w-full">
-                            <Pressable
-                                onPress={() => setFilter("videos")}
-                                className={`items-center w-[48%] ${filter === "videos" ? 'bg-blue-500' : 'bg-white'
-                                    } items-center w-1/5 border border-blue-500 p-3 rounded-full mx-2`}
-                            >
-                                <Text className={`text-center ${filter === "videos" ? "text-white" : "text-black"}`}>
-                                    Workout Videos
-                                </Text>
+                        <View className="flex-row space-x-1">
+                            <Pressable onPress={handlePress}>
+                                <Icon className="px-2" name={"search"} size={25} color="black" />
                             </Pressable>
 
-                            <Pressable
-                                onPress={() => setFilter("articles")}
-                                className={`items-center w-[48%] ${filter === "articles" ? 'bg-blue-500' : 'bg-white'
-                                    } items-center w-1/5 border border-blue-500 p-3 rounded-full mx-2`}
-                            >
-                                <Text className={`text-center ${filter === "articles" ? "text-white" : "text-black"}`}>
-                                    Articles & Tips
-                                </Text>
+                            <Pressable onPress={() => router.push('/Other Tabs/notification')}>
+                                <Icon className="px-2" name={"notifications"} size={25} color="black" />
+                            </Pressable>
+
+                            <Pressable onPress={() => router.push('/Other Tabs/profile')}>
+                                <Icon className="px-2" name={"person"} size={25} color="black" />
                             </Pressable>
                         </View>
                     </View>
 
+                    {/* Filter Buttons */}
+                    <View className="flex-row justify-between items-center mt-10 w-full">
+                        <Pressable
+                            onPress={() => setFilter("videos")}
+                            className={`items-center w-[48%] ${filter === "videos" ? 'bg-blue-500' : 'bg-white'
+                                } items-center w-1/5 border border-blue-500 p-3 rounded-full mx-2`}
+                        >
+                            <Text className={`text-center ${filter === "videos" ? "text-white" : "text-black"}`}>
+                                Workout Videos
+                            </Text>
+                        </Pressable>
+
+                        <Pressable
+                            onPress={() => setFilter("articles")}
+                            className={`items-center w-[48%] ${filter === "articles" ? 'bg-blue-500' : 'bg-white'
+                                } items-center w-1/5 border border-blue-500 p-3 rounded-full mx-2`}
+                        >
+                            <Text className={`text-center ${filter === "articles" ? "text-white" : "text-black"}`}>
+                                Articles & Tips
+                            </Text>
+                        </Pressable>
+                    </View>
+                </View>
+                <ScrollView>
                     {/* Content Section */}
                     <View className="mt-6">
                         {filter === "videos" && (
@@ -129,12 +128,14 @@ const Resource = () => {
                                                 <Text numberOfLines={3}>{article.description}</Text>
                                             </View>
                                         </View>
-                                        <View className="w-[48%] bg-gray-100 rounded-lg">
-                                            <View className="flex-row bg-mau_sac2 rounded-lg h-32">
+                                        <View className="w-[48%]">
+                                            <Pressable
+                                                className="flex-row bg-mau_sac2 rounded-lg h-32"
+                                                onPress={() => router.push("/Other Tabs/articles")}>
                                                 <Pressable className="absolute top-1 right-1">
                                                     <Icon name="star" size={24} color="#FFC107" />
                                                 </Pressable>
-                                            </View>
+                                            </Pressable>
                                         </View>
                                     </View>
                                 ))}
