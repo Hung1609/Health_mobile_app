@@ -43,7 +43,7 @@ const Goal = () => {
                     style={tw`${selectedGoals.includes(goal) ? 'bg-blue-500' : 'bg-white'}`}
                 >
                     <Text 
-                        className={`ml-3 font-bold ${selectedGoals.includes(goal) ? 'text-white' : 'text-orange-500'}`}
+                        className={`ml-3 font-bold ${selectedGoals.includes(goal) ? 'text-white' : 'text-yellow-500'}`}
                     >
                         {goal}</Text>
                     <View
