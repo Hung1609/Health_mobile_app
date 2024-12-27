@@ -27,9 +27,13 @@ const LogIn = () => {
         setSecureTextEntry(!secureTextEntry);
     };
 
+    const handlePass = () => {
+        router.push("/Main Tabs/home");
+    };
+
     const handleLogin = async () => {
         try {
-            const response = await axios.post("http://127.0.0.1:5000/login", {
+            const response = await axios.post("http://127.0.0.1:8000/login", {
                 email: email,
                 password: password,
             });
@@ -141,7 +145,7 @@ const LogIn = () => {
                             </View>
 
                             <TouchableOpacity
-                                onPress={handleLogin}
+                                onPress={handlePass}
                                 className="bg-blue-500 py-3 rounded-lg mt-5"
                                 activeOpacity={0.7}
                             >
