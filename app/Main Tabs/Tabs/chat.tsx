@@ -3,11 +3,15 @@ import { Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Touchabl
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import tw from "tailwind-react-native-classnames";
+import Icon2 from "react-native-vector-icons/Ionicons";
+import { router } from "expo-router";
+import { useRoute } from "@react-navigation/native";
 
 interface ChatMessage {
   id: number;
   text: string;
   fromBot: boolean;
+  timestamp: string;
 }
 
 const Chat = () => {
@@ -17,7 +21,8 @@ const Chat = () => {
     {
       id: 1,
       text: "Hello, I'm your personal assistant. How can I help you?",
-      fromBot: true
+      fromBot: true,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     }
   ]);
 
@@ -42,7 +47,8 @@ const Chat = () => {
       {
         id: 1,
         text: "Hello, I'm your personal assistant. How can I help you?",
-        fromBot: true
+        fromBot: true,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }
     ]);
     setTextInputValue("");
@@ -55,11 +61,13 @@ const Chat = () => {
         id: messages.length + 1,
         text: textInputValue,
         fromBot: false,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       const botReply = {
         id: messages.length + 2,
         text: "Toi bi ngu",
         fromBot: true,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }
       setMessages((prevMessages) => [...prevMessages, newMessage, botReply]);
       setTextInputValue("");
@@ -68,19 +76,26 @@ const Chat = () => {
     }
   };
 
-  const renderItem: ListRenderItem<ChatMessage> = ({ item }) => (
-    <View 
-      style={tw`${item.fromBot ? 'justify-start' : 'justify-end'}`}
-      className="my-3 flex-row items-center"
-    >
-      {item.fromBot && (
-        <Icon name="robot-excited-outline" size={24} color="dodgerblue" className="mr-3 bg-blue-50 rounded-full p-2" />
+  const renderItem: ListRenderItem<ChatMessage> = ({ item, index }) => (
+    <View>
+      {index === 0 && (
+        <Text className="text-center text-gray-500 text-xs mb-3">
+          {item.timestamp}
+        </Text>
       )}
-      <View 
-        style={tw`${item.fromBot ? 'bg-gray-200' : 'bg-blue-500'}`} 
-        className="max-w-xs p-2 rounded-lg"  
+      <View
+        style={tw`${item.fromBot ? 'justify-start' : 'justify-end'}`}
+        className="my-3 flex-row items-center"
       >
-        <Text style={tw`${item.fromBot ? 'text-black' : 'text-white'}`}>{item.text}</Text>
+        {item.fromBot && (
+          <Icon name="robot-excited-outline" size={24} color="dodgerblue" className="mr-3 bg-blue-50 rounded-full p-2" />
+        )}
+        <View
+          style={tw`${item.fromBot ? 'bg-gray-200' : 'bg-blue-500'}`}
+          className="max-w-xs p-2 rounded-lg"
+        >
+          <Text style={tw`${item.fromBot ? 'text-black' : 'text-white'}`}>{item.text}</Text>
+        </View>
       </View>
     </View>
   );
@@ -92,12 +107,35 @@ const Chat = () => {
           className="flex-1"
           behavior="padding"
         >
-          <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}> 
+          <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
             <View className="w-full h-full bg-white flex-1">
-              <Text className="text-center font-bold text-3xl mt-20">HealthCare Chatbot</Text>
-              
+              <View className="flex-row justify-between items-center px-5 mt-10">
+                <Text className="font-bold text-3xl">Health Bot</Text>
+                <View className="flex-row">
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                  >
+                    <Icon2 name="search" size={25} className="px-2"/>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => router.push("/Other Tabs/notification")}
+                  >
+                    <Icon2 name="notifications" size={25} className="px-2"/>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => router.push("/Other Tabs/profile")}
+                  >
+                    <Icon2 name="person" size={25} className="px-2"/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
               <View className="flex-1">
-                <FlatList 
+                <FlatList
                   ref={flatListRef}
                   data={messages}
                   renderItem={renderItem}
@@ -119,9 +157,9 @@ const Chat = () => {
                       </TouchableOpacity>
                     )}
                   </View>
-                  
+
                   <View className="flex-row border-2 rounded-lg flex-grow items-center justify-between">
-                    <TextInput 
+                    <TextInput
                       placeholder="Ask me anything..."
                       value={textInputValue}
                       onChangeText={setTextInputValue}
@@ -135,20 +173,27 @@ const Chat = () => {
                     />
 
                     <View className="flex-row">
-                    <TouchableOpacity 
-                      activeOpacity={0.7}
-                      className="mr-3"
-                    >
-                      <Icon name="camera" size={20} color="dodgerblue" />
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        className="mr-2"
+                      >
+                        <Icon name="microphone" size={20} color="dodgerblue" />
+                      </TouchableOpacity>
 
-                    <TouchableOpacity 
-                      activeOpacity={0.7}
-                      onPress={sendMessage}
-                      className="mr-3"
-                    >
-                      <Icon name="send" size={20} color="dodgerblue" />
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        className="mr-3"
+                      >
+                        <Icon name="camera" size={20} color="dodgerblue" />
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={sendMessage}
+                        className="mr-3"
+                      >
+                        <Icon name="send" size={20} color="dodgerblue" />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>

@@ -22,7 +22,6 @@ const LogIn = () => {
     const toggleCheckbox = () => {
         setIsChecked(!isChecked);
     };
-
     const toggleSecureTextEntry = () => {
         setSecureTextEntry(!secureTextEntry);
     };
