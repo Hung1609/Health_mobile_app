@@ -42,11 +42,11 @@ const Favourite = () => {
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView className="flex-1">
+            <SafeAreaView className="flex-1 bg-white">
                 <View className="w-full h-full flex-1 px-5">
                     <View className="flex-row items-center justify-between mt-10">
                         <View>
-                            <Text className="font-bold text-2xl">Favourites</Text>
+                            <Text className="font-bold text-3xl">Favourites</Text>
                         </View>
 
                         <View className="flex-row space-x-1">
@@ -70,27 +70,27 @@ const Favourite = () => {
                         {/* Filter */}
                         <Pressable
                             onPress={() => setFilter('all')}
-                            className={items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'all' ? 'bg-blue-500' : 'bg-white'}}
+                            className={`items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'all' ? 'bg-blue-500' : 'bg-white'}`}
                         >
-                            <Text className={text-center ${filter === "all" ? "text-white" : "text-black"}}>All</Text>
+                            <Text className={`text-center ${filter === "all" ? "text-white" : "text-black"}`}>All</Text>
                         </Pressable>
 
                         <Pressable
                             onPress={() => setFilter('video')}
-                            className={items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'video' ? 'bg-blue-500' : 'bg-white'}}
+                            className={`items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'video' ? 'bg-blue-500' : 'bg-white'}`}
                         >
-                            <Text className={text-center ${filter === "video" ? "text-white" : "text-black"}}>Video</Text>
+                            <Text className={`text-center ${filter === "video" ? "text-white" : "text-black"}`}>Video</Text>
                         </Pressable>
 
                         <Pressable
                             onPress={() => setFilter('articles')}
-                            className={items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'articles' ? 'bg-blue-500' : 'bg-white'}}
+                            className={`items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'articles' ? 'bg-blue-500' : 'bg-white'}`}
                         >
-                            <Text className={text-center ${filter === "articles" ? "text-white" : "text-black"}}>Articles</Text>
+                            <Text className={`text-center ${filter === "articles" ? "text-white" : "text-black"}`}>Articles</Text>
                         </Pressable>
 
                     </View>
-                  </View>
+                 
                 <ScrollView>
                     {/* Filtered Content */}
                     <View className="mt-2">
@@ -151,6 +151,7 @@ const Favourite = () => {
                             ))}
                     </View>
                 </ScrollView>
+                </View>
             </SafeAreaView>
         </SafeAreaProvider>
     );

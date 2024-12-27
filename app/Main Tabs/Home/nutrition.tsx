@@ -161,11 +161,11 @@ const Nutrition = () => {
                       key={item.id}
                       activeOpacity={0.7}
                       onPress={() => router.push({ pathname: '/Main Tabs/Home/nutrition-details', params: { item: JSON.stringify(item) } })}
-                      className="rounded-xl overflow-hidden w-48 border-2 border-blue-500"
+                      className="rounded-3xl overflow-hidden w-48 border-2 border-blue-500"
                     >
-                      <Image source={{ uri: item.image }} className="w-full h-32" />
+                      <Image source={{ uri: item.image }} className="w-full h-32 rounded-b-3xl" />
                       <View className="p-2">
-                        <Text className="text-yellow-500 font-bold">{item.title}</Text>
+                        <Text className="text-black font-bold">{item.title}</Text>
                         <View className="flex-row justify-between mt-2">
                           <View className="flex-row items-center gap-1">
                             <Icon name="time-outline" />
@@ -184,7 +184,7 @@ const Nutrition = () => {
             </View>
 
             {/* Recipes Section */}
-            <View className="px-4 my-6">
+            <View className="px-4 mt-6 mb-4">
               <Text className="text-yellow-500 text-lg font-bold mb-4">Recipes For You</Text>
               <View className="gap-3">
                 {recipesData[selectedMeal].map((item) => (
@@ -192,11 +192,11 @@ const Nutrition = () => {
                     key={item.id}
                     activeOpacity={0.8}
                     onPress={() => router.push({ pathname: '/Main Tabs/Home/nutrition-details', params: { item: JSON.stringify(item) } })}
-                    className="bg-white rounded-xl flex-row overflow-hidden border-blue-500 border-2"
+                    className="bg-white rounded-3xl flex-row overflow-hidden border-blue-500 border-2"
                   >
-                    <Image source={{ uri: item.image }} className="w-2/5 h-full" />
-                    <View className="flex-1 p-4 justify-center">
-                      <Text className="text-yellow-500 font-bold">{item.title}</Text>
+                    <Image source={{ uri: item.image }} className="w-2/5 h-full rounded-r-3xl" />
+                    <View className="flex-1 p-6 justify-center">
+                      <Text className="text-black font-bold">{item.title}</Text>
                       <View className="flex-row justify-between mt-2">
                         <View className="flex-row items-center gap-1">
                           <Icon name="time-outline" />

@@ -33,12 +33,12 @@ const Progress = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className='flex-1'>
+      <SafeAreaView className='flex-1 bg-white'>
         <ScrollView>
-          <View className="mt-3">
-            <View className="bg-blue-500 p-4 items-center m-2 border-2 border-white rounded-3xl">
+          <View>
+            <View className="bg-blue-500 p-4 items-center m-4 border-2 border-white rounded-3xl">
               {/* User Info */}
-              <Text className="text-white text-xl font-bold ">Madison Smith</Text>
+              <Text className="text-white text-xl font-bold">Madison Smith</Text>
 
               {/* Stats Section */}
               <View className="flex-row justify-around w-full border-2 border-white rounded-xl py-3 mt-4">
@@ -57,7 +57,7 @@ const Progress = () => {
               </View>
             </View>
             <View>
-              <View className="border-blue-500 border-2 rounded-md m-2">
+              <View className="border-blue-500 border-2 rounded-md m-4">
                 <Calendar
                   onDayPress={onDayPress}
                   markedDates={{
@@ -80,27 +80,31 @@ const Progress = () => {
                     monthTextColor: "#007BFF",
                     indicatorColor: "#007BFF",
                   }}
-                /></View>
-              <Text className="m-5 text-lg font-bold text-darkBlue">Activities</Text>
-              {filteredActivities.length > 0 ? (
-                filteredActivities.map((item) => (
-                  <View
-                    className="mx-2"
-                    key={item.id}>
-                    <View className="flex-row items-center border-blue-500 border-2 bg-white my-2 rounded-lg p-3">
-                      <View className="bg-blue-500 rounded-full h-10 w-10 justify-center items-center">
-                        <Icon name="checkmark-done" size={20} color="white" />
-                      </View>
-                      <View className="ml-3 flex-1">
-                        <Text className="text-black font-bold">{item.title}</Text>
-                        <Text className="text-gray-500 text-sm">Calories Burned: {item.calories} kcal</Text>
+                />
+              </View>
+              
+              <View className="mb-2">
+                <Text className="mx-4 mt-3 mb-2 text-xl font-bold text-yellow-500">Activities</Text>
+                {filteredActivities.length > 0 ? (
+                  filteredActivities.map((item) => (
+                    <View
+                      className="mx-4"
+                      key={item.id}>
+                      <View className="flex-row items-center border-blue-500 border-2 bg-white my-2 rounded-lg p-3">
+                        <View className="bg-blue-500 rounded-full h-10 w-10 justify-center items-center">
+                          <Icon name="checkmark-done" size={20} color="white" />
+                        </View>
+                        <View className="ml-3 flex-1">
+                          <Text className="text-black font-bold">{item.title}</Text>
+                          <Text className="text-gray-500 text-sm">Calories Burned: {item.calories} kcal</Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                ))
-              ) : (
-                <Text className="mx-2 text-gray-500 text-center">No activities for this date.</Text>
-              )}
+                  ))
+                ) : (
+                  <Text className="mx-2 mb-2 text-gray-500 text-center">No activities for this date.</Text>
+                )}
+              </View>
             </View>
           </View>
         </ScrollView>
