@@ -17,7 +17,6 @@ const CustomTopTabBar = ({ state, descriptors, navigation }: any) => {
   return (
     <View className="w-full px-5 bg-white">
       <View className='flex-row items-center justify-between mt-14'>
-
         <View>
           <Text className='font-bold text-2xl'>Welcome, username</Text>
           <Text className='text-blue-500 text-lg font-semibold'>It's time to change your lifestyle</Text>
