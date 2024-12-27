@@ -1,0 +1,14 @@
+langchain
+langchain_community
+langchain-google-genai
+rank-bm25
+uvicorn
+sentence-transformers
+torch
+scikit-learn
+pymongo 
+fastapi
+mangum 
+pydantic 
+python-dotenv 
+transformers
