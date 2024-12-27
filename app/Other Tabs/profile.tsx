@@ -12,7 +12,6 @@ const Notification = () => {
     return (
         <SafeAreaProvider>
             <SafeAreaView className='flex-1'>
-
                 {/* Header Section */}
                 <View className="bg-blue-600 p-4 items-center m-2 border-2 border-white rounded-3xl">
                     <Pressable

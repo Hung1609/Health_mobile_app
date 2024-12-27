@@ -34,7 +34,7 @@ const Level = () => {
                 style={tw`${selectedLevel === level ? 'bg-blue-500 border-2 border-black' : 'bg-white border-2 border-black'}`}
               >
                 <Text 
-                  className={`font-bold text-xl ${selectedLevel === level ? 'text-white' : 'text-orange-500'}`}
+                  className={`font-bold text-xl ${selectedLevel === level ? 'text-white' : 'text-yellow-500'}`}
                 >
                   {level}</Text>
               </TouchableOpacity>

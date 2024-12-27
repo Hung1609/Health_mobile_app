@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Pressable, Alert, Image } from "react-native";
+import { StyleSheet, Text, View, Pressable, Alert, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import { ScrollView } from "react-native";

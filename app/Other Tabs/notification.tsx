@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, Pressable, ScrollView } from "react-native";
+import { Text, View, Pressable, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from '@react-navigation/native';
@@ -73,40 +73,33 @@ const Notification = () => {
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView className="flex-1 px-4">
+            <SafeAreaView className="flex-1 px-4 bg-white">
                 <View className="flex-row mt-5">
-                    <Pressable
+                    <TouchableOpacity
                         className="flex-row items-center"
-                        onPress={() => navigation.goBack()}>
+                        onPress={() => navigation.goBack()}
+                        activeOpacity={0.7}
+                    >
                         <Icon name="arrow-back" size={20} color="black" />
-                        <Text
-                            className=" font-bold text-xl mx-2">Notifications</Text>
-                    </Pressable>
+                        <Text className="font-bold text-xl mx-2">Notifications</Text>
+                    </TouchableOpacity>
                 </View>
 
                 {/* Tab Navigation */}
                 <View className="flex-row justify-between items-center mt-5 p-1">
                     <Pressable
                         onPress={() => setTab("reminders")}
-                        className={`flex-1 items-center py-2 rounded-full ${tab === "reminders" ? 'bg-blue-500' : 'bg-white'
-                            } items-center border border-blue-500 py-3 rounded-full mx-2`}
+                        className={`flex-1 items-center py-2 rounded-full ${tab === "reminders" ? 'bg-blue-500' : 'bg-white'} items-center border border-blue-500 py-3 rounded-full mx-2`}
                     >
-                        <Text
-                            className={`${tab === "reminders" ? "text-white" : "text-black"
-                                } font-bold`}
-                        >
+                        <Text className={`${tab === "reminders" ? "text-white" : "text-black"} font-bold`}>
                             Reminders
                         </Text>
                     </Pressable>
                     <Pressable
                         onPress={() => setTab("system")}
-                        className={`flex-1 items-center py-2 rounded-full ${tab === "system" ? 'bg-blue-500' : 'bg-white'
-                            } items-center border border-blue-500 py-3 rounded-full mx-2`}
+                        className={`flex-1 items-center py-2 rounded-full ${tab === "system" ? 'bg-blue-500' : 'bg-white'} items-center border border-blue-500 py-3 rounded-full mx-2`}
                     >
-                        <Text
-                            className={`${tab === "system" ? "text-white" : "text-black"
-                                } font-bold`}
-                        >
+                        <Text className={`${tab === "system" ? "text-white" : "text-black"} font-bold`}>
                             System
                         </Text>
                     </Pressable>
@@ -116,8 +109,7 @@ const Notification = () => {
                     {/* Render Notifications */}
                     {(tab === "reminders" ? reminders : system).map((item, index, array) => {
                         // Display the day only once for each group
-                        const showDay =
-                            index === 0 || array[index - 1].day !== item.day;
+                        const showDay = index === 0 || array[index - 1].day !== item.day;
 
                         return (
                             <View key={item.id}>

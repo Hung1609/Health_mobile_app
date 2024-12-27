@@ -70,30 +70,30 @@ const Favourite = () => {
                         {/* Filter */}
                         <Pressable
                             onPress={() => setFilter('all')}
-                            className={`items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'all' ? 'bg-blue-500' : 'bg-white'}`}
+                            className={items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'all' ? 'bg-blue-500' : 'bg-white'}}
                         >
-                            <Text className={`text-center ${filter === "all" ? "text-white" : "text-black"}`}>All</Text>
+                            <Text className={text-center ${filter === "all" ? "text-white" : "text-black"}}>All</Text>
                         </Pressable>
 
                         <Pressable
                             onPress={() => setFilter('video')}
-                            className={`items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'video' ? 'bg-blue-500' : 'bg-white'}`}
+                            className={items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'video' ? 'bg-blue-500' : 'bg-white'}}
                         >
-                            <Text className={`text-center ${filter === "video" ? "text-white" : "text-black"}`}>Video</Text>
+                            <Text className={text-center ${filter === "video" ? "text-white" : "text-black"}}>Video</Text>
                         </Pressable>
 
                         <Pressable
                             onPress={() => setFilter('articles')}
-                            className={`items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'articles' ? 'bg-blue-500' : 'bg-white'}`}
+                            className={items-center w-1/5 border border-blue-500 py-2 rounded-full mx-2 ${filter === 'articles' ? 'bg-blue-500' : 'bg-white'}}
                         >
-                            <Text className={`text-center ${filter === "articles" ? "text-white" : "text-black"}`}>Articles</Text>
+                            <Text className={text-center ${filter === "articles" ? "text-white" : "text-black"}}>Articles</Text>
                         </Pressable>
 
                     </View>
-                </View>
+                  </View>
                 <ScrollView>
                     {/* Filtered Content */}
-                    <View className="mt-6">
+                    <View className="mt-2">
                         {/* Display videos if filter is "all" or "video" */}
                         {(filter === "all" || filter === "video") &&
                             videoData.map((video) => (
@@ -145,7 +145,7 @@ const Favourite = () => {
                                             <Pressable className="absolute top-1 right-1">
                                                 <Icon name="star" size={24} color="#FFC107" />
                                             </Pressable>
-                                        </View>
+                                          </View>
                                     </View>
                                 </View>
                             ))}
