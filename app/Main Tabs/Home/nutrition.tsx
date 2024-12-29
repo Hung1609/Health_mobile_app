@@ -1,128 +1,152 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/Octicons';
 import { router } from 'expo-router';
+import { useFavorites, FavoriteItem } from './FavoritesContext';
 
 type MealType = 'Breakfast' | 'Lunch' | 'Dinner'; // Define valid meal types
 
 const Nutrition = () => {
   const [selectedMeal, setSelectedMeal] = useState<MealType>('Breakfast'); // Type the state
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
+  
+  const handleFavorite = (item: FavoriteItem) => {
+    const isFavorite = favorites.some((fav) => fav.id === item.id);
+    
+    if (isFavorite) {
+      removeFavorite(item.id);
+      alert(`${item.title} has been removed from your favorites.`);
+    } else {
+      addFavorite(item);
+      alert(`${item.title} has been added to your favorites.`);
+    }
+  };
+
+  const isFavorite = (id: number) => {
+    return favorites.some((fav) => fav.id === id);
+  };
 
   // Define the structure of data
-  const recommendedData: Record<MealType, { id: number; title: string; image: string; time: string; calories: string }[]> = {
+  const recommendedData: Record<MealType, { id: number; title: string; image: string; time: string; calories: string, type: string }[]> = {
     Breakfast: [
       {
-        id: 1,
-        title: 'Fruit Smoothie',
-        image: 'https://via.placeholder.com/200x120',
-        time: '12 Minutes',
-        calories: '120 Cal',
-      },
-      {
-        id: 2,
+        id: 15,
         title: 'Green Celery Juice',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
         calories: '120 Cal',
+        type: 'nutrition',
       },
       {
-        id: 3,
+        id: 16,
         title: 'Bread',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
         calories: '120 Cal',
+        type: 'nutrition',
       },
     ],
     Lunch: [
       {
-        id: 1,
+        id: 17,
         title: 'Chicken Salad',
         image: 'https://via.placeholder.com/200x120',
         time: '20 Minutes',
         calories: '250 Cal',
+        type: 'nutrition',
       },
       {
-        id: 2,
+        id: 18,
         title: 'Quinoa Bowl',
         image: 'https://via.placeholder.com/200x120',
         time: '25 Minutes',
         calories: '300 Cal',
+        type: 'nutrition',
       },
     ],
     Dinner: [
       {
-        id: 1,
+        id: 19,
         title: 'Steak and Vegetables',
         image: 'https://via.placeholder.com/200x120',
         time: '30 Minutes',
         calories: '400 Cal',
+        type: 'nutrition',
       },
       {
-        id: 2,
+        id: 20,
         title: 'Salmon with Rice',
         image: 'https://via.placeholder.com/200x120',
         time: '35 Minutes',
         calories: '350 Cal',
+        type: 'nutrition',
       },
     ],
   };
 
-  const recipesData: Record<MealType, { id: number; title: string; image: string; time: string; calories: string }[]> = {
+  const recipesData: Record<MealType, { id: number; title: string; image: string; time: string; calories: string, type: string }[]> = {
     Breakfast: [
       {
-        id: 1,
+        id: 21,
         title: 'Greek Yogurt',
         image: 'https://via.placeholder.com/100x100',
         time: '6 Minutes',
         calories: '200 Cal',
+        type: 'nutrition',
       },
       {
-        id: 2,
+        id: 22,
         title: 'Avocado And Egg Toast',
         image: 'https://via.placeholder.com/100x100',
         time: '15 Minutes',
         calories: '150 Cal',
+        type: 'nutrition',
       },
       {
-        id: 3,
+        id: 23,
         title: 'Avocado And Egg Toast',
         image: 'https://via.placeholder.com/100x100',
         time: '15 Minutes',
         calories: '150 Cal',
+        type: 'nutrition',
       },
     ],
     Lunch: [
       {
-        id: 1,
+        id: 24,
         title: 'Turkey Wrap',
         image: 'https://via.placeholder.com/100x100',
         time: '10 Minutes',
         calories: '220 Cal',
+        type: 'nutrition',
       },
       {
-        id: 2,
+        id: 25,
         title: 'Pasta Primavera',
         image: 'https://via.placeholder.com/100x100',
         time: '25 Minutes',
         calories: '350 Cal',
+        type: 'nutrition',
       },
     ],
     Dinner: [
       {
-        id: 1,
+        id: 26,
         title: 'Chicken Stir Fry',
         image: 'https://via.placeholder.com/100x100',
         time: '20 Minutes',
         calories: '300 Cal',
+        type: 'nutrition',
       },
       {
-        id: 2,
+        id: 27,
         title: 'Vegetarian Curry',
         image: 'https://via.placeholder.com/100x100',
         time: '40 Minutes',
         calories: '250 Cal',
+        type: 'nutrition',
       },
     ],
   };
@@ -163,7 +187,21 @@ const Nutrition = () => {
                       onPress={() => router.push({ pathname: '/Main Tabs/Home/nutrition-details', params: { item: JSON.stringify(item) } })}
                       className="rounded-3xl overflow-hidden w-48 border-2 border-blue-500"
                     >
-                      <Image source={{ uri: item.image }} className="w-full h-32 rounded-b-3xl" />
+                      <View className="relative">
+                        <Image source={{ uri: item.image }} className="w-full h-32 rounded-b-3xl" />
+                        <TouchableOpacity 
+                          activeOpacity={0.7}
+                          onPress={() => handleFavorite(item)}
+                          className="absolute top-2 right-2"
+                        >
+                          <Icon
+                            name="star"
+                            size={20}
+                            color={isFavorite(item.id) ? 'gold' : 'white'} // Gold if item is in favorites
+                          />
+                        </TouchableOpacity>
+                      </View>
+                      
                       <View className="p-2">
                         <Text className="text-black font-bold">{item.title}</Text>
                         <View className="flex-row justify-between mt-2">
@@ -171,7 +209,7 @@ const Nutrition = () => {
                             <Icon name="time-outline" />
                             <Text className="text-gray-500 text-sm">{item.time}</Text>
                           </View>
-                          <View className='flex-row items-center gap-1'>
+                          <View className="flex-row items-center gap-1">
                             <Icon2 name="flame" />
                             <Text className="text-gray-500 text-sm">{item.calories}</Text>
                           </View>
@@ -190,11 +228,28 @@ const Nutrition = () => {
                 {recipesData[selectedMeal].map((item) => (
                   <TouchableOpacity
                     key={item.id}
-                    activeOpacity={0.8}
+                    activeOpacity={0.7}
                     onPress={() => router.push({ pathname: '/Main Tabs/Home/nutrition-details', params: { item: JSON.stringify(item) } })}
                     className="bg-white rounded-3xl flex-row overflow-hidden border-blue-500 border-2"
                   >
-                    <Image source={{ uri: item.image }} className="w-2/5 h-full rounded-r-3xl" />
+                    <View className="relative h-32 w-2/5">
+                      <Image 
+                        source={{ uri: item.image }} 
+                        className="w-full h-full rounded-r-3xl" 
+                      />
+                      <TouchableOpacity 
+                        activeOpacity={0.7}
+                        onPress={() => handleFavorite(item)}
+                        className="absolute top-2 right-2"
+                      >
+                        <Icon
+                            name="star"
+                            size={20}
+                            color={isFavorite(item.id) ? 'gold' : 'white'} // Gold if item is in favorites
+                          />
+                      </TouchableOpacity>
+                    </View>
+                    
                     <View className="flex-1 p-6 justify-center">
                       <Text className="text-black font-bold">{item.title}</Text>
                       <View className="flex-row justify-between mt-2">
