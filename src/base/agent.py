@@ -3,13 +3,16 @@ from langchain.agents import AgentExecutor, create_openai_functions_agent  # T�
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder  # Xử lý prompt
 from pymongo import MongoClient  # Kết nối MongoDB
 from langchain.retrievers import EnsembleRetriever  # Kết hợp nhiều retriever
-from langchain_community.retrievers import BM25Retriever  # Retriever dựa trên BM25
+from langchain_community.retrievers import BM25Retriever  # Keyword-based search dựa trên BM25
+from langchain.schema import BaseRetriever # xây dựng custom retriever dựa trên BaseRetriever
 from langchain_core.documents import Document  # Lớp Document
-from transformers import AutoTokenizer, AutoModel
-import torch
-from sklearn.metrics.pairwise import cosine_similarity
-from dotenv import load_dotenv
-import os
+from transformers import AutoTokenizer, AutoModel # load PhoBERT
+import torch # for vector embeddings
+from pydantic import Field # stored attributes on classes that aren't meant to be user-facing fields
+from typing import Callable
+from sklearn.metrics.pairwise import cosine_similarity # compare vector embeddings
+from dotenv import load_dotenv # loads env variables from .env
+import os # handle env variable lookups
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 # Tải biến môi trường
@@ -21,22 +24,30 @@ if not GOOGLE_API_KEY:
 
 MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://phanlachung2004:aggin2004@exercise.5do4n.mongodb.net/")
 MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "Health_database")
+
+COLLECTION_NAMES = ["exercises","diets","nutritions"]
 CHAT_HISTORY_COLLECTION = "chat_history"
-COLLECTION_NAME = os.getenv("MONGO_COLLECTION_NAME", "exercises")
 
 # Kết nối MongoDB
 client = MongoClient(MONGO_URI)
 db = client[MONGO_DB_NAME]
-collection = db[COLLECTION_NAME]
 
 # Load PhoBERT model and tokenizer
-tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base-v2")
-model = AutoModel.from_pretrained("vinai/phobert-base-v2")
+tokenizer = None
+model = None
+
+def load_phobert():
+    """Load PhoBERT model/tokenizer only once."""
+    global tokenizer, model
+    if tokenizer is None or model is None:
+        tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base-v2")
+        model = AutoModel.from_pretrained("vinai/phobert-base-v2")
 
 def encode_text(text):
     """
     Encode text into embeddings using PhoBERT.
     """
+    load_phobert()
     inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=256)
     with torch.no_grad():
         outputs = model(**inputs)
@@ -45,12 +56,6 @@ def encode_text(text):
 def vector_search_with_phobert(query: str, documents: list, k: int = 4):
     """
     Perform vector search using PhoBERT embeddings and cosine similarity.
-    Args:
-        query (str): The query string.
-        documents (list): A list of Document objects.
-        k (int): Number of top results to return.
-    Returns:
-        list: Top k relevant documents.
     """
     query_vec = encode_text(query)
     doc_embeddings = [encode_text(doc.page_content) for doc in documents]
@@ -58,14 +63,9 @@ def vector_search_with_phobert(query: str, documents: list, k: int = 4):
     top_k_indices = sorted(range(len(similarities)), key=lambda i: similarities[i], reverse=True)[:k]
     return [documents[i] for i in top_k_indices]
 
-def rerank_documents(query: str, documents: list):
+def rerank_documents(query: str, documents: list): 
     """
     Re-rank the retrieved documents based on relevance using a scoring mechanism.
-    Args:
-        query (str): The query string.
-        documents (list): A list of Document objects to be re-ranked.
-    Returns:
-        list: Re-ranked documents sorted by relevance.
     """
     query_vec = encode_text(query)
     doc_embeddings = [encode_text(doc.page_content) for doc in documents]
@@ -73,43 +73,52 @@ def rerank_documents(query: str, documents: list):
     reranked_docs = sorted(zip(documents, scores), key=lambda x: x[1], reverse=True)
     return [doc for doc, _ in reranked_docs]
 
-def get_retriever(llm, question: str, collection_name: str = COLLECTION_NAME) -> EnsembleRetriever:
+# merge vector search and BM25 from MongoDB
+def get_retriever(llm, question: str) -> EnsembleRetriever:
     """
     Tạo một ensemble retriever kết hợp vector search và BM25 từ MongoDB
-    Args:
-        llm: Mô hình ngôn ngữ lớn để xử lý HyDE và Multi-Query.
-        question (str): Câu hỏi gốc từ người dùng.
-        collection_name (str): Tên collection trong MongoDB để truy vấn.
+    với nhiều documents
     """
     try:
-        print(f"Connecting to MongoDB collection: {collection_name}...")
+        print(f"Connecting to MongoDB collections: {COLLECTION_NAMES}...")
         documents = []
-        for doc in collection.find():
-            content = doc.get("content", "")
-            metadata = doc.get("metadata", {})
-            documents.append(Document(
-                page_content=content,
-                metadata=metadata
-            ))
+        # loop each collection
+        for col_name in COLLECTION_NAMES:
+            collection = db[col_name]
+            for doc in collection.find():
+                content = doc.get("name", "")
+                if not content.strip():
+                    continue
+                documents.append(Document(
+                    page_content=content
+                ))
 
-        print(f"Retrieved {len(documents)} documents.")
+        print(f"Retrieved {len(documents)} documents(combined from {COLLECTION_NAMES}).")
+        print("Sample of retrieved documents:")
+        for doc in documents[:5]:
+            print(f"- {doc.page_content}")
 
         if not documents:
-            raise ValueError("No documents found in collection!")
+            raise ValueError("No valid (non-empty) documents found!")
 
         # Tạo BM25 retriever
         bm25_retriever = BM25Retriever.from_documents(documents)
         bm25_retriever.k = 4
 
-        # Tạo vector retriever
+        # Tạo vector search
         def phobert_vector_search(query: str, k: int = 4):
             return vector_search_with_phobert(query, documents, k)
 
-        class PhoBERTVectorRetriever:
-            def __init__(self, search_fn):
-                self.search_fn = search_fn
+        class PhoBERTVectorRetriever(BaseRetriever):
+            search_fn: Callable = Field(..., exclude=True)
+
+            def __init__(self, search_fn: Callable):
+                super().__init__(search_fn=search_fn)
 
             def get_relevant_documents(self, query: str):
+                return self.search_fn(query)
+            
+            async def aget_relevant_documents(self, query: str):
                 return self.search_fn(query)
 
         phobert_retriever = PhoBERTVectorRetriever(phobert_vector_search)
@@ -117,7 +126,7 @@ def get_retriever(llm, question: str, collection_name: str = COLLECTION_NAME) ->
         # Kết hợp BM25 và vector retriever
         ensemble_retriever = EnsembleRetriever(
             retrievers=[bm25_retriever, phobert_retriever],
-            weights=[0.5, 0.5]
+            weights=[0.7, 0.3]
         )
 
         print("EnsembleRetriever created successfully!")
@@ -136,8 +145,6 @@ def get_retriever(llm, question: str, collection_name: str = COLLECTION_NAME) ->
 def get_llm_and_agent(_retriever) -> AgentExecutor:
     """
     Khởi tạo Language Model và Agent với cấu hình cụ thể
-    Args:
-        _retriever: Retriever đã được cấu hình để tìm kiếm thông tin
     """
     try:
         print("Initializing ChatGoogleGenerativeAI...")
@@ -163,13 +170,30 @@ def get_llm_and_agent(_retriever) -> AgentExecutor:
         # Tạo và trả về agent
         agent = create_openai_functions_agent(llm=llm, tools=tools, prompt=prompt)
         print("Agent created successfully!")
-        return AgentExecutor(agent=agent, tools=tools, verbose=True)
+        return AgentExecutor(agent=agent, tools=tools, verbose=True, output_key="output")
 
     except Exception as e:
         print(f"Error in get_llm_and_agent: {str(e)}")
         raise
 
-
-
-
-
+def ask_question(agent, question: str, chat_history=None):
+    """
+    Ask a question to the chatbot agent and get the response.
+    Args:
+        agent: The initialized AgentExecutor instance.
+        question (str): The user's question.
+    Returns:
+        str: The agent's response.
+    """
+    if chat_history is None:
+        chat_history = []
+    response = agent.invoke({"input": question, "chat_history": chat_history})
+    
+    # Log thông tin từ retriever
+    print("Documents retrieved for the question:")
+    if "retrieved_documents" in response:
+        for doc in response["retrieved_documents"]:
+            print(f"- {doc.page_content}")
+    else:
+        print("No retrieved documents were used in this response.")
+    return response["output"]
