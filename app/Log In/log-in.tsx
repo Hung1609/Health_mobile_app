@@ -28,6 +28,10 @@ const LogIn = () => {
         setSecureTextEntry(!secureTextEntry);
     };
 
+    const handlePass = () => {
+        router.push("/Main Tabs/Tabs/home");
+    };
+
     const handleLogin = async () => {
         try {
             const response = await fetch("http://127.0.0.1:8000/login", {

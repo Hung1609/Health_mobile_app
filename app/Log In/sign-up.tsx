@@ -81,8 +81,8 @@ const SignUp = () => {
                             </Text>
                             <TextInput
                                 placeholder="Enter your full name"
-                                value={fullName}
-                                onChangeText={setFullName}
+                                value={username}
+                                onChangeText={setUsername}
                                 className="bg-white py-5 px-3 rounded-lg border"
                                 keyboardType="default"
                                 autoCapitalize="words"
