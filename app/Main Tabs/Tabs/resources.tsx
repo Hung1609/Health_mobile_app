@@ -46,10 +46,10 @@ const Resource = () => {
     return (
         <SafeAreaProvider>
             <SafeAreaView className="flex-1 bg-white">
-                <View className="w-full h-full flex-1 px-5">
+                <View className="w-full h-full flex-1 px-4">
                     <View className="flex-row items-center justify-between mt-10">
                         <View>
-                            <Text className="font-bold text-3lxl">Resources</Text>
+                            <Text className="font-bold text-3xl">Resources</Text>
                         </View>
 
                         <View className="flex-row space-x-1">

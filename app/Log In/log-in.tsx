@@ -31,6 +31,7 @@ const LogIn = () => {
     };
 
     const handleLogin = async () => {
+        router.push("/Main Tabs/Tabs/home");
         try {
             const response = await axios.post("http://127.0.0.1:8000/login", {
                 email: email,
@@ -38,7 +39,7 @@ const LogIn = () => {
             });
             console.log(response.data);
             // Navigate to the home screen
-            router.push("/Main Tabs/home");
+            router.push("/Main Tabs/Tabs/home");
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
                 // Handle Axios-specific errors

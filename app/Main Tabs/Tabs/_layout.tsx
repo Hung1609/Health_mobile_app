@@ -39,7 +39,7 @@ const TabLayout = () => {
             <Tabs.Screen
                 name="favourite"
                 options={{
-                    title: 'Favourites',
+                    title: 'Favorites',
                     headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <Icon className="justify-center align-middle" name={"star"} size={20} color={color} />

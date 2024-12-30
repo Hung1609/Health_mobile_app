@@ -109,7 +109,7 @@ const Chat = () => {
         >
           <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
             <View className="w-full h-full bg-white flex-1">
-              <View className="flex-row justify-between items-center px-5 mt-10">
+              <View className="flex-row justify-between items-center px-4 mt-10">
                 <Text className="font-bold text-3xl">Health Bot</Text>
                 <View className="flex-row">
                   <TouchableOpacity
