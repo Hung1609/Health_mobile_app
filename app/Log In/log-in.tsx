@@ -11,6 +11,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/Ionicons";
 import axios from "axios";
+import { Alert } from "react-native";
 
 const LogIn = () => {
     const router = useRouter();
@@ -22,37 +23,40 @@ const LogIn = () => {
     const toggleCheckbox = () => {
         setIsChecked(!isChecked);
     };
+
     const toggleSecureTextEntry = () => {
         setSecureTextEntry(!secureTextEntry);
     };
 
-    const handlePass = () => {
-        router.push("/Main Tabs/home");
-    };
-
     const handleLogin = async () => {
-        router.push("/Main Tabs/Tabs/home");
         try {
-            const response = await axios.post("http://127.0.0.1:8000/login", {
-                email: email,
-                password: password,
+            const response = await fetch("http://127.0.0.1:8000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email, // Suppose you call it `emailOrUsername`
+                    password: password, // from the TextInput
+                }),
             });
-            console.log(response.data);
-            // Navigate to the home screen
-            router.push("/Main Tabs/Tabs/home");
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                // Handle Axios-specific errors
-                console.error(
-                    error.response?.data?.error || "Something went wrong"
-                );
-            } else {
-                // Handle non-Axios errors
-                console.error("An unexpected error occurred");
+
+            const data = await response.json();
+            if (!response.ok) {
+                // Error from backend
+                Alert.alert("Login Error", data.detail || "Unknown error");
+                return;
             }
+
+            // If successful
+            Alert.alert("Success", data.message);
+            // Move to next screen
+            router.push("/Main Tabs/Tabs/home");
+        } catch (error) {
+            console.error(error);
+            Alert.alert("Network Error", "Unable to connect to server");
         }
     };
-
 
     return (
         <SafeAreaProvider>
@@ -145,7 +149,7 @@ const LogIn = () => {
                             </View>
 
                             <TouchableOpacity
-                                onPress={handlePass}
+                                onPress={handleLogin}
                                 className="bg-blue-500 py-3 rounded-lg mt-5"
                                 activeOpacity={0.7}
                             >
