@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from 'react-native-vector-icons/Octicons';
 import { router } from "expo-router";
 import { useFavorites, FavoriteItem } from '../Home/FavoritesContext';
+import Toast from 'react-native-toast-message';
 
 type FavouriteItems = 'All' | 'Workout' | 'Nutrition';
 
@@ -13,36 +14,40 @@ const Favourite = () => {
   const [selectedFavorite, setSelectedFavorite] = useState<FavouriteItems>('All');
 
   // Access query parameters using useLocalSearchParams
-  const { favorites, addFavorite, removeFavorite } = useFavorites();
+  const { favorites, removeFavorite } = useFavorites();
 
   const filteredFavorites = selectedFavorite === 'All'
     ? favorites
     : favorites.filter((item: { type: string }) => item.type.toLowerCase() === selectedFavorite.toLowerCase());
 
   const handleFavorite = (item: FavoriteItem) => {
-      const isFavorite = favorites.some((fav) => fav.id === item.id);
-      
-      if (isFavorite) {
-        removeFavorite(item.id);
-        alert(`${item.title} has been removed from your favorites.`);
-      } else {
-        addFavorite(item);
-        alert(`${item.title} has been added to your favorites.`);
-      }
-    };
+    const isFavorite = favorites.some((fav) => fav.id === item.id);
+    
+    if (isFavorite) {
+      removeFavorite(item.id);
+      Toast.show({
+        type: 'success',
+        text1: 'Removed from Favorites',
+        text2: `${item.title} has been removed.`,
+        position: 'bottom',
+        visibilityTime: 2000,
+        bottomOffset: 80,
+      });
+    }
+  };
   
-    const isFavorite = (id: number) => {
-      return favorites.some((fav) => fav.id === id);
-    };
+  const isFavorite = (id: number) => {
+    return favorites.some((fav) => fav.id === id);
+  };
 
-    const checkFavorite = (item: FavoriteItem) => {
-      if (item.type.toLowerCase() === 'nutrition') {
-        router.push({
-           pathname: '/Main Tabs/Home/nutrition-details', 
-           params: { item: JSON.stringify(item) } 
-        });
-      }
-    };
+  const checkFavorite = (item: FavoriteItem) => {
+    if (item.type.toLowerCase() === 'nutrition') {
+      router.push({
+          pathname: '/Main Tabs/Home/nutrition-details', 
+          params: { item: JSON.stringify(item) } 
+      });
+    }
+  };
 
   return (
     <SafeAreaProvider>
@@ -127,7 +132,7 @@ const Favourite = () => {
                         <Icon
                             name="star"
                             size={20}
-                            color={isFavorite(item.id) ? 'gold' : 'white'} // Gold if item is in favorites
+                            color={isFavorite(item.id) ? '#FFC107' : 'white'} // Gold if item is in favorites
                           />
                       </TouchableOpacity>
                     </View>

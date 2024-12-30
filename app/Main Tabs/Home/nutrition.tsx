@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/Octicons';
 import { router } from 'expo-router';
 import { useFavorites, FavoriteItem } from './FavoritesContext';
+import Toast from 'react-native-toast-message';
 
 type MealType = 'Breakfast' | 'Lunch' | 'Dinner'; // Define valid meal types
 
@@ -17,10 +18,24 @@ const Nutrition = () => {
     
     if (isFavorite) {
       removeFavorite(item.id);
-      alert(`${item.title} has been removed from your favorites.`);
+      Toast.show({
+        type: 'success',
+        text1: 'Removed from Favorites',
+        text2: `${item.title} has been removed.`,
+        position: 'bottom',
+        visibilityTime: 2000,
+        bottomOffset: 80,
+      });
     } else {
       addFavorite(item);
-      alert(`${item.title} has been added to your favorites.`);
+      Toast.show({
+        type: 'success',
+        text1: 'Added to Favorites',
+        text2: `${item.title} has been added.`,
+        position: 'bottom',
+        visibilityTime: 2000,
+        bottomOffset: 80,
+      });
     }
   };
 
@@ -197,7 +212,7 @@ const Nutrition = () => {
                           <Icon
                             name="star"
                             size={20}
-                            color={isFavorite(item.id) ? 'gold' : 'white'} // Gold if item is in favorites
+                            color={isFavorite(item.id) ? '#FFC107' : 'white'} // Gold if item is in favorites
                           />
                         </TouchableOpacity>
                       </View>
@@ -245,7 +260,7 @@ const Nutrition = () => {
                         <Icon
                             name="star"
                             size={20}
-                            color={isFavorite(item.id) ? 'gold' : 'white'} // Gold if item is in favorites
+                            color={isFavorite(item.id) ? '#FFC107' : 'white'} // Gold if item is in favorites
                           />
                       </TouchableOpacity>
                     </View>

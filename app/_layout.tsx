@@ -2,6 +2,7 @@ import { Stack } from "expo-router"
 import "../global.css"
 import { UserProvider } from "./Log In/UserContext"
 import { FavoritesProvider } from "./Main Tabs/Home/FavoritesContext";
+import Toast from 'react-native-toast-message';
 
 const RootLayout = () => {
   return (
@@ -147,6 +148,7 @@ const RootLayout = () => {
           />
         </Stack>
       </FavoritesProvider>
+      <Toast />
     </UserProvider>
   );
 };
