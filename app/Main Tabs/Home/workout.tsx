@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/Octicons';
+import { router } from 'expo-router';
 
 type Exercise = 'Beginner' | 'Intermediate' | 'Advanced'; // Define valid meal types
 
@@ -14,7 +15,7 @@ const Workout = () => {
     Beginner: [
       {
         id: 1,
-        title: 'Fruit Smoothie',
+        title: 'Upper Body',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
         calories: '120 Cal',
@@ -22,7 +23,7 @@ const Workout = () => {
       },
       {
         id: 2,
-        title: 'Green Celery Juice',
+        title: 'Lower Body',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
         calories: '120 Cal',
@@ -30,7 +31,7 @@ const Workout = () => {
       },
       {
         id: 3,
-        title: 'Bread',
+        title: 'Core',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
         calories: '120 Cal',
@@ -40,7 +41,7 @@ const Workout = () => {
     Intermediate: [
       {
         id: 1,
-        title: 'Chicken Salad',
+        title: 'Upper Body',
         image: 'https://via.placeholder.com/200x120',
         time: '20 Minutes',
         calories: '250 Cal',
@@ -48,7 +49,7 @@ const Workout = () => {
       },
       {
         id: 2,
-        title: 'Quinoa Bowl',
+        title: 'Lower Body',
         image: 'https://via.placeholder.com/200x120',
         time: '25 Minutes',
         calories: '300 Cal',
@@ -58,7 +59,7 @@ const Workout = () => {
     Advanced: [
       {
         id: 1,
-        title: 'Steak and Vegetables',
+        title: 'Upper Body',
         image: 'https://via.placeholder.com/200x120',
         time: '30 Minutes',
         calories: '400 Cal',
@@ -66,7 +67,7 @@ const Workout = () => {
       },
       {
         id: 2,
-        title: 'Salmon with Rice',
+        title: 'Lower Body',
         image: 'https://via.placeholder.com/200x120',
         time: '35 Minutes',
         calories: '350 Cal',
@@ -152,9 +153,8 @@ const Workout = () => {
                   key={meal}
                   onPress={() => setSelectedExercise(meal as Exercise)}
                   activeOpacity={0.7}
-                  className={`justify-center items-center py-2 w-28 border rounded-3xl ${
-                    selectedExercise === meal ? 'border-blue-500 bg-blue-500' : 'border-blue-500'
-                  }`}
+                  className={`justify-center items-center py-2 w-28 border rounded-3xl ${selectedExercise === meal ? 'border-blue-500 bg-blue-500' : 'border-blue-500'
+                    }`}
                 >
                   <Text className={selectedExercise === meal ? 'text-white font-semibold' : 'text-black'}>
                     {meal}
@@ -173,6 +173,18 @@ const Workout = () => {
                       key={item.id}
                       activeOpacity={0.7}
                       className="rounded-xl overflow-hidden w-48 border-2 border-blue-500"
+                      onPress={() =>
+                        router.push({
+                          pathname: "/Main Tabs/Home/WorkoutLibrary/exercise",
+                          params: {
+                            title: item.title,
+                            duration: item.time,
+                            calories: item.calories,
+                            exercises: item.exercises,
+                            image: item.image,
+                          },
+                        })
+                      }
                     >
                       <Image source={{ uri: item.image }} className="w-full h-32" />
                       <View className="p-2">
@@ -182,7 +194,7 @@ const Workout = () => {
                             <Icon name="time-outline" />
                             <Text className="text-gray-500 text-sm">{item.time}</Text>
                           </View>
-                          <View className='flex-row items-center gap-1'>
+                          <View className="flex-row items-center gap-1">
                             <Icon2 name="flame" />
                             <Text className="text-gray-500 text-sm">{item.calories}</Text>
                           </View>
@@ -218,6 +230,18 @@ const Workout = () => {
                     key={item.id}
                     activeOpacity={0.8}
                     className="bg-white rounded-xl flex-row overflow-hidden border-blue-500 border-2"
+                    onPress={() =>
+                      router.push({
+                        pathname: "/Main Tabs/Home/WorkoutLibrary/exercise",
+                        params: {
+                          title: item.title,
+                          duration: item.time,
+                          calories: item.calories,
+                          exercises: item.exercises,
+                          image: item.image,
+                        },
+                      })
+                    }
                   >
                     <Image source={{ uri: item.image }} className="w-2/5 h-full" />
                     <View className="flex-1 p-4 justify-center">
@@ -233,9 +257,9 @@ const Workout = () => {
                         </View>
                       </View>
                       <View className="flex-row items-center gap-1 mt-1">
-                          <Icon name="barbell-sharp" />
-                          <Text className="text-gray-500 text-sm">{item.exercises}</Text>
-                        </View>
+                        <Icon name="barbell-sharp" />
+                        <Text className="text-gray-500 text-sm">{item.exercises}</Text>
+                      </View>
                     </View>
                   </TouchableOpacity>
                 ))}

@@ -33,7 +33,7 @@ const Progress = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className='flex-1'>
+      <SafeAreaView className='flex-1 bg-white'>
         <ScrollView>
           <View className="mt-3">
             <View className="bg-blue-500 p-4 items-center m-2 border-2 border-white rounded-3xl">
