@@ -29,9 +29,8 @@ const Favourite = () => {
         type: 'success',
         text1: 'Removed from Favorites',
         text2: `${item.title} has been removed.`,
-        position: 'bottom',
+        position: 'top',
         visibilityTime: 2000,
-        bottomOffset: 80,
       });
     }
   };
@@ -81,15 +80,13 @@ const Favourite = () => {
               </View>
             </View>
 
-            <View className="mt-10 flex-row items-center gap-5 justify-center">
-              <Text className="text-yellow-500">Sort By</Text>
-
+            <View className="mt-10 flex-row items-center gap-3 justify-center">
               {[ 'All', 'Workout', 'Nutrition' ].map((item) => (
                 <TouchableOpacity
                   key={item}
                   onPress={() => setSelectedFavorite(item as FavouriteItems)}
                   activeOpacity={0.7}
-                  className={`justify-center items-center p-2 rounded-3xl w-24 border ${selectedFavorite === item ? 'bg-blue-500 border-blue-500' : 'border-blue-500'}`}
+                  className={`justify-center items-center p-2 rounded-3xl w-28 border ${selectedFavorite === item ? 'bg-blue-500 border-blue-500' : 'border-blue-500'}`}
                 >
                   <Text className={`${selectedFavorite === item ? 'text-white font-semibold' : 'text-black'}`}>
                     {item}
@@ -98,10 +95,10 @@ const Favourite = () => {
               ))}
             </View>
             
-            <ScrollView className="mt-6" contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView className="mt-8" contentContainerStyle={{ flexGrow: 1 }}>
               {filteredFavorites.length === 0 ? (
               <View className="flex-1 justify-center items-center h-full">
-                <Text>No favorites yet!</Text>
+                <Text className="text-xl text-gray-500">No favorites yet!</Text>
               </View>
               ) : (
                 filteredFavorites.map((item: {
@@ -144,14 +141,16 @@ const Favourite = () => {
                           <Text className="text-gray-500 text-sm">{item.time}</Text>
                         </View>
                         <View className='flex-row items-center gap-1'>
-                          <Icon2 name="flame" />
+                          <Icon2 name="flame" color="gray" />
                           <Text className="text-gray-500 text-sm">{item.calories}</Text>
                         </View>
                       </View>
-                      <View className="flex-row items-center gap-1 mt-1">
-                          <Icon name="barbell-sharp" />
+                      {item.type.toLowerCase() === 'workout' && (
+                        <View className="flex-row items-center gap-1 mt-1">
+                          <Icon name="barbell-sharp" color="gray" />
                           <Text className="text-gray-500 text-sm">{item.exercises}</Text>
                         </View>
+                      )}
                     </View>
                   </TouchableOpacity>
                 ))

@@ -22,9 +22,8 @@ const Workout = () => {
         type: 'success',
         text1: 'Removed from Favorites',
         text2: `${item.title} has been removed.`,
-        position: 'bottom',
+        position: 'top',
         visibilityTime: 2000,
-        bottomOffset: 80,
       });
     } else {
       addFavorite(item);
@@ -32,9 +31,8 @@ const Workout = () => {
         type: 'success',
         text1: 'Added to Favorites',
         text2: `${item.title} has been added.`,
-        position: 'bottom',
+        position: 'top',
         visibilityTime: 2000,
-        bottomOffset: 80,
       });
     }
   };
@@ -194,7 +192,7 @@ const Workout = () => {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View className="w-full h-full bg-white">
             {/* Meal Selector Buttons */}
-            <View className="flex-row justify-center gap-3 mt-4">
+            <View className="flex-row justify-center gap-3 mt-2">
               {['Beginner', 'Intermediate', 'Advanced'].map((meal) => (
                 <TouchableOpacity
                   key={meal}
@@ -245,12 +243,12 @@ const Workout = () => {
                             <Text className="text-gray-500 text-sm">{item.time}</Text>
                           </View>
                           <View className='flex-row items-center gap-1'>
-                            <Icon2 name="flame" />
+                            <Icon2 name="flame" color="gray" />
                             <Text className="text-gray-500 text-sm">{item.calories}</Text>
                           </View>
                         </View>
                         <View className="flex-row items-center gap-1 mt-1">
-                          <Icon name="barbell-sharp" />
+                          <Icon name="barbell-sharp" color="gray" />
                           <Text className="text-gray-500 text-sm">{item.exercises}</Text>
                         </View>
                       </View>
@@ -306,12 +304,12 @@ const Workout = () => {
                           <Text className="text-gray-500 text-sm">{item.time}</Text>
                         </View>
                         <View className='flex-row items-center gap-1'>
-                          <Icon2 name="flame" />
+                          <Icon2 name="flame" color="gray" />
                           <Text className="text-gray-500 text-sm">{item.calories}</Text>
                         </View>
                       </View>
                       <View className="flex-row items-center gap-1 mt-1">
-                          <Icon name="barbell-sharp" />
+                          <Icon name="barbell-sharp" color="gray" />
                           <Text className="text-gray-500 text-sm">{item.exercises}</Text>
                         </View>
                     </View>

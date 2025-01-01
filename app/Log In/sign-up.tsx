@@ -23,6 +23,7 @@ const SignUp = () => {
     const [password, setPassword] = useState("");
 
     const handleContinue = async () => {
+        router.push("/Log In/Set Up/gender");
         try {
             const response = await axios.post("http://127.0.0.1:5000/signup", {
                 fullName: fullName,
