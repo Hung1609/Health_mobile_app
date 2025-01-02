@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -36,7 +36,7 @@ const OtpVerify = () => {
                 ref={inputRefs[index]}
                 value={value}
                 onChangeText={(text) => handleChangeText(text, index)}
-                keyboardType='numeric'
+                keyboardType={Platform.OS === 'ios' ? 'numbers-and-punctuation' : 'number-pad'}
                 maxLength={1}
                 className='border rounded-lg text-center text-3xl w-1/5 h-16 font-bold'
               />

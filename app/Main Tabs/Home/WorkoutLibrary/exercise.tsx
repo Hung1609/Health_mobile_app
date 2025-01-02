@@ -3,7 +3,8 @@ import { View, Text, Image, Pressable, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+
 
 const Exercises = () => {
     const route = useRoute();
@@ -53,17 +54,14 @@ const Exercises = () => {
 
                     {/* Workout Rounds */}
                     <View className="mt-5 px-5">
-                        <Text className="text-blue-500 text-lg font-bold mb-3">Round 1</Text>
-                        {renderWorkout("Dumbbell Rows", "00:30", "Repetition 3x")}
-                        {renderWorkout("Russian Twists", "00:15", "Repetition 2x")}
-                        {renderWorkout("Squats", "00:30", "Repetition 3x")}
+                        {renderWorkout("Bench Press", "12", "3 sets x 6 reps")}
+                        {renderWorkout("Overhead Press", "12", "3 sets x 8 reps")}
+                        {renderWorkout("Incline Dumbbell Press", "12", "3 sets x 10 reps")}
+                        {renderWorkout("Dumbbell Lateral Raise", "12", "3 sets x 12 reps")}
+                        {renderWorkout("Dumbbell Chest Flyes", "12", "3 sets x 12 reps")}
+                        {renderWorkout("Barbell Lying Triceps Extension", "12", "3 sets x 15 reps")}
                     </View>
 
-                    <View className="mt-5 px-5">
-                        <Text className="text-blue-500 text-lg font-bold mb-3">Round 2</Text>
-                        {renderWorkout("Tabata Intervals", "00:10", "Repetition 2x")}
-                        {renderWorkout("Bicycle Crunches", "00:20", "Repetition 3x")}
-                    </View>
                 </ScrollView>
             </SafeAreaView>
         </SafeAreaProvider>
@@ -71,9 +69,18 @@ const Exercises = () => {
 };
 
 const renderWorkout = (title: string, time: string, repetitions: string) => (
-    <View
+    <Pressable
         className="flex-row items-center bg-blue-50 rounded-lg p-4 mb-3"
         key={title}
+        onPress={() => router.push({
+            pathname: "/Main Tabs/Home/WorkoutLibrary/create-routine",
+            params: {
+                title,
+                time,
+                repetitions,
+            },
+        })
+        }
     >
         <View className="mr-3">
             <Icon name="play-circle-outline" size={24} color="#3b82f6" />
@@ -81,11 +88,11 @@ const renderWorkout = (title: string, time: string, repetitions: string) => (
         <View className="flex-1">
             <Text className="text-lg font-bold text-gray-800">{title}</Text>
             <Text className="text-sm text-gray-600 mt-1">
-                <Icon name="time-outline" size={14} /> {time}
+                <Icon name="time-outline" size={14} /> {time} Minutes
             </Text>
         </View>
         <Text className="text-sm font-bold text-blue-500">{repetitions}</Text>
-    </View>
+    </Pressable>
 );
 
 export default Exercises;

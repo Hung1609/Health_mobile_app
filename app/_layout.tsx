@@ -147,8 +147,8 @@ const RootLayout = () => {
             }}
           />
         </Stack>
+        <Toast />
       </FavoritesProvider>
-      <Toast />
     </UserProvider>
   );
 };

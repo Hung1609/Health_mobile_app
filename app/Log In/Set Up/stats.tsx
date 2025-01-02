@@ -1,5 +1,6 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
-import React, { useState } from "react";
+
+import { View, Text, TextInput, TouchableOpacity, Platform, Alert } from 'react-native';
+import React, { useState } from 'react';
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -72,7 +73,7 @@ const Weight = () => {
                             <TextInput
                                 placeholder="Enter your height"
                                 className="bg-white py-5 px-3 rounded-lg border flex-1"
-                                keyboardType="numeric"
+                                keyboardType={Platform.OS === 'ios' ? 'numbers-and-punctuation' : 'number-pad'}
                                 autoCapitalize="none"
                                 autoCorrect={false}
                                 value={height}
@@ -93,7 +94,7 @@ const Weight = () => {
                             <TextInput
                                 placeholder="Enter your weight"
                                 className="bg-white py-5 px-3 rounded-lg border flex-1"
-                                keyboardType="numeric"
+                                keyboardType={Platform.OS === 'ios' ? 'numbers-and-punctuation' : 'number-pad'}
                                 autoCapitalize="none"
                                 autoCorrect={false}
                                 value={weight}
