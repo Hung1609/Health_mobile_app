@@ -80,7 +80,7 @@ const Notification = () => {
                         onPress={() => navigation.goBack()}
                         activeOpacity={0.7}
                     >
-                        <Icon name="arrow-back" size={20} color="black" />
+                        <Icon name="caret-back" size={20} color="black" />
                         <Text className="font-bold text-xl mx-2">Notifications</Text>
                     </TouchableOpacity>
                 </View>

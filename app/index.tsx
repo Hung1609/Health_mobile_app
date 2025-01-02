@@ -14,8 +14,7 @@ const OnBoarding = () => {
     NavigationBar.setPositionAsync("absolute");
     NavigationBar.setBackgroundColorAsync("#00000000");
     NavigationBar.setButtonStyleAsync("dark");
-    
-  }, [])
+  }, []);
 
   return (
     <SafeAreaProvider>

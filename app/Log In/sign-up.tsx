@@ -25,6 +25,7 @@ const SignUp = () => {
     const [password, setPassword] = useState("");
 
     const handleContinue = async () => {
+        router.push("/Log In/Set Up/gender");
         try {
             const response = await fetch("http://127.0.0.1:8000/signup", {
                 method: "POST",

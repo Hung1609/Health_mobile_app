@@ -20,6 +20,8 @@ const Resource = () => {
             duration: "12 Minutes",
             calories: "120 Kcal",
             image: "https://via.placeholder.com/150",
+            time: "20",
+            exercises: "3"
         },
         {
             id: 2,
@@ -27,6 +29,8 @@ const Resource = () => {
             duration: "15 Minutes",
             calories: "150 Kcal",
             image: "https://via.placeholder.com/150",
+            time: "20",
+            exercises: "3"
         },
     ];
 
@@ -45,8 +49,8 @@ const Resource = () => {
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView className="flex-1 bg-white">
-                <View className="w-full h-full flex-1 px-4">
+            <SafeAreaView className="flex-1">
+                <View className="w-full h-full flex-1 px-5 bg-white">
                     <View className="flex-row items-center justify-between mt-10">
                         <View>
                             <Text className="font-bold text-3xl">Resources</Text>
@@ -89,60 +93,75 @@ const Resource = () => {
                             </Text>
                         </Pressable>
                     </View>
-                </View>
-                <ScrollView>
-                    {/* Content Section */}
-                    <View className="mt-6">
-                        {filter === "videos" && (
-                            <View className="flex-row p-2">
-                                {videos.map((video) => (
-                                    <View key={video.id} className="w-[48%] bg-gray-100 border-blue-500 border-2 rounded-lg mr-4">
-                                        <Image
-                                            source={{ uri: video.image }}
-                                            className="h-32 w-full rounded-lg"
-                                        />
-                                        <Text className="text-black font-bold mt-2">{video.title}</Text>
-                                        <View className="flex-row items-center justify-between mt-1">
-                                            <Text className="text-gray-600 text-sm">{video.duration}</Text>
-                                            <Text className="text-gray-600 text-sm">{video.calories}</Text>
-                                        </View>
-                                        <Pressable className="absolute bottom-12 right-3">
-                                            <Icon name="play-circle" size={24} color="black" />
-                                        </Pressable>
-                                        <Pressable className="absolute top-3 right-3">
-                                            <Icon name="star" size={24} color="#FFC107" />
-                                        </Pressable>
-                                    </View>
-                                ))}
-                            </View>
-                        )}
 
-                        {filter === "articles" && (
-                            <View>
-                                {articles.map((article) => (
-                                    <View key={article.id} className="flex-row border-2 border-blue-600 bg-white rounded-lg p-1 m-2">
-                                        <View className="flex-1 justify-center mx-3">
-                                            <Text className="text-black font-bold text-lg">{article.title}</Text>
-
-                                            <View className="flex-row items-center mt-2 space-x-2">
-                                                <Text numberOfLines={3}>{article.description}</Text>
+                    <ScrollView>
+                        {/* Content Section */}
+                        <View className="mt-6">
+                            {filter === "videos" && (
+                                <View className="flex-row">
+                                    {videos.map((video) => (
+                                        <Pressable
+                                            key={video.id}
+                                            className="w-[48%] bg-gray-100 border-blue-500 border-2 rounded-lg overflow-hidden mr-4"
+                                            onPress={() =>
+                                                router.push({
+                                                    pathname: "/Main Tabs/Home/WorkoutLibrary/exercise",
+                                                    params: {
+                                                        title: video.title,
+                                                        duration: video.time,
+                                                        calories: video.calories,
+                                                        exercises: video.exercises,
+                                                        image: video.image,
+                                                    },
+                                                })
+                                            }>
+                                            <Image
+                                                source={{ uri: video.image }}
+                                                className="h-32 w-full rounded-b-lg"
+                                            />
+                                            <Text className="text-black font-bold mt-2">{video.title}</Text>
+                                            <View className="flex-row items-center justify-between mt-1">
+                                                <Text className="text-gray-600 text-sm">{video.duration}</Text>
+                                                <Text className="text-gray-600 text-sm">{video.calories}</Text>
                                             </View>
-                                        </View>
-                                        <View className="w-[48%]">
-                                            <Pressable
-                                                className="flex-row bg-mau_sac2 rounded-lg h-32"
-                                                onPress={() => router.push("/Other Tabs/articles")}>
-                                                <Pressable className="absolute top-1 right-1">
-                                                    <Icon name="star" size={24} color="#FFC107" />
-                                                </Pressable>
+                                            <Pressable className="absolute top-3 right-3">
+                                                <Icon name="star" size={24} color="#FFC107" />
                                             </Pressable>
-                                        </View>
-                                    </View>
-                                ))}
-                            </View>
-                        )}
-                    </View>
-                </ScrollView>
+                                        </Pressable>
+                                    ))}
+                                </View>
+                            )}
+
+                            {filter === "articles" && (
+                                <View>
+                                    {articles.map((article) => (
+                                        <Pressable
+                                            key={article.id}
+                                            className="flex-row border-2 border-blue-600 bg-white rounded-lg p-1 m-2"
+                                            onPress={() => router.push("/Other Tabs/articles")}>
+                                            <View className="flex-1 justify-center mx-3">
+                                                <Text className="text-black font-bold text-lg">{article.title}</Text>
+
+                                                <View className="flex-row items-center mt-2 space-x-2">
+                                                    <Text numberOfLines={3}>{article.description}</Text>
+                                                </View>
+                                            </View>
+                                            <View className="w-[48%]">
+                                                <View
+                                                    className="flex-row bg-mau_sac2 rounded-lg h-32"
+                                                >
+                                                    <Pressable className="absolute top-1 right-1">
+                                                        <Icon name="star" size={24} color="#FFC107" />
+                                                    </Pressable>
+                                                </View>
+                                            </View>
+                                        </Pressable>
+                                    ))}
+                                </View>
+                            )}
+                        </View>
+                    </ScrollView>
+                </View>
             </SafeAreaView>
         </SafeAreaProvider>
     );
