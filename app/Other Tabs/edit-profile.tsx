@@ -12,7 +12,7 @@ const Editprofile = () => {
     return (
         <SafeAreaProvider>
             <SafeAreaView className='flex-1'>
-                <ScrollView className="flex-1 ">
+                <View className="flex-1 ">
                     {/* Header Section */}
                     <View className="p-4">
                         <Pressable
@@ -71,7 +71,12 @@ const Editprofile = () => {
                             />
                         </View>
                     </View>
-                </ScrollView>
+                </View>
+                <Pressable
+                    className="fixed bottom-0 items-center justify-center w-full h-14 bg-blue-500 rounded-3xl mb-2"
+                    onPress={() => navigation.goBack()}>
+                    <Text className='font-bold text-white text-xl'>Confirm</Text>
+                </Pressable>
             </SafeAreaView>
         </SafeAreaProvider>
     );

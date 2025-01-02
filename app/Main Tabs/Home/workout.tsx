@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import { useFavorites, FavoriteItem } from './FavoritesContext';
 import Toast from 'react-native-toast-message';
 
+
 type Exercise = 'Beginner' | 'Intermediate' | 'Advanced'; // Define valid meal types
 
 const Workout = () => {
@@ -46,7 +47,7 @@ const Workout = () => {
     Beginner: [
       {
         id: 1,
-        title: 'Fruit Smoothie',
+        title: 'Upper Body',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
         calories: '120 Cal',
@@ -55,7 +56,7 @@ const Workout = () => {
       },
       {
         id: 2,
-        title: 'Green Celery Juice',
+        title: 'Lower Body',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
         calories: '120 Cal',
@@ -64,7 +65,7 @@ const Workout = () => {
       },
       {
         id: 3,
-        title: 'Bread',
+        title: 'Core',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
         calories: '120 Cal',
@@ -74,8 +75,8 @@ const Workout = () => {
     ],
     Intermediate: [
       {
-        id: 4,
-        title: 'Chicken Salad',
+        id: 1,
+        title: 'Upper Body',
         image: 'https://via.placeholder.com/200x120',
         time: '20 Minutes',
         calories: '250 Cal',
@@ -83,8 +84,8 @@ const Workout = () => {
         type: 'workout',
       },
       {
-        id: 5,
-        title: 'Quinoa Bowl',
+        id: 2,
+        title: 'Lower Body',
         image: 'https://via.placeholder.com/200x120',
         time: '25 Minutes',
         calories: '300 Cal',
@@ -94,8 +95,8 @@ const Workout = () => {
     ],
     Advanced: [
       {
-        id: 6,
-        title: 'Steak and Vegetables',
+        id: 1,
+        title: 'Upper Body',
         image: 'https://via.placeholder.com/200x120',
         time: '30 Minutes',
         calories: '400 Cal',
@@ -103,8 +104,8 @@ const Workout = () => {
         type: 'workout',
       },
       {
-        id: 7,
-        title: 'Salmon with Rice',
+        id: 2,
+        title: 'Lower Body',
         image: 'https://via.placeholder.com/200x120',
         time: '35 Minutes',
         calories: '350 Cal',
@@ -198,9 +199,8 @@ const Workout = () => {
                   key={meal}
                   onPress={() => setSelectedExercise(meal as Exercise)}
                   activeOpacity={0.7}
-                  className={`justify-center items-center py-2 w-28 border rounded-3xl ${
-                    selectedExercise === meal ? 'border-blue-500 bg-blue-500' : 'border-blue-500'
-                  }`}
+                  className={`justify-center items-center py-2 w-28 border rounded-3xl ${selectedExercise === meal ? 'border-blue-500 bg-blue-500' : 'border-blue-500'
+                    }`}
                 >
                   <Text className={selectedExercise === meal ? 'text-white font-semibold' : 'text-black'}>
                     {meal}
@@ -219,6 +219,18 @@ const Workout = () => {
                       key={item.id}
                       activeOpacity={0.7}
                       className="rounded-3xl overflow-hidden w-48 border-2 border-blue-500"
+                      onPress={() =>
+                        router.push({
+                          pathname: "/Main Tabs/Home/WorkoutLibrary/exercise",
+                          params: {
+                            title: item.title,
+                            duration: item.time,
+                            calories: item.calories,
+                            exercises: item.exercises,
+                            image: item.image,
+                          },
+                        })
+                      }
                     >
                       <View className="relative">
                         <Image source={{ uri: item.image }} className="w-full h-32 rounded-b-3xl" />
@@ -278,6 +290,18 @@ const Workout = () => {
                     key={item.id}
                     activeOpacity={0.7}
                     className="bg-white rounded-3xl flex-row overflow-hidden border-blue-500 border-2"
+                    onPress={() =>
+                      router.push({
+                        pathname: "/Main Tabs/Home/WorkoutLibrary/exercise",
+                        params: {
+                          title: item.title,
+                          duration: item.time,
+                          calories: item.calories,
+                          exercises: item.exercises,
+                          image: item.image,
+                        },
+                      })
+                    }
                   >
                     <View className="relative h-32 w-2/5">
                       <Image 
