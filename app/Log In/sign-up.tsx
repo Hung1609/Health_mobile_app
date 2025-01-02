@@ -12,6 +12,8 @@ import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useUser, UserProvider } from "./UserContext";
 import axios from "axios";
+import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignUp = () => {
     const router = useRouter();
@@ -25,30 +27,37 @@ const SignUp = () => {
     const handleContinue = async () => {
         router.push("/Log In/Set Up/gender");
         try {
-            const response = await axios.post("http://127.0.0.1:5000/signup", {
-                fullName: fullName,
-                email: email,
-                password: password,
+            const response = await fetch("http://127.0.0.1:8000/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    full_name: fullName,
+                    email: email,
+                    password: password,
+                    // Make sure you capture `password` from your TextInput
+                }),
             });
-            console.log(response.data);
-            // Navigate to the next screen
-            router.push({
-                pathname: "/Log In/Set Up/gender",
-                params: { email, fullName },
-            });
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                // Handle Axios-specific errors
-                console.error(
-                    error.response?.data?.error || "Something went wrong"
-                );
-            } else {
-                // Handle non-Axios errors
-                console.error("An unexpected error occurred");
+
+            const data = await response.json();
+            if (!response.ok) {
+                // Error from backend
+                Alert.alert("Sign Up Error", data.detail || "Unknown error");
+                return;
             }
+
+            await AsyncStorage.setItem("userEmail", email);
+
+            // If successful
+            Alert.alert("Success", data.message);
+            // Move to next screen, e.g. set up profile
+            router.push("/Log In/Set Up/gender");
+        } catch (error) {
+            console.error(error);
+            Alert.alert("Network Error", "Unable to connect to server");
         }
     };
-
 
     const toggleSecureTextEntry = () => {
         setSecureTextEntry(!secureTextEntry);
@@ -73,8 +82,8 @@ const SignUp = () => {
                             </Text>
                             <TextInput
                                 placeholder="Enter your full name"
-                                value={fullName}
-                                onChangeText={setFullName}
+                                value={username}
+                                onChangeText={setUsername}
                                 className="bg-white py-5 px-3 rounded-lg border"
                                 keyboardType="default"
                                 autoCapitalize="words"
