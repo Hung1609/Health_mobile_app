@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -19,7 +19,7 @@ const Weight = () => {
                 <TextInput
                 placeholder='Enter your height'
                 className='bg-white py-5 px-3 rounded-lg border flex-1'
-                keyboardType='numeric'
+                keyboardType={Platform.OS === 'ios' ? 'numbers-and-punctuation' : 'number-pad'}
                 autoCapitalize='none'
                 autoCorrect={false}
                 />
@@ -36,7 +36,7 @@ const Weight = () => {
                 <TextInput
                 placeholder='Enter your weight'
                 className='bg-white py-5 px-3 rounded-lg border flex-1'
-                keyboardType='numeric'
+                keyboardType={Platform.OS === 'ios' ? 'numbers-and-punctuation' : 'number-pad'}
                 autoCapitalize='none'
                 autoCorrect={false}
                 />

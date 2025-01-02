@@ -3,7 +3,9 @@ import React from "react"
 import { StatusBar } from "expo-status-bar"
 import { useRouter } from "expo-router"
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context"
-import * as NavigationBar from "expo-navigation-bar"
+import * as NavigationBar from "expo-navigation-bar";
+import 'react-native-get-random-values';
+import Toast from 'react-native-toast-message';
 
 const OnBoarding = () => {
   const router = useRouter()
@@ -12,8 +14,7 @@ const OnBoarding = () => {
     NavigationBar.setPositionAsync("absolute");
     NavigationBar.setBackgroundColorAsync("#00000000");
     NavigationBar.setButtonStyleAsync("dark");
-    
-  }, [])
+  }, []);
 
   return (
     <SafeAreaProvider>
@@ -42,6 +43,7 @@ const OnBoarding = () => {
           </TouchableOpacity>
         </ImageBackground>
       </SafeAreaView>
+      <Toast />
     </SafeAreaProvider>
   )
 }
