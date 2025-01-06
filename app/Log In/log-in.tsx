@@ -33,6 +33,7 @@ const LogIn = () => {
     };
 
     const handleLogin = async () => {
+        router.push("/Main Tabs/Tabs/home");
         try {
             const response = await fetch("http://127.0.0.1:8000/login", {
                 method: "POST",
