@@ -12,7 +12,7 @@ from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-
+from agent import initialize_agent, get_chat_response
 app = FastAPI()
 
 app.add_middleware(
@@ -117,6 +117,22 @@ def convert_id(doc):
         doc["_id"] = str(doc["_id"])
     return doc
 
+# Initialize agent globally
+class ChatAgent:
+    _instance = None
+    
+    @classmethod
+    async def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = await cls._initialize()
+        return cls._instance
+    
+    @classmethod
+    async def _initialize(cls):
+        return initialize_agent()
+
+class ChatRequest(BaseModel):
+    message: str
 
 # =========================================================
 # ============== PHẦN ADMIN (UPLOAD FILE) ================
@@ -452,3 +468,18 @@ def star_article(article_id: str, payload: dict = Body(...)):
 
     convert_id(updated)
     return updated
+
+
+# ------------------- RECOMMENDATIONS ---------------------
+
+@app.post("/chat")
+async def chat_endpoint(request: ChatRequest):
+    try:
+        print(f"Received request: {request}")
+        agent = await ChatAgent.get_instance()
+        response = await get_chat_response(agent, request.message)
+        print(f"Sending response: {response}")
+        return {"response": response}
+    except Exception as e:
+        print(f"Error occurred: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
