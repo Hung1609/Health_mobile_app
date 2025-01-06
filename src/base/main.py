@@ -2,19 +2,31 @@ import uvicorn
 from fastapi import FastAPI, File, UploadFile, HTTPException, Body
 from typing import Optional
 import pymongo
-from pydantic import BaseModel
 from bson import ObjectId
-#from agent import get_retriever, get_llm_and_agent
 import logging
 from dotenv import load_dotenv
 import os
-import boto3 # Thư viện để upload S3
+import boto3  # Thư viện để upload S3
 from werkzeug.security import generate_password_hash, check_password_hash
+from pydantic import BaseModel, EmailStr
+from passlib.context import CryptContext
+from fastapi.middleware.cors import CORSMiddleware
+from typing import List
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # <--- allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # 1) KẾT NỐI MONGODB
-client = pymongo.MongoClient("mongodb+srv://phanlachung2004:aggin2004@exercise.5do4n.mongodb.net/")
+client = pymongo.MongoClient(
+    "mongodb+srv://phanlachung2004:aggin2004@exercise.5do4n.mongodb.net/"
+)
 db = client["Health_database"]
 
 users_collection = db["users"]
@@ -26,19 +38,65 @@ s3_client = boto3.client(
     "s3",
     aws_access_key_id="AWS_ACCESS_KEY",
     aws_secret_access_key="AWS_SECRET_KEY",
-    region_name="ap-southeast-2"  
+    region_name="ap-southeast-2",
 )
 BUCKET_NAME = "health-app-data"
 
 # 3) Mô hình dữ liệu (Pydantic) dùng cho request/response (ví dụ)
-class User(BaseModel):
-    username: str
-    password: str
-    email: str
+# assword Hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-class LoginUser(BaseModel):
-    email: str
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+class UserCreate(BaseModel):
+    full_name: str
+    email: EmailStr
     password: str
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserOut(BaseModel):
+    id: str
+    full_name: str
+    email: EmailStr
+
+
+class UserGender(BaseModel):
+    email: EmailStr
+    gender: str  # "male" or "female"
+
+
+class UserAge(BaseModel):
+    email: EmailStr
+    age: int
+
+
+class UserStats(BaseModel):
+    email: EmailStr
+    height: float
+    weight: float
+
+
+class UserGoal(BaseModel):
+    email: EmailStr
+    goals: List[str]  # e.g., ["Lose Weight", "Shape Body"]
+
+
+class UserLevel(BaseModel):
+    email: EmailStr
+    level: str  # e.g., "Beginner", "Intermediate", or "Advance"
+
 
 class Recommendation(BaseModel):
     title: str
@@ -46,10 +104,12 @@ class Recommendation(BaseModel):
     image: Optional[str] = None
     isStarred: bool = False
 
+
 class Article(BaseModel):
     title: str
     image: Optional[str] = None
     isStarred: bool = False
+
 
 # Hàm tiện ích để chuyển ObjectId -> string
 def convert_id(doc):
@@ -61,6 +121,7 @@ def convert_id(doc):
 # =========================================================
 # ============== PHẦN ADMIN (UPLOAD FILE) ================
 # =========================================================
+
 
 @app.post("/admin/recommendations")
 async def create_recommendation_for_admin(
@@ -83,7 +144,7 @@ async def create_recommendation_for_admin(
             "title": title,
             "duration": duration,
             "fileUrl": file_url,
-            "isStarred": False
+            "isStarred": False,
         }
         result = rec_collection.insert_one(doc)
         doc["_id"] = str(result.inserted_id)
@@ -109,11 +170,7 @@ async def create_article_for_admin(
         file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{s3_key}"
 
         # 2) Tạo document lưu vào DB
-        doc = {
-            "title": title,
-            "fileUrl": file_url,
-            "isStarred": False
-        }
+        doc = {"title": title, "fileUrl": file_url, "isStarred": False}
         result = article_collection.insert_one(doc)
         doc["_id"] = str(result.inserted_id)
         return doc
@@ -129,37 +186,152 @@ async def create_article_for_admin(
 
 # -----------------  USER ENDPOINTS -----------------------
 
-# [POST] Đăng ký user
-@app.post("/register")
-def register(user: User):
-    existing_user = users_collection.find_one({"username": user.email})
-    if existing_user:
-        raise HTTPException(status_code=400, detail="User already exists")
-    
-    # hash password
-    hashed_password = generate_password_hash(user.password)
 
-    user_doc = {
-        "username": user.username,
-        "email": user.email,
-        "password": user.password
-    }
-    result = users_collection.insert_one(user_doc)
-    return {"message": "User registered successfully!"}
-
-# [POST] login
-@app.post("/login")
-def Login(user: LoginUser):
+@app.post("/signup")
+def sign_up(user: UserCreate):
+    # Check if user with the email already exists
     existing_user = users_collection.find_one({"email": user.email})
-    if not existing_user or not check_password_hash(existing_user["password"], user.password):
-        raise HTTPException(status_code=401, detail="Invalid email or password!")
-    return {
-        "message": "Login successful!", 
-        "user": { 
-            "email": existing_user["email"], 
-            "username": existing_user["username"]
-        }
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered.")
+
+    # Hash the user's password
+    hashed_pw = hash_password(user.password)
+
+    # Create a user document
+    user_doc = {
+        "full_name": user.full_name,
+        "email": user.email,
+        "password": hashed_pw,
     }
+
+    # Insert into MongoDB
+    result = users_collection.insert_one(user_doc)
+    if not result.inserted_id:
+        raise HTTPException(status_code=500, detail="Could not create user.")
+
+    return {"message": "User created successfully!"}
+
+
+@app.post("/login")
+def login(user: UserLogin):
+    # Check if user exists by email
+    existing_user = users_collection.find_one({"email": user.email})
+    if not existing_user:
+        raise HTTPException(status_code=401, detail="Invalid email or password.")
+
+    # Verify password
+    if not verify_password(user.password, existing_user["password"]):
+        raise HTTPException(status_code=401, detail="Invalid email or password.")
+
+    # If successful, you can return a token, or for now, just send a success message
+    return {"message": "Login successful!"}
+
+
+@app.post("/gender")
+def set_gender(gender: UserGender):
+    # 1. Find if user with this email exists
+    existing_user = users_collection.find_one({"email": gender.email})
+    if not existing_user:
+        # If there's no user with this email, return 404
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # 2. Update gender in database
+    update_result = users_collection.update_one(
+        {"email": gender.email}, {"$set": {"gender": gender.gender}}
+    )
+
+    if update_result.modified_count == 0:
+        return {
+            "message": "No changes were made. User already has this gender or user not found."
+        }
+
+    return {"message": f"Gender successfully updated to {gender.gender}."}
+
+
+@app.post("/age")
+def set_age(age: UserAge):
+    # 1. Check if the user exists
+    existing_user = users_collection.find_one({"email": age.email})
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # 2. Update the user's 'age'
+    update_result = users_collection.update_one(
+        {"email": age.email}, {"$set": {"age": age.age}}
+    )
+
+    if update_result.modified_count == 0:
+        return {
+            "message": "No changes were made. Possibly the user already has this age or was not found."
+        }
+
+    return {"message": f"Age successfully updated to {age.age}."}
+
+
+@app.post("/stats")
+def set_stats(stats: UserStats):
+    # 1. Find the user by email
+    existing_user = users_collection.find_one({"email": stats.email})
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # 2. Update the user with the provided stats
+    update_result = users_collection.update_one(
+        {"email": stats.email},
+        {"$set": {"height": stats.height, "weight": stats.weight}},
+    )
+
+    # 3. Check if the update was successful
+    if update_result.modified_count == 0:
+        return {
+            "message": "No changes were made. Possibly the user already has these stats or was not found."
+        }
+
+    return {
+        "message": f"Stats updated: Height = {stats.height}, Weight = {stats.weight}."
+    }
+
+
+@app.post("/goal")
+def set_goal(goal: UserGoal):
+    # 1. Find the user by email
+    existing_user = users_collection.find_one({"email": goal.email})
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # 2. Update the user's goals
+    update_result = users_collection.update_one(
+        {"email": goal.email}, {"$set": {"goals": goal.goals}}
+    )
+
+    # 3. Check if the update was successful
+    if update_result.modified_count == 0:
+        return {
+            "message": "No changes were made. Possibly the user already has these goals or was not found."
+        }
+
+    return {"message": f"Goals updated: {goal.goals}"}
+
+
+@app.post("/level")
+def set_level(level: UserLevel):
+    # 1. Find the user by email
+    existing_user = users_collection.find_one({"email": level.email})
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # 2. Update the user's level
+    update_result = users_collection.update_one(
+        {"email": level.email}, {"$set": {"level": level.level}}
+    )
+
+    if update_result.modified_count == 0:
+        return {
+            "message": "No changes were made. Possibly the user already has this level or was not found."
+        }
+
+    return {"message": f"Level updated to {level.level}."}
+
 
 # [GET] Lấy thông tin user qua query param ?username=
 @app.get("/user")
@@ -170,7 +342,9 @@ def get_user(username: str):
     convert_id(user)
     return user
 
+
 # ------------------- RECOMMENDATIONS ---------------------
+
 
 @app.get("/recommendations")
 def get_recommendations():
@@ -214,9 +388,7 @@ def star_recommendation(rec_id: str, payload: dict = Body(...)):
         raise HTTPException(status_code=400, detail="Missing isStarred field")
 
     updated = rec_collection.find_one_and_update(
-        {"_id": obj_id},
-        {"$set": {"isStarred": is_starred}},
-        return_document=True
+        {"_id": obj_id}, {"$set": {"isStarred": is_starred}}, return_document=True
     )
     if not updated:
         raise HTTPException(status_code=404, detail="Recommendation not found")
@@ -226,6 +398,7 @@ def star_recommendation(rec_id: str, payload: dict = Body(...)):
 
 
 # ------------------- ARTICLES ---------------------
+
 
 @app.get("/articles")
 def get_articles():
@@ -272,13 +445,10 @@ def star_article(article_id: str, payload: dict = Body(...)):
         raise HTTPException(status_code=400, detail="Missing isStarred field")
 
     updated = article_collection.find_one_and_update(
-        {"_id": obj_id},
-        {"$set": {"isStarred": is_starred}},
-        return_document=True
+        {"_id": obj_id}, {"$set": {"isStarred": is_starred}}, return_document=True
     )
     if not updated:
         raise HTTPException(status_code=404, detail="Article not found")
 
     convert_id(updated)
     return updated
-
