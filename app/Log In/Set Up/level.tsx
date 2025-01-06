@@ -48,7 +48,7 @@ const Level = () => {
             }
 
             Alert.alert("Success", data.message);
-            router.push("/Log In/success-screen");
+            router.push("/Log In/log-in");
         } catch (error) {
             console.error(error);
             Alert.alert("Network Error", "Unable to reach the server.");

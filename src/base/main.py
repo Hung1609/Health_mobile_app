@@ -32,6 +32,8 @@ db = client["Health_database"]
 users_collection = db["users"]
 rec_collection = db["recommendations"]
 article_collection = db["articles"]
+w_collection = db["workouts"]
+n_collection = db["nutrition"]
 
 # 2) KẾT NỐI S3 (thay AWS_ACCESS_KEY / AWS_SECRET_KEY / region_name bằng của bạn)
 s3_client = boto3.client(
@@ -98,6 +100,11 @@ class UserLevel(BaseModel):
     level: str  # e.g., "Beginner", "Intermediate", or "Advance"
 
 
+class ResetPassword(BaseModel):
+    email: EmailStr
+    new_password: str
+
+
 class Recommendation(BaseModel):
     title: str
     duration: Optional[str] = None
@@ -109,6 +116,27 @@ class Article(BaseModel):
     title: str
     image: Optional[str] = None
     isStarred: bool = False
+
+
+class Workout(BaseModel):
+    level: str
+    id: int
+    title: str
+    image: str
+    time: str
+    calories: str
+    exercises: str
+    type: str
+
+
+class NutritionItem(BaseModel):
+    mealType: str
+    id: int
+    title: str
+    image: str
+    time: str
+    calories: str
+    type: str
 
 
 # Hàm tiện ích để chuyển ObjectId -> string
@@ -349,6 +377,30 @@ def set_level(level: UserLevel):
     return {"message": f"Level updated to {level.level}."}
 
 
+@app.post("/reset_password")
+def reset_password(reset_data: ResetPassword):
+    # 1. Find the user by email
+    existing_user = users_collection.find_one({"email": reset_data.email})
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # 2. Hash the new password
+    hashed_pw = hash_password(reset_data.new_password)
+
+    # 3. Update the user's password in MongoDB
+    update_result = users_collection.update_one(
+        {"email": reset_data.email}, {"$set": {"password": hashed_pw}}
+    )
+
+    if update_result.modified_count == 0:
+        # Possibly the password was the same as before, or user wasn't found
+        return {
+            "message": "No changes were made. The user may already have this password."
+        }
+
+    return {"message": "Password reset successful!"}
+
+
 # [GET] Lấy thông tin user qua query param ?username=
 @app.get("/user")
 def get_user(username: str):
@@ -483,3 +535,40 @@ async def chat_endpoint(request: ChatRequest):
     except Exception as e:
         print(f"Error occurred: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+# --HOME--
+
+
+@app.get("/workouts/{level}", response_model=List[Workout])
+async def get_workouts(level: str):
+    data = list(w_collection.find({"level": level}, {"_id": 0}))
+    if not data:
+        raise HTTPException(status_code=404, detail="No workouts found")
+    return data
+
+
+@app.post("/workouts/")
+async def add_workout(workout: Workout):
+    if w_collection.find_one({"id": workout.id}):
+        raise HTTPException(
+            status_code=400, detail="Workout with this ID already exists"
+        )
+    w_collection.insert_one(workout.dict())
+    return {"message": "Workout added successfully"}
+
+
+@app.get("/nutrition/{meal_type}", response_model=List[NutritionItem])
+async def get_nutrition(meal_type: str):
+    data = list(n_collection.find({"mealType": meal_type}, {"_id": 0}))
+    if not data:
+        raise HTTPException(
+            status_code=404, detail="No nutrition data found for this meal type."
+        )
+    return data
+
+
+@app.post("/nutrition/")
+async def add_nutrition(item: NutritionItem):
+    if n_collection.find_one({"id": item.id}):
+        raise HTTPException(status_code=400, detail="Item with this ID already exists.")
+    n_collection.insert_one(item.dict())
+    return {"message": "Nutrition item added successfully"}
