@@ -7,6 +7,25 @@ import { router } from 'expo-router';
 import { useFavorites, FavoriteItem } from './FavoritesContext';
 import Toast from 'react-native-toast-message';
 
+type ExerciseDetail = {
+  name: string;
+  description: string;
+  reps: string;
+  sets: string;
+  video: string;
+};
+
+type WorkoutData = {
+  id: number;
+  title: string;
+  image: string;
+  time: string;
+  calories: string;
+  exercises: string; 
+  details: ExerciseDetail[]; // Array of exercise details
+  level: string; // Difficulty level
+  type: string; // Type of workout
+};
 
 type Exercise = 'Beginner' | 'Intermediate' | 'Advanced'; // Define valid meal types
 
@@ -43,15 +62,39 @@ const Workout = () => {
   };
 
   // Define the structure of data
-  const recommendedData: Record<Exercise, { id: number; title: string; image: string; time: string; calories: string, exercises: string, type: string }[]> = {
+  const recommendedData: Record<Exercise, WorkoutData[]> = {
     Beginner: [
       {
         id: 1,
         title: 'Upper Body',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
-        calories: '120 Cal',
+        calories: '120',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Beginner',
         type: 'workout',
       },
       {
@@ -59,8 +102,32 @@ const Workout = () => {
         title: 'Lower Body',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
-        calories: '120 Cal',
+        calories: '120',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Beginner',
         type: 'workout',
       },
       {
@@ -68,19 +135,67 @@ const Workout = () => {
         title: 'Core',
         image: 'https://via.placeholder.com/200x120',
         time: '12 Minutes',
-        calories: '120 Cal',
+        calories: '120',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Beginner',
         type: 'workout',
       },
     ],
     Intermediate: [
       {
-        id: 1,
+        id: 100,
         title: 'Upper Body',
         image: 'https://via.placeholder.com/200x120',
         time: '20 Minutes',
-        calories: '250 Cal',
+        calories: '250',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Intermediate',
         type: 'workout',
       },
       {
@@ -88,19 +203,67 @@ const Workout = () => {
         title: 'Lower Body',
         image: 'https://via.placeholder.com/200x120',
         time: '25 Minutes',
-        calories: '300 Cal',
+        calories: '300',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Intermediate',
         type: 'workout',
       },
     ],
     Advanced: [
       {
-        id: 1,
+        id: 200,
         title: 'Upper Body',
         image: 'https://via.placeholder.com/200x120',
         time: '30 Minutes',
-        calories: '400 Cal',
+        calories: '400',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Advanced',
         type: 'workout',
       },
       {
@@ -108,22 +271,70 @@ const Workout = () => {
         title: 'Lower Body',
         image: 'https://via.placeholder.com/200x120',
         time: '35 Minutes',
-        calories: '350 Cal',
+        calories: '350',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Advanced',
         type: 'workout',
       },
     ],
   };
 
-  const exercisesData: Record<Exercise, { id: number; title: string; image: string; time: string; calories: string, exercises: string, type: string }[]> = {
+  const exercisesData: Record<Exercise, WorkoutData[]> = {
     Beginner: [
       {
         id: 8,
         title: 'Greek Yogurt',
         image: 'https://via.placeholder.com/100x100',
         time: '6 Minutes',
-        calories: '200 Cal',
+        calories: '200',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Beginner',
         type: 'workout',
       },
       {
@@ -131,8 +342,32 @@ const Workout = () => {
         title: 'Avocado And Egg Toast',
         image: 'https://via.placeholder.com/100x100',
         time: '15 Minutes',
-        calories: '150 Cal',
+        calories: '150',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Beginner',
         type: 'workout',
       },
       {
@@ -140,8 +375,32 @@ const Workout = () => {
         title: 'Avocado And Egg Toast',
         image: 'https://via.placeholder.com/100x100',
         time: '15 Minutes',
-        calories: '150 Cal',
+        calories: '150',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Beginner',
         type: 'workout',
       },
     ],
@@ -151,8 +410,32 @@ const Workout = () => {
         title: 'Turkey Wrap',
         image: 'https://via.placeholder.com/100x100',
         time: '10 Minutes',
-        calories: '220 Cal',
+        calories: '220',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Intermediate',
         type: 'workout',
       },
       {
@@ -160,8 +443,32 @@ const Workout = () => {
         title: 'Pasta Primavera',
         image: 'https://via.placeholder.com/100x100',
         time: '25 Minutes',
-        calories: '350 Cal',
+        calories: '350',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Intermediate',
         type: 'workout',
       },
     ],
@@ -171,8 +478,32 @@ const Workout = () => {
         title: 'Chicken Stir Fry',
         image: 'https://via.placeholder.com/100x100',
         time: '20 Minutes',
-        calories: '300 Cal',
+        calories: '300',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Advanced',
         type: 'workout',
       },
       {
@@ -180,8 +511,32 @@ const Workout = () => {
         title: 'Vegetarian Curry',
         image: 'https://via.placeholder.com/100x100',
         time: '40 Minutes',
-        calories: '250 Cal',
+        calories: '250',
         exercises: '3 Exercises',
+        details: [
+          {
+            name: 'Bench Press',
+            description: 'Perform with dumbbells',
+            reps: '6',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Push-Ups',
+            description: 'Standard push-ups for chest',
+            reps: '10',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120',
+          },
+          {
+            name: 'Bicep Curls',
+            description: 'Use dumbbells for this exercise',
+            reps: '8',
+            sets: '3',
+            video: 'https://via.placeholder.com/200x120'
+          },
+        ],
+        level: 'Advanced',
         type: 'workout',
       },
     ],
@@ -223,11 +578,7 @@ const Workout = () => {
                         router.push({
                           pathname: "/Main Tabs/Home/WorkoutLibrary/exercise",
                           params: {
-                            title: item.title,
-                            duration: item.time,
-                            calories: item.calories,
-                            exercises: item.exercises,
-                            image: item.image,
+                            workout: JSON.stringify(item),
                           },
                         })
                       }
@@ -256,7 +607,7 @@ const Workout = () => {
                           </View>
                           <View className='flex-row items-center gap-1'>
                             <Icon2 name="flame" color="gray" />
-                            <Text className="text-gray-500 text-sm">{item.calories}</Text>
+                            <Text className="text-gray-500 text-sm">{item.calories} Cal</Text>
                           </View>
                         </View>
                         <View className="flex-row items-center gap-1 mt-1">
@@ -294,11 +645,7 @@ const Workout = () => {
                       router.push({
                         pathname: "/Main Tabs/Home/WorkoutLibrary/exercise",
                         params: {
-                          title: item.title,
-                          duration: item.time,
-                          calories: item.calories,
-                          exercises: item.exercises,
-                          image: item.image,
+                          workout: JSON.stringify(item),
                         },
                       })
                     }
@@ -329,7 +676,7 @@ const Workout = () => {
                         </View>
                         <View className='flex-row items-center gap-1'>
                           <Icon2 name="flame" color="gray" />
-                          <Text className="text-gray-500 text-sm">{item.calories}</Text>
+                          <Text className="text-gray-500 text-sm">{item.calories} Cal</Text>
                         </View>
                       </View>
                       <View className="flex-row items-center gap-1 mt-1">

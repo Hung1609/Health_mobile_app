@@ -65,7 +65,7 @@ const Chat = () => {
       };
       const botReply = {
         id: messages.length + 2,
-        text: "Toi bi ngu",
+        text: "Hi",
         fromBot: true,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }

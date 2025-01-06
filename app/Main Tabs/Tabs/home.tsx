@@ -6,13 +6,12 @@ import Icon2 from "react-native-vector-icons/FontAwesome5";
 import WorkoutScreen from "../Home/workout";
 import ProgressScreen from "../Home/progress";
 import NutritionScreen from "../Home/nutrition";
-import CommunityScreen from "../Home/community";
 import { router } from "expo-router";
 
 const TopTab = createMaterialTopTabNavigator();
 
 const CustomTopTabBar = ({ state, descriptors, navigation }: any) => {
-  type TabName = "Workout" | "Progress" | "Nutrition" | "Community";
+  type TabName = "Workout" | "Progress" | "Nutrition";
 
   return (
     <View className="w-full px-4 bg-white">
@@ -42,7 +41,7 @@ const CustomTopTabBar = ({ state, descriptors, navigation }: any) => {
         </View>
       </View>
 
-      <View className="flex-row my-6 justify-center items-center">
+      <View className="flex-row my-6 justify-evenly items-center">
         {state.routes.map((route: any, index: number) => {
           const { options } = descriptors[route.key];
           const label = (options.tabBarLabel ?? route.name) as TabName; // Explicitly cast label
@@ -65,7 +64,6 @@ const CustomTopTabBar = ({ state, descriptors, navigation }: any) => {
             Workout: <Icon2 name="dumbbell" size={25} color={isFocused ? "#3B82F6" : "black"} />,
             Progress: <Icon2 name="clipboard-list" size={25} color={isFocused ? "#3B82F6" : "black"} />,
             Nutrition: <Icon2 name="apple-alt" size={25} color={isFocused ? "#3B82F6" : "black"} />,
-            Community: <Icon name="people" size={25} color={isFocused ? "#3B82F6" : "black"} />,
           };
 
           return (
@@ -103,7 +101,6 @@ const HomeScreen = () => {
       <TopTab.Screen name="Workout" component={WorkoutScreen} />
       <TopTab.Screen name="Progress" component={ProgressScreen} />
       <TopTab.Screen name="Nutrition" component={NutritionScreen} />
-      <TopTab.Screen name="Community" component={CommunityScreen} />
     </TopTab.Navigator>
   );
 };
