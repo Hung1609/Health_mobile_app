@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Image, Pressable, ScrollView, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
@@ -8,97 +8,77 @@ import { router, useLocalSearchParams } from "expo-router";
 const createroutine = () => {
     const navigation = useNavigation();
     const params = useLocalSearchParams();
+    const workout = params.workout ? JSON.parse(params.workout as string) : null;
 
-    // Mock data for exercises
-    const exerciseList = [
-        { id: 1, title: "Bench Press" },
-        { id: 2, title: "Overhead Press" },
-        { id: 3, title: "Incline Dumbbell Press" },
-        { id: 4, title: "Dumbbell Lateral Raise" },
-        { id: 5, title: "Dumbbell Chest Flyes" },
-        { id: 5, title: "Barbell Lying Triceps Extension" },
-    ];
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Find the current exercise index
-    const currentIndex = exerciseList.findIndex((exercise) => exercise.title === params.title);
+    const { details } = workout;
+    const currentExercise = details[currentIndex];
 
-    // Function to handle "Next" button
     const handleNext = () => {
-        const nextIndex = currentIndex + 1;
-
-        if (nextIndex < exerciseList.length) {
-            // If there are more exercises, navigate to the next one
-            const nextExercise = exerciseList[nextIndex];
+        if (currentIndex < details.length - 1) {
+            setCurrentIndex(currentIndex + 1);
+        } else {
             router.push({
-                pathname: "/Main Tabs/Home/WorkoutLibrary/create-routine",
+                pathname: "/Main Tabs/Home/WorkoutLibrary/finish",
                 params: {
-                    title: nextExercise.title,
+                    workout: JSON.stringify(workout),
                 },
             });
-        } else {
-            // If it's the last exercise, navigate back
-            navigation.goBack(); // Or use `router.back()` if using expo-router
         }
-    };
+    }
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView className='flex-1'>
-                <Pressable
-                    className="flex-row items-center m-3 bg-white"
-                    onPress={() => navigation.goBack()}>
-                    <Icon name="caret-back" size={20} color="black" />
-                    <Text className='font-bold text-2xl'>Exercises</Text>
-                </Pressable>
+            <SafeAreaView className='flex-1 bg-white px-4'>
                 <ScrollView>
-                    <View className="h-full m-2 justify-center">
-                        <View className="relative py-4 px-2">
+                    <View className="my-4">
                             <Image
                                 source={{
                                     uri: "https://via.placeholder.com/300x150",
                                 }}
-                                className="w-full h-60 rounded-2xl"
+                                className="w-full h-60 rounded-3xl"
                             />
-                            <View className="bg-blue-500 rounded-2xl p-4 my-10 shadow-lg">
+                            <View className="bg-blue-500 rounded-3xl p-4 my-10">
                                 {/* Title */}
-                                <Text className="text-center text-2xl font-bold text-black">
-                                    {params.title}
+                                <Text className="text-center text-2xl font-bold text-white">
+                                    {currentExercise.name}
                                 </Text>
 
                                 {/* Description */}
-                                <Text className="text-center text-gray text-sm mt-2">
+                                <Text className="text-center text-gray mt-2 text-white">
                                     Lorem Ipsum Dolor Sit Amet, Consectetur Adipisicing Elit. Sed Cursus Libero Eget.
                                 </Text>
 
                                 {/* Info Row */}
-                                <View className="flex-row justify-between items-center mt-4 bg-white px-4 py-2 rounded-lg">
+                                <View className="flex-row justify-around items-center mt-4 bg-white py-2 rounded-3xl">
                                     {/* Duration */}
                                     <View className="flex-row items-center">
-                                        <Icon name="time-outline" size={16} color="black" />
-                                        <Text className="ml-2 text-gray-700 font-medium">{params.time} Minutes</Text>
+                                        <Text className="text-gray-700 font-medium">x{currentExercise.reps}</Text>
                                     </View>
 
                                     {/* Repetitions */}
                                     <View className="flex-row items-center">
                                         <Icon name="repeat-outline" size={16} color="black" />
-                                        <Text className="ml-2 text-gray-700 font-medium">{params.repetitions}</Text>
+                                        <Text className="ml-1 text-gray-700 font-medium">{currentExercise.sets}</Text>
                                     </View>
 
                                     {/* Difficulty */}
                                     <View className="flex-row items-center">
                                         <Icon name="fitness-outline" size={16} color="black" />
-                                        <Text className="ml-2 text-gray-700 font-medium">Beginner</Text>
+                                        <Text className="ml-1 text-gray-700 font-medium">{workout.level}</Text>
                                     </View>
                                 </View>
                             </View>
                         </View>
-                    </View>
+                    
                 </ScrollView>
-                <TouchableOpacity
-                    className="absolute h-20 w-20 bg-blue-500 bottom-0 right-0 rounded-full items-center justify-center m-5"
+                <TouchableOpacity  
+                    activeOpacity={0.7}
+                    className="border items-center bg-blue-500 p-3 border-blue-500 rounded-3xl mb-2"
                     onPress={handleNext}
                 >
-                    <Text className="text-white text-l text-center">Next</Text>
+                    <Text className="text-white font-bold text-xl">Next</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         </SafeAreaProvider>
