@@ -1,5 +1,15 @@
 import React, { useState, useRef } from "react";
-import { Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ListRenderItem, FlatList } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ListRenderItem,
+  FlatList,
+} from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import tw from "tailwind-react-native-classnames";
@@ -22,8 +32,11 @@ const Chat = () => {
       id: 1,
       text: "Hello, I'm your personal assistant. How can I help you?",
       fromBot: true,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    }
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    },
   ]);
 
   const [textInputValue, setTextInputValue] = useState("");
@@ -48,31 +61,72 @@ const Chat = () => {
         id: 1,
         text: "Hello, I'm your personal assistant. How can I help you?",
         fromBot: true,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      }
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
     ]);
     setTextInputValue("");
     setInputHeight(40);
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (textInputValue.trim()) {
       const newMessage = {
         id: messages.length + 1,
         text: textInputValue,
         fromBot: false,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       };
-      const botReply = {
-        id: messages.length + 2,
-        text: "Hi",
-        fromBot: true,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+      try {
+        // call API
+        const response = await fetch("http://192.168.12.254/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: textInputValue,
+          }),
+        });
+        const data = await response.json();
+        // Add bot response
+        const botReply = {
+          id: messages.length + 2,
+          text: data.response,
+          fromBot: true,
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+
+        setMessages((prevMessages) => [...prevMessages, botReply]);
+      } catch (error) {
+        // Handle error
+        const errorMessage = {
+          id: messages.length + 2,
+          text: "Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.",
+          fromBot: true,
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+        setMessages((prevMessages) => [...prevMessages, errorMessage]);
       }
-      setMessages((prevMessages) => [...prevMessages, newMessage, botReply]);
       setTextInputValue("");
       setInputHeight(40);
-      setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
+      setTimeout(
+        () => flatListRef.current?.scrollToEnd({ animated: true }),
+        100
+      );
     }
   };
 
@@ -84,17 +138,24 @@ const Chat = () => {
         </Text>
       )}
       <View
-        style={tw`${item.fromBot ? 'justify-start' : 'justify-end'}`}
+        style={tw`${item.fromBot ? "justify-start" : "justify-end"}`}
         className="my-3 flex-row items-center"
       >
         {item.fromBot && (
-          <Icon name="robot-excited-outline" size={24} color="dodgerblue" className="mr-3 bg-blue-50 rounded-full p-2" />
+          <Icon
+            name="robot-excited-outline"
+            size={24}
+            color="dodgerblue"
+            className="mr-3 bg-blue-50 rounded-full p-2"
+          />
         )}
         <View
-          style={tw`${item.fromBot ? 'bg-gray-200' : 'bg-blue-500'}`}
+          style={tw`${item.fromBot ? "bg-gray-200" : "bg-blue-500"}`}
           className="max-w-xs p-2 rounded-lg"
         >
-          <Text style={tw`${item.fromBot ? 'text-black' : 'text-white'}`}>{item.text}</Text>
+          <Text style={tw`${item.fromBot ? "text-black" : "text-white"}`}>
+            {item.text}
+          </Text>
         </View>
       </View>
     </View>
@@ -103,33 +164,31 @@ const Chat = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView className="flex-1">
-        <KeyboardAvoidingView
-          className="flex-1"
-          behavior="padding"
-        >
-          <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
+        <KeyboardAvoidingView className="flex-1" behavior="padding">
+          <TouchableWithoutFeedback
+            onPress={dismissKeyboard}
+            accessible={false}
+          >
             <View className="w-full h-full bg-white flex-1">
               <View className="flex-row justify-between items-center px-4 mt-10">
                 <Text className="font-bold text-3xl">Health Bot</Text>
                 <View className="flex-row">
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                  >
-                    <Icon2 name="search" size={25} className="px-2"/>
+                  <TouchableOpacity activeOpacity={0.7}>
+                    <Icon2 name="search" size={25} className="px-2" />
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => router.push("/Other Tabs/notification")}
                   >
-                    <Icon2 name="notifications" size={25} className="px-2"/>
+                    <Icon2 name="notifications" size={25} className="px-2" />
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => router.push("/Other Tabs/profile")}
                   >
-                    <Icon2 name="person" size={25} className="px-2"/>
+                    <Icon2 name="person" size={25} className="px-2" />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -139,7 +198,7 @@ const Chat = () => {
                   ref={flatListRef}
                   data={messages}
                   renderItem={renderItem}
-                  keyExtractor={item => item.id.toString()}
+                  keyExtractor={(item) => item.id.toString()}
                   className="px-4 mt-10 mb-10"
                 />
               </View>
@@ -153,7 +212,11 @@ const Chat = () => {
                         onPress={resetChat}
                         className="bg-blue-500 justify-center items-center p-3 rounded-full mr-4"
                       >
-                        <Icon name="chat-plus-outline" size={25} color="white" />
+                        <Icon
+                          name="chat-plus-outline"
+                          size={25}
+                          color="white"
+                        />
                       </TouchableOpacity>
                     )}
                   </View>
@@ -164,26 +227,24 @@ const Chat = () => {
                       value={textInputValue}
                       onChangeText={setTextInputValue}
                       className="p-3 flex-1"
-                      style={{ height: isFocused ? 3 + inputHeight : inputHeight }}
+                      style={{
+                        height: isFocused ? 3 + inputHeight : inputHeight,
+                      }}
                       keyboardType="default"
                       multiline={true}
                       onFocus={handleFocus}
                       onBlur={handleBlur}
-                      onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height)}
+                      onContentSizeChange={(e) =>
+                        setInputHeight(e.nativeEvent.contentSize.height)
+                      }
                     />
 
                     <View className="flex-row">
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        className="mr-2"
-                      >
+                      <TouchableOpacity activeOpacity={0.7} className="mr-2">
                         <Icon name="microphone" size={20} color="dodgerblue" />
                       </TouchableOpacity>
 
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        className="mr-3"
-                      >
+                      <TouchableOpacity activeOpacity={0.7} className="mr-3">
                         <Icon name="camera" size={20} color="dodgerblue" />
                       </TouchableOpacity>
 
@@ -204,6 +265,6 @@ const Chat = () => {
       </SafeAreaView>
     </SafeAreaProvider>
   );
-}
+};
 
 export default Chat;
