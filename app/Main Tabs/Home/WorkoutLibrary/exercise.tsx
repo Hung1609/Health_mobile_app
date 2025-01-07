@@ -1,98 +1,143 @@
 import React from "react";
-import { View, Text, Image, Pressable, ScrollView } from "react-native";
+import { View, Text, Image, Pressable, ScrollView, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import Icon2 from 'react-native-vector-icons/Octicons';
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { router, useLocalSearchParams } from "expo-router";
-
+import { useFavorites } from "../FavoritesContext";
+import Toast from 'react-native-toast-message';
 
 const Exercises = () => {
     const route = useRoute();
     const params = useLocalSearchParams();
+    const workout = params.workout ? JSON.parse(params.workout as string) : null;
+    
+    const { favorites, addFavorite, removeFavorite } = useFavorites();
+    const isFavorite = favorites.some(fav => fav.id === Number(workout.id)); 
 
-    const navigation = useNavigation();
+    const handleFavorite = () => {
+        const isFav = favorites.some(fav => fav.id === Number(workout.id));
+        if (isFav) {
+            removeFavorite(Number(workout.id));
+            Toast.show({
+                type: 'success',
+                text1: 'Removed from Favorites',
+                text2: `${workout.title} has been removed.`,
+                position: 'top',
+                visibilityTime: 2000,
+            }); 
+        } else {
+            const item = {
+                id: Number(workout.id),
+                title: Array.isArray(workout.title) ? workout.title[0] : workout.title, 
+                image: Array.isArray(workout.image) ? workout.image[0] : workout.image, 
+                time: Array.isArray(workout.duration) ? workout.duration[0] : workout.duration, 
+                calories: Array.isArray(workout.calories) ? workout.calories[0] : workout.calories, 
+                exercises: Array.isArray(workout.exercises) ? workout.exercises[0] : workout.exercises,
+                type: 'workout', 
+            };
+            
+            addFavorite(item);
+          
+            Toast.show({
+                type: 'success',
+                text1: 'Added to Favorites',
+                text2: `${workout.title} has been added.`,
+                position: 'top',
+                visibilityTime: 2000,
+            });
+        };
+    };
+    
     return (
         <SafeAreaProvider>
-            <SafeAreaView className='flex-1'>
-                <Pressable
-                    className="flex-row items-center m-3"
-                    onPress={() => navigation.goBack()}>
-                    <Icon name="caret-back" size={20} color="black" />
-                    <Text className='font-bold text-2xl'>Exercises</Text>
-                </Pressable>
-                <ScrollView className="flex-1 bg-white">
-                    <View className="relative py-4 px-2">
+            <SafeAreaView className='flex-1 bg-white px-4'>
+                <ScrollView>
+                    <View className="my-4">
                         <Image
                             source={{
                                 uri: "https://via.placeholder.com/300x150",
                             }}
-                            className="w-full h-60 rounded-2xl"
+                            className="w-full h-60 rounded-3xl"
                         />
-                        <View className="absolute bottom-5 left-4 right-4">
-                            <Text className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm font-bold self-start">
-                                {params.title}
+
+                        <View className="absolute top-0 right-0">
+                            <Text className="bg-blue-500 text-white px-4 py-1 rounded-l-3xl rounded-t-3xl font-semibold">
+                                {workout.title}
                             </Text>
-                            <View className="flex-row justify-between mt-2">
-                                <View className="flex-row items-center">
-                                    <Icon className="mx-1" name="time-outline" size={12} color={"white"} />
-                                    <Text className="text-white text-xs font-bold ">{params.duration}</Text>
+                        </View>    
+
+                        <View 
+                            className="absolute bottom-0 w-full py-4 px-5 rounded-b-3xl justify-center"
+                            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+                        >
+                            <View className="flex-row justify-between items-center">
+                                <View className="flex-row items-center gap-1">
+                                    <Icon name="time-outline" color={"white"} size={15} />
+                                    <Text className="text-white text-sm">{workout.time}</Text>
                                 </View>
-                                <View className="flex-row items-center">
-                                    <Icon className="mx-1" name="flame-outline" size={12} color={"white"} />
-                                    <Text className="text-white text-xs font-bold ">{params.calories} Kcal</Text>
+                                <View className="flex-row items-center gap-1">
+                                    <Icon2 name="flame" color={"white"} size={13} />
+                                    <Text className="text-white text-sm">{workout.calories} Cal</Text>
                                 </View>
-                                <View className="flex-row items-center">
-                                    <Icon className="mx-1" name="barbell" size={12} color={"white"} />
-                                    <Text className="text-white text-xs font-bold ">{params.exercises}</Text>
+                                <View className="flex-row items-center gap-1">
+                                    <Icon name="fitness-outline" color={"white"} size={15} />
+                                    <Text className="text-white text-sm">{workout.level}</Text>
                                 </View>
+                                <TouchableOpacity 
+                                    activeOpacity={0.7}
+                                    onPress={handleFavorite}
+                                >
+                                    <Icon 
+                                        name="star" 
+                                        size={20} 
+                                        color={isFavorite ? '#FFC107' : 'white'} 
+                                    />
+                                </TouchableOpacity>
                             </View>
-                            <Pressable className="absolute right-4">
-                                <Icon name="star-outline" size={24} color="#FFC107" />
-                            </Pressable>
                         </View>
                     </View>
 
                     {/* Workout Rounds */}
-                    <View className="mt-5 px-5">
-                        {renderWorkout("Bench Press", "12", "3 sets x 6 reps")}
-                        {renderWorkout("Overhead Press", "12", "3 sets x 8 reps")}
-                        {renderWorkout("Incline Dumbbell Press", "12", "3 sets x 10 reps")}
-                        {renderWorkout("Dumbbell Lateral Raise", "12", "3 sets x 12 reps")}
-                        {renderWorkout("Dumbbell Chest Flyes", "12", "3 sets x 12 reps")}
-                        {renderWorkout("Barbell Lying Triceps Extension", "12", "3 sets x 15 reps")}
+                    <View className="mt-5">
+                        {workout.details.map((detail: any, index: number) => (
+                            <TouchableOpacity 
+                                className="border mb-3 flex-row items-center p-3 rounded-3xl bg-blue-50 border-blue-500"
+                                key={index}
+                                activeOpacity={0.7}
+                            >
+                                <Icon 
+                                    name="play-circle-outline" 
+                                    size={40} 
+                                    color="#3b82f6" 
+                                    className="mr-3"
+                                />
+                                <View>
+                                    <Text className="font-semibold">{detail.name}</Text>
+                                    <Text className="text-yellow-500">x{detail.reps}</Text>
+                                </View>
+                                <Text className="absolute right-3 text-yellow-500">Repetition {detail.sets}x</Text>
+                            </TouchableOpacity>
+                        ))}
                     </View>
 
                 </ScrollView>
+                <TouchableOpacity  
+                    activeOpacity={0.7}
+                    className="border items-center bg-blue-500 p-3 border-blue-500 rounded-3xl mb-2"
+                    onPress={() => router.push({
+                        pathname: "/Main Tabs/Home/WorkoutLibrary/create-routine",
+                        params: {
+                            workout: JSON.stringify(workout),
+                        },
+                    })}
+                >
+                    <Text className="text-white font-bold text-xl">Start</Text>
+                </TouchableOpacity>
             </SafeAreaView>
         </SafeAreaProvider>
     );
 };
-
-const renderWorkout = (title: string, time: string, repetitions: string) => (
-    <Pressable
-        className="flex-row items-center bg-blue-50 rounded-lg p-4 mb-3"
-        key={title}
-        onPress={() => router.push({
-            pathname: "/Main Tabs/Home/WorkoutLibrary/create-routine",
-            params: {
-                title,
-                time,
-                repetitions,
-            },
-        })
-        }
-    >
-        <View className="mr-3">
-            <Icon name="play-circle-outline" size={24} color="#3b82f6" />
-        </View>
-        <View className="flex-1">
-            <Text className="text-lg font-bold text-gray-800">{title}</Text>
-            <Text className="text-sm text-gray-600 mt-1">
-                <Icon name="time-outline" size={14} /> {time} Minutes
-            </Text>
-        </View>
-        <Text className="text-sm font-bold text-blue-500">{repetitions}</Text>
-    </Pressable>
-);
 
 export default Exercises;

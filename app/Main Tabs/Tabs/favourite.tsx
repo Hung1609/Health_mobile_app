@@ -45,6 +45,11 @@ const Favourite = () => {
           pathname: '/Main Tabs/Home/nutrition-details', 
           params: { item: JSON.stringify(item) } 
       });
+    } else if (item.type.toLowerCase() === 'workout') {
+      router.push({
+          pathname: '/Main Tabs/Home/WorkoutLibrary/exercise', 
+          params: { workout: JSON.stringify(item) } 
+      });
     }
   };
 

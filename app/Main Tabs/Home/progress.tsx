@@ -6,22 +6,14 @@ import Icon2 from 'react-native-vector-icons/Octicons';
 import { ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { Calendar, DateData } from "react-native-calendars";
-import { LineChart, BarChart } from 'react-native-chart-kit';
+import { BarChart } from 'react-native-chart-kit';
+import { useWorkout } from "./WorkoutLibrary/WorkoutContext";
 
-const chartData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'], // X-axis labels
-  datasets: [
-    {
-      data: [150, 170, 200, 250, 230, 170, 190, 240, 240, 240, 240, 240], // Y-axis values
-    },
-  ],
-};
-
-const activities = [
-  { id: 1, title: "Morning Run", calories: 300, time: '20 Minutes', date: "2024-12-26" },
-  { id: 2, title: "Yoga", calories: 150, time: '20 Minutes', date: "2024-12-27" },
-  { id: 3, title: "Cycling", calories: 250, time: '20 Minutes', date: "2024-12-26" },
-];
+interface GroupedWorkoutData {
+  calories: number;
+  duration: string[];
+  dayName: string;
+}
 
 const getToday = () => {
   const today = new Date();
@@ -32,16 +24,67 @@ const getToday = () => {
 };
 
 const Progress = () => {
+  const { workoutData } = useWorkout();
   const [selectedDate, setSelectedDate] = useState<string>(getToday());
   const [currentView, setCurrentView] = useState<"calendar" | "tracking">("calendar");
 
+  // Calendar
   const onDayPress = (day: DateData) => {
     setSelectedDate(day.dateString);
   };
 
-  const filteredActivities = activities.filter(
+  const filteredActivities = workoutData.filter(
     (activity) => activity.date === selectedDate
   );
+  
+  // Get the current month name (Charts)
+  const getMonthName = (monthIndex: number) => {
+    const months = [
+      "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec",
+    ];
+    return months[monthIndex];
+  };
+
+   // Aggregate data by month (Charts)
+  const monthlyData = workoutData.reduce<Record<number, { calories: number; label: string }>>((acc, workout) => {
+    if (!workout.date || !workout.calories) return acc;
+    
+    const date = new Date(workout.date); // Ensure each workout has a date
+    if (isNaN(date.getTime())) return acc; // Skip invalid dates
+
+    const month = date.getMonth(); // Get the month index (0-11)
+
+    const calories =
+      typeof workout.calories === "string"
+        ? parseInt(workout.calories)
+        : workout.calories;
+
+    if (!acc[month]) {
+      acc[month] = { calories: 0, label: getMonthName(month) };
+    }
+  
+    acc[month].calories += calories; // Sum calories
+    return acc;
+  }, {});
+  
+  // Chart data
+  const chartLabels: string[] = [];
+  const chartValues: number[] = [];
+
+  Object.keys(monthlyData).forEach((monthIndex) => {
+    const index = Number(monthIndex); // Convert string to number
+    chartLabels.push(monthlyData[index].label);
+    chartValues.push(monthlyData[index].calories);
+  });
+  
+  const chartData = {
+    labels: chartLabels, // X-axis labels
+    datasets: [
+      {
+        data: chartValues, // Y-axis values
+      },
+    ],
+  };
 
   // Set width for the BarChart
   const fixedBarWidth = 70;
@@ -50,38 +93,62 @@ const Progress = () => {
   const chartWidth = fixedBarWidth * dataLength;
   const finalChartWidth = Math.max(chartWidth, minChartWidth);
 
-  // Get the current day name
-  const getDayName = () => {
+  // Get the current day name (Charts)
+  const getDayName = (dateString: string) => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    return days[new Date().getDay()];
+    const date = new Date(dateString);
+    return days[date.getDay()];
   };
 
-  // Get the current year, month, day
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  const currentDay = new Date().getDate();
+  // Format the date to type Day/Month
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // Months are 0-indexed
+    return `${day}/${month}`;
+  };
 
-  // Weekly data
-  const weeklyData = [
-    {
-      day: getDayName(),
-      date: `${currentDay}/${currentMonth}`,
-      calories: 1200,
-      duration: "30m",
-    },
-    {
-      day: getDayName(),
-      date: `${currentDay}/${currentMonth}`,
-      calories: 1500,
-      duration: "45m",
-    },
-    {
-      day: getDayName(),
-      date: `${currentDay}/${currentMonth}`,
-      calories: 2000,
-      duration: "20m",
-    },
-  ];
+  // Sum duration in minutes of all workouts in a day
+  const sumDuration = (durations: string[]): number => {
+    return durations.reduce((total, duration) => {
+      const timeParts = duration.split(" "); // Assuming "30m", "45m", etc.
+      const minutes = parseInt(timeParts[0], 10); // Extract the numeric part and convert to integer
+      return total + minutes;
+    }, 0);
+  };
+
+  // Parse calories
+  const parseCalories = (calories: number | undefined): number => {
+    if (!calories) return 0;
+    const numericCalories = calories; // Remove non-numeric characters
+    return isNaN(Number(numericCalories)) ? 0 : Number(numericCalories);
+  };
+
+  // Group workouts by date and sum calories and duration
+  const groupedData = workoutData.reduce<Record<string, GroupedWorkoutData>>((acc, workout) => {
+    if (!acc[workout.date]) {
+      acc[workout.date] = { calories: 0, duration: [], dayName: getDayName(workout.date) };
+    }
+
+    // Sum calories 
+    acc[workout.date].calories += parseCalories(workout.calories); 
+
+    // Collect durations 
+    acc[workout.date].duration.push(workout.time || "0m");
+
+    return acc;
+  }, {});
+
+  // Group data by date
+  const groupedDataArray = Object.keys(groupedData).map((date) => ({
+    date: formatDate(date),
+    dayName: groupedData[date].dayName,
+    calories: groupedData[date].calories,
+    totalDuration: sumDuration(groupedData[date].duration),
+  }));
+
+  // Get the current year
+  const currentYear = new Date().getFullYear();
 
   return (
     <SafeAreaProvider>
@@ -129,7 +196,7 @@ const Progress = () => {
               </TouchableOpacity>
             </View>
 
-            {currentView === "calendar" ? (
+            {currentView === "calendar" ? ( // Calendar
               <View>
                 <View className="border-blue-500 border-2 rounded-3xl my-4 overflow-hidden">
                   <Calendar
@@ -178,6 +245,10 @@ const Progress = () => {
                                 <Icon2 name="flame" color="gray" />
                                 <Text className="text-gray-500 text-sm">{item.calories} Cal</Text>
                               </View>
+                              <View className='flex-row items-center gap-1'>
+                                <Icon name="fitness-outline" color="gray" />
+                                <Text className="text-gray-500 text-sm">{item.level}</Text>
+                              </View>
                             </View>
                           </View>
                         </View>
@@ -188,7 +259,7 @@ const Progress = () => {
                   )}
                 </View>
               </View>
-            ) : (
+            ) : ( // Charts
               <View className="flex-1 justify-center items-center mb-4">
                 <Text className="text-yellow-500 text-xl font-bold mt-2 mb-8">My progress in {currentYear}</Text>
 
@@ -226,31 +297,31 @@ const Progress = () => {
                 />
                 </ScrollView>
 
-                {weeklyData.map((item, index) => (
-                <View 
-                  key={index}
-                  className="mt-4 bg-blue-500 rounded-3xl py-2 flex-row w-full items-center justify-evenly"
-                >
-                  <View className="justify-center items-center">
-                    <Text className="text-white text-sm">{item.day}</Text>
-                    <Text className="text-white font-bold text-xl">{item.date}</Text>
-                  </View>
-                  <View className="h-full w-[1px] bg-white" />
-                  <View className="justify-center items-center">
-                    <Text className="text-white text-sm">Calories</Text>
-                    <View className="flex-row items-center gap-1">
-                      <Icon2 name="flame" size={20} color="white" />
-                      <Text className="text-white font-bold text-xl">{item.calories}</Text>
+                {groupedDataArray.map((item, index) => (
+                  <View
+                    key={index}
+                    className="mt-4 bg-blue-500 rounded-3xl py-2 flex-row w-full items-center justify-evenly"
+                  >
+                    <View className="justify-center items-center">
+                      <Text className="text-white text-sm">{item.dayName}</Text>
+                      <Text className="text-white font-bold text-xl">{item.date}</Text>
+                    </View>
+                    <View className="h-full w-[1px] bg-white" />
+                    <View className="justify-center items-center">
+                      <Text className="text-white text-sm">Calories</Text>
+                      <View className="flex-row items-center gap-1">
+                        <Icon2 name="flame" size={20} color="white" />
+                        <Text className="text-white font-bold text-xl">{item.calories} Cal</Text>
+                      </View>
+                    </View>
+                    <View className="justify-center items-center">
+                      <Text className="text-white text-sm">Duration</Text>
+                      <View className="flex-row items-center gap-1">
+                        <Icon name="time-outline" size={20} color="white" />
+                        <Text className="text-white font-bold text-xl">{item.totalDuration} min</Text>
+                      </View>
                     </View>
                   </View>
-                  <View className="justify-center items-center">
-                    <Text className="text-white text-sm">Duration</Text>
-                    <View className="flex-row items-center gap-1">
-                      <Icon name="time-outline" size={20} color="white" />
-                      <Text className="text-white font-bold text-xl">{item.duration}</Text>
-                    </View>
-                  </View>
-                </View>
                 ))}
               </View>
             )}
