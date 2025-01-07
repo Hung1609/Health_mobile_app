@@ -32,7 +32,7 @@ db = client["Health_database"]
 users_collection = db["users"]
 rec_collection = db["recommendations"]
 article_collection = db["articles"]
-w_collection = db["workouts"]
+w_collection = db["workout"]
 n_collection = db["nutrition"]
 
 # 2) KẾT NỐI S3 (thay AWS_ACCESS_KEY / AWS_SECRET_KEY / region_name bằng của bạn)
