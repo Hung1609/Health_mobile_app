@@ -147,7 +147,7 @@ const Favourite = () => {
                         </View>
                         <View className='flex-row items-center gap-1'>
                           <Icon2 name="flame" color="gray" />
-                          <Text className="text-gray-500 text-sm">{item.calories}</Text>
+                          <Text className="text-gray-500 text-sm">{item.calories} Cal</Text>
                         </View>
                       </View>
                       {item.type.toLowerCase() === 'workout' && (
