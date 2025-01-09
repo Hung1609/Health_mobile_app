@@ -41,4 +41,4 @@ app-example
 src/health_env/
 .vscode/
 
-src/base/__pycache__/
+src/base/__pycache__/*
