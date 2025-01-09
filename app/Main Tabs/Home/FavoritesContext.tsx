@@ -9,6 +9,7 @@ export type FavoriteItem = {
   calories: string;
   exercises?: string;
   type: string;
+  ftype: string;
 };
 
 // Define the shape of the context
