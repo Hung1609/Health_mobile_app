@@ -13,6 +13,7 @@ from passlib.context import CryptContext
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from agent import initialize_agent, get_chat_response
+
 app = FastAPI()
 
 app.add_middleware(
@@ -100,9 +101,13 @@ class UserLevel(BaseModel):
     level: str  # e.g., "Beginner", "Intermediate", or "Advance"
 
 
-class ResetPassword(BaseModel):
-    email: EmailStr
+class ResetPasswordModel(BaseModel):
+    email: str
     new_password: str
+
+
+class GetUserInfo(BaseModel):
+    email: EmailStr
 
 
 class Recommendation(BaseModel):
@@ -118,15 +123,25 @@ class Article(BaseModel):
     isStarred: bool = False
 
 
-class Workout(BaseModel):
-    level: str
+class ExerciseDetail(BaseModel):
+    name: str
+    description: str
+    reps: str
+    sets: str
+    video: str
+
+
+class WorkoutData(BaseModel):
     id: int
     title: str
     image: str
     time: str
     calories: str
     exercises: str
-    type: str
+    details: List[ExerciseDetail]
+    level: str  # Beginner, Intermediate, Advanced
+    type: str  # workout type
+    
 
 
 class NutritionItem(BaseModel):
@@ -145,22 +160,25 @@ def convert_id(doc):
         doc["_id"] = str(doc["_id"])
     return doc
 
+
 # Initialize agent globally
 class ChatAgent:
     _instance = None
-    
+
     @classmethod
     async def get_instance(cls):
         if cls._instance is None:
             cls._instance = await cls._initialize()
         return cls._instance
-    
+
     @classmethod
     async def _initialize(cls):
         return initialize_agent()
 
+
 class ChatRequest(BaseModel):
     message: str
+
 
 # =========================================================
 # ============== PHẦN ADMIN (UPLOAD FILE) ================
@@ -377,28 +395,54 @@ def set_level(level: UserLevel):
     return {"message": f"Level updated to {level.level}."}
 
 
-@app.post("/reset_password")
-def reset_password(reset_data: ResetPassword):
-    # 1. Find the user by email
-    existing_user = users_collection.find_one({"email": reset_data.email})
-    if not existing_user:
-        raise HTTPException(status_code=404, detail="User not found.")
+@app.post("/reset-password")
+async def reset_password(data: ResetPasswordModel):
+    print(f"Received data: {data.dict()}")  # Debug log
 
-    # 2. Hash the new password
-    hashed_pw = hash_password(reset_data.new_password)
+    # Check if the user exists
+    user = users_collection.find_one({"email": data.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
 
-    # 3. Update the user's password in MongoDB
+    # Hash the new password
+    hashed_password = hash_password(data.new_password)
+
+    # Update the user's password in the database
     update_result = users_collection.update_one(
-        {"email": reset_data.email}, {"$set": {"password": hashed_pw}}
+        {"email": data.email}, {"$set": {"password": hashed_password}}
     )
 
     if update_result.modified_count == 0:
-        # Possibly the password was the same as before, or user wasn't found
-        return {
-            "message": "No changes were made. The user may already have this password."
-        }
+        raise HTTPException(status_code=500, detail="Failed to update password")
 
-    return {"message": "Password reset successful!"}
+    return {"message": "Password successfully updated"}
+
+
+@app.post("/get_user_info")
+def get_user_info(user_req: GetUserInfo):
+    # Find user by email
+    user = users_collection.find_one({"email": user_req.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # Convert _id to string if needed, or exclude it altogether
+    user["_id"] = str(user["_id"])
+
+    # Exclude password before returning
+    user.pop("password", None)
+
+    return {
+        "full_name": user.get("full_name"),
+        "email": user.get("email"),
+        "gender": user.get("gender"),
+        "age": user.get("age"),
+        "height": user.get("height"),
+        "weight": user.get("weight"),
+        "birthday": user.get("birthday"),
+        "goals": user.get("goals"),
+        "level": user.get("level"),
+        # ...any other fields...
+    }
 
 
 # [GET] Lấy thông tin user qua query param ?username=
@@ -524,6 +568,7 @@ def star_article(article_id: str, payload: dict = Body(...)):
 
 # ------------------- RECOMMENDATIONS ---------------------
 
+
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
     try:
@@ -535,25 +580,46 @@ async def chat_endpoint(request: ChatRequest):
     except Exception as e:
         print(f"Error occurred: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
 # --HOME--
 
 
-@app.get("/workouts/{level}", response_model=List[Workout])
+@app.get("/workouts/{level}", response_model=List[WorkoutData])
 async def get_workouts(level: str):
+    """
+    Retrieve workouts by difficulty level (Beginner, Intermediate, Advanced).
+    """
     data = list(w_collection.find({"level": level}, {"_id": 0}))
     if not data:
-        raise HTTPException(status_code=404, detail="No workouts found")
+        raise HTTPException(
+            status_code=404, detail=f"No workouts found for level: {level}"
+        )
     return data
 
 
 @app.post("/workouts/")
-async def add_workout(workout: Workout):
+async def add_workout(workout: WorkoutData):
+    """
+    Add a new workout to the database.
+    """
     if w_collection.find_one({"id": workout.id}):
         raise HTTPException(
-            status_code=400, detail="Workout with this ID already exists"
+            status_code=400, detail="Workout with this ID already exists."
         )
     w_collection.insert_one(workout.dict())
     return {"message": "Workout added successfully"}
+
+
+@app.get("/workout/{id}", response_model=WorkoutData)
+async def get_workout_by_id(id: int):
+    """
+    Retrieve a specific workout by its ID.
+    """
+    workout = w_collection.find_one({"id": id}, {"_id": 0})
+    if not workout:
+        raise HTTPException(status_code=404, detail="Workout not found.")
+    return workout
 
 
 @app.get("/nutrition/{meal_type}", response_model=List[NutritionItem])

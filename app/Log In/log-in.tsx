@@ -12,6 +12,7 @@ import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/Ionicons";
 import axios from "axios";
 import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LogIn = () => {
   const router = useRouter();
@@ -54,6 +55,7 @@ const LogIn = () => {
 
       // If successful
       Alert.alert("Success", data.message);
+      await AsyncStorage.setItem("userEmail", email);
       // Move to next screen
       router.push("/Main Tabs/Tabs/home");
     } catch (error) {
