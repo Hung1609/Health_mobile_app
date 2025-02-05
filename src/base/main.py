@@ -130,7 +130,7 @@ class WorkoutData(BaseModel):
     details: List[ExerciseDetail]
     level: str  # Beginner, Intermediate, Advanced
     type: str  # workout type
-    
+    ftype: str
 
 
 class NutritionItem(BaseModel):
@@ -141,6 +141,7 @@ class NutritionItem(BaseModel):
     time: str
     calories: str
     type: str
+    ftype: str
 
 
 # Hàm tiện ích để chuyển ObjectId -> string
