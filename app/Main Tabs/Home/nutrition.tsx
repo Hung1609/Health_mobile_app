@@ -24,6 +24,7 @@ type NutritionItem = {
     time: string;
     calories: string;
     type: string;
+    ftype: string;
 };
 
 const Nutrition = () => {
