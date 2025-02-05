@@ -35,7 +35,8 @@ const Exercises = () => {
                 time: Array.isArray(workout.duration) ? workout.duration[0] : workout.duration, 
                 calories: Array.isArray(workout.calories) ? workout.calories[0] : workout.calories, 
                 exercises: Array.isArray(workout.exercises) ? workout.exercises[0] : workout.exercises,
-                type: 'workout', 
+                type: Array.isArray(workout.type) ? workout.type[0] : workout.type,
+                ftype: 'workout', 
             };
             
             addFavorite(item);

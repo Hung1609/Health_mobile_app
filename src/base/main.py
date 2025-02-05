@@ -1,23 +1,22 @@
 import uvicorn
 from fastapi import FastAPI, File, UploadFile, HTTPException, Body
+from base.agent_controller import AgentController
 from typing import Optional
 import pymongo
 from bson import ObjectId
 import logging
-from dotenv import load_dotenv
 import os
-import boto3  # Thư viện để upload S3
 from werkzeug.security import generate_password_hash, check_password_hash
 from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-from agent import initialize_agent, get_chat_response
+
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # <--- allow all origins
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,17 +31,8 @@ db = client["Health_database"]
 users_collection = db["users"]
 rec_collection = db["recommendations"]
 article_collection = db["articles"]
-w_collection = db["workouts"]
+w_collection = db["workout"]
 n_collection = db["nutrition"]
-
-# 2) KẾT NỐI S3 (thay AWS_ACCESS_KEY / AWS_SECRET_KEY / region_name bằng của bạn)
-s3_client = boto3.client(
-    "s3",
-    aws_access_key_id="AWS_ACCESS_KEY",
-    aws_secret_access_key="AWS_SECRET_KEY",
-    region_name="ap-southeast-2",
-)
-BUCKET_NAME = "health-app-data"
 
 # 3) Mô hình dữ liệu (Pydantic) dùng cho request/response (ví dụ)
 # assword Hashing
@@ -100,9 +90,13 @@ class UserLevel(BaseModel):
     level: str  # e.g., "Beginner", "Intermediate", or "Advance"
 
 
-class ResetPassword(BaseModel):
-    email: EmailStr
+class ResetPasswordModel(BaseModel):
+    email: str
     new_password: str
+
+
+class GetUserInfo(BaseModel):
+    email: EmailStr
 
 
 class Recommendation(BaseModel):
@@ -118,15 +112,25 @@ class Article(BaseModel):
     isStarred: bool = False
 
 
-class Workout(BaseModel):
-    level: str
+class ExerciseDetail(BaseModel):
+    name: str
+    description: str
+    reps: str
+    sets: str
+    video: str
+
+
+class WorkoutData(BaseModel):
     id: int
     title: str
     image: str
     time: str
     calories: str
     exercises: str
-    type: str
+    details: List[ExerciseDetail]
+    level: str  # Beginner, Intermediate, Advanced
+    type: str  # workout type
+    ftype: str
 
 
 class NutritionItem(BaseModel):
@@ -137,6 +141,7 @@ class NutritionItem(BaseModel):
     time: str
     calories: str
     type: str
+    ftype: str
 
 
 # Hàm tiện ích để chuyển ObjectId -> string
@@ -145,86 +150,12 @@ def convert_id(doc):
         doc["_id"] = str(doc["_id"])
     return doc
 
-# Initialize agent globally
-class ChatAgent:
-    _instance = None
-    
-    @classmethod
-    async def get_instance(cls):
-        if cls._instance is None:
-            cls._instance = await cls._initialize()
-        return cls._instance
-    
-    @classmethod
-    async def _initialize(cls):
-        return initialize_agent()
 
-class ChatRequest(BaseModel):
-    message: str
+# Initialize agent 
+agent_controller = AgentController()
 
 # =========================================================
-# ============== PHẦN ADMIN (UPLOAD FILE) ================
-# =========================================================
-
-
-@app.post("/admin/recommendations")
-async def create_recommendation_for_admin(
-    title: str = Body(...),
-    duration: str = Body(...),
-    file: UploadFile = File(...),
-):
-    """
-    Endpoint dành cho admin, upload ảnh/video bài tập lên S3,
-    rồi lưu record vào MongoDB.
-    """
-    try:
-        # 1) Upload file lên S3
-        s3_key = f"recommendations/{file.filename}"
-        s3_client.upload_fileobj(file.file, BUCKET_NAME, s3_key)
-        file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{s3_key}"
-
-        # 2) Tạo document lưu vào DB
-        doc = {
-            "title": title,
-            "duration": duration,
-            "fileUrl": file_url,
-            "isStarred": False,
-        }
-        result = rec_collection.insert_one(doc)
-        doc["_id"] = str(result.inserted_id)
-        return doc
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/admin/articles")
-async def create_article_for_admin(
-    title: str = Body(...),
-    file: UploadFile = File(...),
-):
-    """
-    Endpoint dành cho admin, upload ảnh/video bài viết lên S3,
-    rồi lưu record vào MongoDB.
-    """
-    try:
-        # 1) Upload file lên S3
-        s3_key = f"articles/{file.filename}"
-        s3_client.upload_fileobj(file.file, BUCKET_NAME, s3_key)
-        file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{s3_key}"
-
-        # 2) Tạo document lưu vào DB
-        doc = {"title": title, "fileUrl": file_url, "isStarred": False}
-        result = article_collection.insert_one(doc)
-        doc["_id"] = str(result.inserted_id)
-        return doc
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-# =========================================================
-# =========== PHẦN CLIENT (MÀN HÌNH HOME) =================
+# ================ CLIENT (MÀN HÌNH HOME) =================
 # =========================================================
 
 
@@ -377,28 +308,54 @@ def set_level(level: UserLevel):
     return {"message": f"Level updated to {level.level}."}
 
 
-@app.post("/reset_password")
-def reset_password(reset_data: ResetPassword):
-    # 1. Find the user by email
-    existing_user = users_collection.find_one({"email": reset_data.email})
-    if not existing_user:
-        raise HTTPException(status_code=404, detail="User not found.")
+@app.post("/reset-password")
+async def reset_password(data: ResetPasswordModel):
+    print(f"Received data: {data.dict()}")  # Debug log
 
-    # 2. Hash the new password
-    hashed_pw = hash_password(reset_data.new_password)
+    # Check if the user exists
+    user = users_collection.find_one({"email": data.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
 
-    # 3. Update the user's password in MongoDB
+    # Hash the new password
+    hashed_password = hash_password(data.new_password)
+
+    # Update the user's password in the database
     update_result = users_collection.update_one(
-        {"email": reset_data.email}, {"$set": {"password": hashed_pw}}
+        {"email": data.email}, {"$set": {"password": hashed_password}}
     )
 
     if update_result.modified_count == 0:
-        # Possibly the password was the same as before, or user wasn't found
-        return {
-            "message": "No changes were made. The user may already have this password."
-        }
+        raise HTTPException(status_code=500, detail="Failed to update password")
 
-    return {"message": "Password reset successful!"}
+    return {"message": "Password successfully updated"}
+
+
+@app.post("/get_user_info")
+def get_user_info(user_req: GetUserInfo):
+    # Find user by email
+    user = users_collection.find_one({"email": user_req.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # Convert _id to string if needed, or exclude it altogether
+    user["_id"] = str(user["_id"])
+
+    # Exclude password before returning
+    user.pop("password", None)
+
+    return {
+        "full_name": user.get("full_name"),
+        "email": user.get("email"),
+        "gender": user.get("gender"),
+        "age": user.get("age"),
+        "height": user.get("height"),
+        "weight": user.get("weight"),
+        "birthday": user.get("birthday"),
+        "goals": user.get("goals"),
+        "level": user.get("level"),
+        # ...any other fields...
+    }
 
 
 # [GET] Lấy thông tin user qua query param ?username=
@@ -521,39 +478,44 @@ def star_article(article_id: str, payload: dict = Body(...)):
     convert_id(updated)
     return updated
 
-
-# ------------------- RECOMMENDATIONS ---------------------
-
-@app.post("/chat")
-async def chat_endpoint(request: ChatRequest):
-    try:
-        print(f"Received request: {request}")
-        agent = await ChatAgent.get_instance()
-        response = await get_chat_response(agent, request.message)
-        print(f"Sending response: {response}")
-        return {"response": response}
-    except Exception as e:
-        print(f"Error occurred: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
 # --HOME--
 
 
-@app.get("/workouts/{level}", response_model=List[Workout])
+@app.get("/workouts/{level}", response_model=List[WorkoutData])
 async def get_workouts(level: str):
+    """
+    Retrieve workouts by difficulty level (Beginner, Intermediate, Advanced).
+    """
     data = list(w_collection.find({"level": level}, {"_id": 0}))
     if not data:
-        raise HTTPException(status_code=404, detail="No workouts found")
+        raise HTTPException(
+            status_code=404, detail=f"No workouts found for level: {level}"
+        )
     return data
 
 
 @app.post("/workouts/")
-async def add_workout(workout: Workout):
+async def add_workout(workout: WorkoutData):
+    """
+    Add a new workout to the database.
+    """
     if w_collection.find_one({"id": workout.id}):
         raise HTTPException(
-            status_code=400, detail="Workout with this ID already exists"
+            status_code=400, detail="Workout with this ID already exists."
         )
     w_collection.insert_one(workout.dict())
     return {"message": "Workout added successfully"}
+
+
+@app.get("/workout/{id}", response_model=WorkoutData)
+async def get_workout_by_id(id: int):
+    """
+    Retrieve a specific workout by its ID.
+    """
+    workout = w_collection.find_one({"id": id}, {"_id": 0})
+    if not workout:
+        raise HTTPException(status_code=404, detail="Workout not found.")
+    return workout
 
 
 @app.get("/nutrition/{meal_type}", response_model=List[NutritionItem])
@@ -572,3 +534,10 @@ async def add_nutrition(item: NutritionItem):
         raise HTTPException(status_code=400, detail="Item with this ID already exists.")
     n_collection.insert_one(item.dict())
     return {"message": "Nutrition item added successfully"}
+
+# ------------------- CHATBOT ---------------------
+
+@app.post("/get-response")
+async def get_response(input: dict):
+    response = agent_controller.get_response(input)
+    return {"response": response}

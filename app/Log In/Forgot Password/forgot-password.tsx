@@ -1,27 +1,16 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // <-- Install & import
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ForgotPassword = () => {
     const router = useRouter();
     const [email, setEmail] = useState("");
 
     const handleContinue = async () => {
-        if (!email) {
-            Alert.alert("Error", "Please enter your email.");
-            return;
-        }
-
-        // Store email in AsyncStorage
-        await AsyncStorage.setItem("forgotPasswordEmail", email);
-
-        // Then navigate to the set-password screen
-        router.push({
-            pathname: "/Log In/Forgot Password/set-password",
-            params: { email },
-        });
+        await AsyncStorage.setItem("resetEmail", email);
+        router.push("/Log In/Forgot Password/set-password");
     };
 
     return (

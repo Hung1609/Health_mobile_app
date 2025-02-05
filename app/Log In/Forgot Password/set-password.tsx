@@ -6,88 +6,81 @@ import {
     Pressable,
     Alert,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from "react-native-vector-icons/Ionicons";
 
-const ForgotPassword = () => {
+const SetPassword = () => {
     const router = useRouter();
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPasswordInput] = useState("");
     const [secureTextEntry, setSecureTextEntry] = useState(true);
-    const [confirmPassword, setConfirmPassword] = useState(true);
-
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmNewPassword, setConfirmNewPassword] = useState("");
+    const [confirmPasswordSecure, setConfirmPasswordSecure] = useState(true);
     const [email, setEmail] = useState("");
 
     useEffect(() => {
-        // Retrieve the email from AsyncStorage
-        const getEmail = async () => {
-            try {
-                const storedEmail = await AsyncStorage.getItem(
-                    "forgotPasswordEmail"
-                );
-                if (storedEmail) {
-                    setEmail(storedEmail);
-                } else {
-                    Alert.alert(
-                        "Error",
-                        "No email found. Please go back and enter your email."
-                    );
-                    // Optionally navigate the user back
-                    router.push("/Log In/Forgot Password/forgot-password");
-                }
-            } catch (error) {
-                console.error(error);
+        const fetchEmail = async () => {
+            const storedEmail = await AsyncStorage.getItem("resetEmail");
+            if (storedEmail) {
+                setEmail(storedEmail);
             }
         };
-        getEmail();
+        fetchEmail();
     }, []);
 
-    const toggleSecureTextEntry = () => setSecureTextEntry(!secureTextEntry);
-    const toggleConfirmPassword = () => setConfirmPassword(!confirmPassword);
+    const toggleSecureTextEntry = () => {
+        setSecureTextEntry(!secureTextEntry);
+    };
 
-    const handleContinue = async () => {
-        // Basic checks
-        if (!newPassword || !confirmNewPassword) {
-            Alert.alert("Error", "Please fill both password fields.");
+    const toggleConfirmPasswordSecure = () => {
+        setConfirmPasswordSecure(!confirmPasswordSecure);
+    };
+
+    const handleResetPassword = async () => {
+        if (!password || !confirmPassword) {
+            Alert.alert("Error", "Please fill in all fields");
             return;
         }
-        if (newPassword !== confirmNewPassword) {
-            Alert.alert("Error", "Passwords do not match.");
+
+        if (password !== confirmPassword) {
+            Alert.alert("Error", "Passwords do not match");
             return;
         }
 
         try {
-            // Call the /reset_password endpoint
-            const response = await fetch(
-                "http://127.0.0.1:8000/reset_password",
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, new_password: newPassword }),
-                }
-            );
-
-            const data = await response.json();
-            if (!response.ok) {
+            if (!email) {
                 Alert.alert(
                     "Error",
-                    data.detail || "Failed to reset password."
+                    "Email not found. Please restart the process."
                 );
                 return;
             }
 
-            Alert.alert("Success", data.message);
-            // Optional: Clear forgot password email from AsyncStorage
-            await AsyncStorage.removeItem("forgotPasswordEmail");
+            const response = await fetch("http://127.0.0.1/reset-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, new_password: password }),
+            });
 
-            // Navigate to success screen or login screen
-            router.push("/Log In/log-in");
+            const result = await response.json();
+
+            if (response.ok) {
+                Alert.alert("Success", "Password reset successfully", [
+                    {
+                        text: "OK",
+                        onPress: () => router.push("/Log In/log-in"),
+                    },
+                ]);
+            } else {
+                Alert.alert(
+                    "Error",
+                    result.detail || "Failed to reset password"
+                );
+            }
         } catch (error) {
-            console.error(error);
-            Alert.alert("Network Error", "Could not connect to server.");
+            Alert.alert("Error", "An unexpected error occurred");
         }
     };
 
@@ -109,6 +102,8 @@ const ForgotPassword = () => {
                                 placeholder="Enter your password"
                                 className="py-5 px-3"
                                 secureTextEntry={secureTextEntry}
+                                value={password}
+                                onChangeText={setPassword}
                                 autoCapitalize="none"
                                 autoCorrect={false}
                             />
@@ -131,16 +126,22 @@ const ForgotPassword = () => {
                             <TextInput
                                 placeholder="Confirm your password"
                                 className="py-5 px-3"
-                                secureTextEntry={confirmPassword}
+                                secureTextEntry={confirmPasswordSecure}
+                                value={confirmPassword}
+                                onChangeText={setConfirmPasswordInput}
                                 autoCapitalize="none"
                                 autoCorrect={false}
                             />
                             <Pressable
-                                onPress={toggleConfirmPassword}
+                                onPress={toggleConfirmPasswordSecure}
                                 className="absolute right-3 top-1/3"
                             >
                                 <Icon
-                                    name={confirmPassword ? "eye-off" : "eye"}
+                                    name={
+                                        confirmPasswordSecure
+                                            ? "eye-off"
+                                            : "eye"
+                                    }
                                     size={20}
                                     color="gray"
                                 />
@@ -149,7 +150,7 @@ const ForgotPassword = () => {
                     </View>
 
                     <TouchableOpacity
-                        onPress={handleContinue}
+                        onPress={handleResetPassword}
                         className="bg-blue-500 py-3 rounded-lg absolute bottom-5 w-full"
                         activeOpacity={0.7}
                     >
@@ -163,4 +164,4 @@ const ForgotPassword = () => {
     );
 };
 
-export default ForgotPassword;
+export default SetPassword;
