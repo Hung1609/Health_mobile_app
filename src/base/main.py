@@ -1,24 +1,22 @@
 import uvicorn
 from fastapi import FastAPI, File, UploadFile, HTTPException, Body
+from base.agent_controller import AgentController
 from typing import Optional
 import pymongo
 from bson import ObjectId
 import logging
-from dotenv import load_dotenv
 import os
-import boto3  # Thư viện để upload S3
 from werkzeug.security import generate_password_hash, check_password_hash
 from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-from agent import initialize_agent, get_chat_response
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # <--- allow all origins
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,15 +33,6 @@ rec_collection = db["recommendations"]
 article_collection = db["articles"]
 w_collection = db["workout"]
 n_collection = db["nutrition"]
-
-# 2) KẾT NỐI S3 (thay AWS_ACCESS_KEY / AWS_SECRET_KEY / region_name bằng của bạn)
-s3_client = boto3.client(
-    "s3",
-    aws_access_key_id="AWS_ACCESS_KEY",
-    aws_secret_access_key="AWS_SECRET_KEY",
-    region_name="ap-southeast-2",
-)
-BUCKET_NAME = "health-app-data"
 
 # 3) Mô hình dữ liệu (Pydantic) dùng cho request/response (ví dụ)
 # assword Hashing
@@ -161,88 +150,11 @@ def convert_id(doc):
     return doc
 
 
-# Initialize agent globally
-class ChatAgent:
-    _instance = None
-
-    @classmethod
-    async def get_instance(cls):
-        if cls._instance is None:
-            cls._instance = await cls._initialize()
-        return cls._instance
-
-    @classmethod
-    async def _initialize(cls):
-        return initialize_agent()
-
-
-class ChatRequest(BaseModel):
-    message: str
-
+# Initialize agent 
+agent_controller = AgentController()
 
 # =========================================================
-# ============== PHẦN ADMIN (UPLOAD FILE) ================
-# =========================================================
-
-
-@app.post("/admin/recommendations")
-async def create_recommendation_for_admin(
-    title: str = Body(...),
-    duration: str = Body(...),
-    file: UploadFile = File(...),
-):
-    """
-    Endpoint dành cho admin, upload ảnh/video bài tập lên S3,
-    rồi lưu record vào MongoDB.
-    """
-    try:
-        # 1) Upload file lên S3
-        s3_key = f"recommendations/{file.filename}"
-        s3_client.upload_fileobj(file.file, BUCKET_NAME, s3_key)
-        file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{s3_key}"
-
-        # 2) Tạo document lưu vào DB
-        doc = {
-            "title": title,
-            "duration": duration,
-            "fileUrl": file_url,
-            "isStarred": False,
-        }
-        result = rec_collection.insert_one(doc)
-        doc["_id"] = str(result.inserted_id)
-        return doc
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/admin/articles")
-async def create_article_for_admin(
-    title: str = Body(...),
-    file: UploadFile = File(...),
-):
-    """
-    Endpoint dành cho admin, upload ảnh/video bài viết lên S3,
-    rồi lưu record vào MongoDB.
-    """
-    try:
-        # 1) Upload file lên S3
-        s3_key = f"articles/{file.filename}"
-        s3_client.upload_fileobj(file.file, BUCKET_NAME, s3_key)
-        file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{s3_key}"
-
-        # 2) Tạo document lưu vào DB
-        doc = {"title": title, "fileUrl": file_url, "isStarred": False}
-        result = article_collection.insert_one(doc)
-        doc["_id"] = str(result.inserted_id)
-        return doc
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-# =========================================================
-# =========== PHẦN CLIENT (MÀN HÌNH HOME) =================
+# ================ CLIENT (MÀN HÌNH HOME) =================
 # =========================================================
 
 
@@ -565,23 +477,6 @@ def star_article(article_id: str, payload: dict = Body(...)):
     convert_id(updated)
     return updated
 
-
-# ------------------- RECOMMENDATIONS ---------------------
-
-
-@app.post("/chat")
-async def chat_endpoint(request: ChatRequest):
-    try:
-        print(f"Received request: {request}")
-        agent = await ChatAgent.get_instance()
-        response = await get_chat_response(agent, request.message)
-        print(f"Sending response: {response}")
-        return {"response": response}
-    except Exception as e:
-        print(f"Error occurred: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
 # --HOME--
 
 
@@ -638,3 +533,10 @@ async def add_nutrition(item: NutritionItem):
         raise HTTPException(status_code=400, detail="Item with this ID already exists.")
     n_collection.insert_one(item.dict())
     return {"message": "Nutrition item added successfully"}
+
+# ------------------- CHATBOT ---------------------
+
+@app.post("/get-response")
+async def get_response(input: dict):
+    response = agent_controller.get_response(input)
+    return {"response": response}
