@@ -32,6 +32,7 @@ type WorkoutData = {
     details: ExerciseDetail[];
     level: string;
     type: string;
+    ftype: string;
 };
 
 type Exercise = "Beginner" | "Intermediate" | "Advanced";
