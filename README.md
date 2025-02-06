@@ -15,4 +15,9 @@
 5. Install NativeWind
 - npx expo install nativewind tailwindcss react-native-reanimated react-native-safe-area-context 
 
+6. To run the backend
+- change the ip in all .tsx file to your device ip 
+- cd .\src\base\
+- uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
 Note: Make sure to install some additional libraries which are used in the project.
