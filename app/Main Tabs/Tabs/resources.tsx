@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   FlatList,
   Linking,
+  Touchable,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -215,8 +217,9 @@ const Resource = () => {
                     data={articles}
                     keyExtractor={(item) => item.title}
                     renderItem={({ item }) => (
-                      <Pressable
-                        className="flex-row border-2 border-blue-600 bg-white rounded-lg p-1 m-2"
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        className="flex-row border-2 border-blue-500 bg-white rounded-lg m-2 items-center h-40 overflow-hidden"
                         onPress={() => {
                           if (item.url) {
                             Linking.openURL(item.url).catch((err: any) =>
@@ -231,17 +234,14 @@ const Resource = () => {
                               item.urlToImage ||
                               "https://via.placeholder.com/150",
                           }}
-                          className="h-32 w-32 rounded-lg"
+                          className="h-full w-1/3 rounded-r-lg"
                         />
-                        <View className="flex-1 justify-center mx-3">
+                        <View className="flex-1 justify-center ml-3">
                           <Text className="text-black font-bold text-lg">
                             {item.title}
                           </Text>
-                          <Text numberOfLines={3} className="text-gray-600">
-                            {item.description}
-                          </Text>
                         </View>
-                      </Pressable>
+                      </TouchableOpacity>
                     )}
                   />
                 )}

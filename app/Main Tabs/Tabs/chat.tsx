@@ -85,7 +85,6 @@ const Chat = () => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       try {
-        // call API
         const response = await fetch("http://192.168.12.254/chat", {
           method: "POST",
           headers: {

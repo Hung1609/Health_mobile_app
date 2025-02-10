@@ -82,12 +82,21 @@ const RootLayout = () => {
 
             <Stack.Screen name="Main Tabs/Tabs" options={{ headerShown: false }}></Stack.Screen>
             <Stack.Screen name="Other Tabs/profile" options={{ headerShown: false }}></Stack.Screen>
-            <Stack.Screen name="Other Tabs/edit-profile" options={{ headerShown: false }}></Stack.Screen>
+            
             <Stack.Screen name="Other Tabs/notification" options={{ headerShown: false }}></Stack.Screen>
             <Stack.Screen name="Other Tabs/setting" options={{ headerShown: false }}></Stack.Screen>
             <Stack.Screen name="Other Tabs/notification-setting" options={{ headerShown: false }}></Stack.Screen>
             <Stack.Screen name="Other Tabs/articles" options={{ headerShown: false }}></Stack.Screen>
             <Stack.Screen name="Other Tabs/system-setting" options={{ headerShown: false }}></Stack.Screen>
+
+            <Stack.Screen
+              name="Other Tabs/edit-profile"
+              options={{
+                headerTitle: 'Back',
+                headerShadowVisible: false,
+              }}
+            />
+
 
             <Stack.Screen
               name="Main Tabs/Home/WorkoutLibrary/create-routine"
