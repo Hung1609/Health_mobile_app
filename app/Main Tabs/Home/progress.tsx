@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Text, View, Pressable, Image, TouchableOpacity, Dimensions } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -36,6 +36,29 @@ const Progress = () => {
   const filteredActivities = workoutData.filter(
     (activity) => activity.date === selectedDate
   );
+
+  // Create markedDates for dates which have workouts
+  const markedDates = useMemo(() => {
+    const workoutDates = workoutData.reduce((acc, activity) => {
+      acc[activity.date] = {
+        marked: true,
+        dotColor: "#FFC107", // Dot color for workout days
+        selected: activity.date === selectedDate,
+        selectedColor: activity.date === selectedDate ? "#007BFF" : undefined,
+      };
+      return acc;
+    }, {} as Record<string, any>);
+  
+    // Ensure selected date is always highlighted
+    if (selectedDate && !workoutDates[selectedDate]) {
+      workoutDates[selectedDate] = {
+        selected: true,
+        selectedColor: "#007BFF",
+      };
+    }
+  
+    return workoutDates;
+  }, [workoutData, selectedDate]);
   
   // Get the current month name (Charts)
   const getMonthName = (monthIndex: number) => {
@@ -201,13 +224,7 @@ const Progress = () => {
                 <View className="border-blue-500 border-2 rounded-3xl my-4 overflow-hidden">
                   <Calendar
                     onDayPress={onDayPress}
-                    markedDates={{
-                      [selectedDate]: {
-                        selected: true,
-                        marked: true,
-                        selectedColor: "#007BFF",
-                      },
-                    }}
+                    markedDates={markedDates}
                     theme={{
                       backgroundColor: "#FFFFFF",
                       calendarBackground: "#FFFFFF",

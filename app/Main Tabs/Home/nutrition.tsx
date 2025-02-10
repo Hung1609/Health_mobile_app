@@ -65,7 +65,7 @@ const Nutrition = () => {
             setLoading(true);
             try {
                 const response = await fetch(
-                    `http://127.0.0.1:8000/nutrition/${selectedMeal}`
+                    `http://192.168.1.148:8000/nutrition/${selectedMeal}`
                 );
                 const data = await response.json();
 

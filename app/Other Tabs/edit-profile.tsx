@@ -5,7 +5,6 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
-
 const Editprofile = () => {
     const navigation = useNavigation();
 
@@ -14,15 +13,9 @@ const Editprofile = () => {
             <SafeAreaView className='flex-1 bg-white px-4'>
                 <View className="flex-1 ">
                     {/* Header Section */}
-                    <View className="py-4">
-                        <Pressable
-                            className="absolute flex-row items-center left-0 m-3"
-                            onPress={() => navigation.goBack()}>
-                            <Icon name="caret-back" size={20} color="black" />
-                            <Text className=''>My Profile</Text>
-                        </Pressable>
-                        <View className='my-8'>
-                            <Text className='font-semibold mt-5 mb-2'>Full Name</Text>
+                    <View className="py-2">
+                        <View>
+                            <Text className='font-semibold mt-4 mb-2'>Full Name</Text>
                             <TextInput
                                 placeholder='Change your full name'
                                 className='bg-white py-5 px-3 rounded-lg border'
@@ -40,7 +33,7 @@ const Editprofile = () => {
 
                             <Text className='font-semibold mt-5 mb-2'>Phone number</Text>
                             <TextInput
-                                placeholder='Change your phone nuumber'
+                                placeholder='Change your phone number'
                                 className='bg-white py-5 px-3 rounded-lg border'
                                 autoCapitalize='none'
                                 autoCorrect={false}

@@ -35,7 +35,7 @@ const LogIn = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/login", {
+      const response = await fetch("http://192.168.1.148:8000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,7 +141,7 @@ const LogIn = () => {
               </View>
 
               <TouchableOpacity
-                onPress={handlePass}
+                onPress={handleLogin}
                 className="bg-blue-500 py-3 rounded-lg mt-5"
                 activeOpacity={0.7}
               >
