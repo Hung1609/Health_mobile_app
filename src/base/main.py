@@ -16,7 +16,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -151,8 +151,8 @@ def convert_id(doc):
     return doc
 
 
-# Initialize agent 
-agent_controller = AgentController()
+# Initialize agent
+# agent_controller = AgentController()
 
 # =========================================================
 # ================ CLIENT (MÀN HÌNH HOME) =================
@@ -478,6 +478,7 @@ def star_article(article_id: str, payload: dict = Body(...)):
     convert_id(updated)
     return updated
 
+
 # --HOME--
 
 
@@ -535,9 +536,11 @@ async def add_nutrition(item: NutritionItem):
     n_collection.insert_one(item.dict())
     return {"message": "Nutrition item added successfully"}
 
+
 # ------------------- CHATBOT ---------------------
 
-@app.post("/get-response")
-async def get_response(input: dict):
-    response = agent_controller.get_response(input)
-    return {"response": response}
+
+# @app.post("/get-response")
+# async def get_response(input: dict):
+#     response = agent_controller.get_response(input)
+#     return {"response": response}

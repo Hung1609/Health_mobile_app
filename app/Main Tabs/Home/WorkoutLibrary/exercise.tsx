@@ -58,7 +58,7 @@ const Exercises = () => {
                     <View className="my-4">
                         <Image
                             source={{
-                                uri: "https://via.placeholder.com/300x150",
+                                uri: workout.image,
                             }}
                             className="w-full h-60 rounded-3xl"
                         />

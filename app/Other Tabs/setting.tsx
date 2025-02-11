@@ -11,7 +11,7 @@ const Setting = () => {
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView className="flex-1">
+            <SafeAreaView className="flex-1 bg-white">
                 <View>
                     <Pressable
                         className="flex-row items-center m-3"

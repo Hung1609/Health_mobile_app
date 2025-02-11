@@ -76,7 +76,7 @@ const Workout = () => {
             setLoading(true);
             try {
                 const response = await fetch(
-                    `http://127.0.0.1:8000/workouts/${selectedExercise}`
+                    `http://192.168.1.148:8000/workouts/${selectedExercise}`
                 );
                 const data: WorkoutData[] = await response.json();
                 const recommended = data.filter((item) => item.type === "r");

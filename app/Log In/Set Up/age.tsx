@@ -39,7 +39,7 @@ const Old = () => {
             }
 
             // 2. Make POST request to /set_age
-            const response = await fetch("http://127.0.0.1:8000/age", {
+            const response = await fetch("http://192.168.1.148:8000/age", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -114,7 +114,7 @@ const Old = () => {
 
                         <TouchableOpacity
                             onPress={handleContinue}
-                            className="bg-blue-500 py-3 rounded-lg absolute bottom-5"
+                            className="bg-blue-500 py-3 rounded-lg absolute bottom-5 w-full"
                             activeOpacity={0.7}
                         >
                             <Text className="text-white font-bold text-xl text-center">

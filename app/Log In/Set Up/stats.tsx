@@ -30,7 +30,7 @@ const Weight = () => {
             }
 
             // Call your /set_stats endpoint
-            const response = await fetch("http://127.0.0.1:8000/stats", {
+            const response = await fetch("http://192.168.1.148:8000/stats", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
