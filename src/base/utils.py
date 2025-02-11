@@ -2,7 +2,6 @@ def get_chatbot_response(client, messages):
     input_messages = []
     for message in messages:
         input_messages.append({"role": message["role"], "content": message["content"]})
-        
     response = client.invoke(
         input=input_messages,
     ).content # take content of an AIMessage

@@ -1,7 +1,10 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-from base import (GuardAgent, ClassificationAgent,DetailsAgent, AgentProtocol)
+from guard_agent import GuardAgent
+from classification_agent import ClassificationAgent
+from details_agent import DetailsAgent
+from agent_protocol import AgentProtocol
 from typing import Dict
 
 class AgentController():

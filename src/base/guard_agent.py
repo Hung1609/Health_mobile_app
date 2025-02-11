@@ -3,7 +3,7 @@ import os
 import json
 import re
 from copy import deepcopy
-from .utils import get_chatbot_response
+from utils import get_chatbot_response
 from dotenv import load_dotenv
 
 load_dotenv()
