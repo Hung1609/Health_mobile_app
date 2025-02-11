@@ -16,6 +16,7 @@ import tw from "tailwind-react-native-classnames";
 import Icon2 from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
 import { useRoute } from "@react-navigation/native";
+import { callChatBotAPI } from "@/app/services/ChatBot";
 
 interface ChatMessage {
   id: number;
@@ -85,21 +86,23 @@ const Chat = () => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       try {
-        // call API
-        const response = await fetch("http://192.168.12.254/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message: textInputValue,
-          }),
-        });
-        const data = await response.json();
-        // Add bot response
+        // Prepare messages for the API
+        const apiMessages = messages.map((msg) => ({
+          role: msg.fromBot ? "assistant" : "user",
+          content: msg.text,
+        }));
+
+        // Add the new user message
+        apiMessages.push({ role: "user", content: textInputValue });
+        console.log("Sending API Request:", apiMessages); // Log the request
+        // Call the chatbot API
+        const botResponse = await callChatBotAPI(apiMessages);
+        console.log("Bot Response:", botResponse);
+
+        // Add bot response to the chat
         const botReply = {
           id: messages.length + 2,
-          text: data.response,
+          text: botResponse.content,
           fromBot: true,
           timestamp: new Date().toLocaleTimeString([], {
             hour: "2-digit",
@@ -109,6 +112,7 @@ const Chat = () => {
 
         setMessages((prevMessages) => [...prevMessages, botReply]);
       } catch (error) {
+        console.error("Error:", error); // Log the error
         // Handle error
         const errorMessage = {
           id: messages.length + 2,

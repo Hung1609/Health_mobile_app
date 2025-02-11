@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, File, UploadFile, HTTPException, Body
-from base.agent_controller import AgentController
+from agent_controller import AgentController
 from typing import Optional
 import pymongo
 from bson import ObjectId
