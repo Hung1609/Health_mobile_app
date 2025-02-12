@@ -40,7 +40,7 @@ const Nutrition = () => {
         if (isFavorite) {
             removeFavorite(item.id);
             Toast.show({
-                type: "success",
+                type: "error",
                 text1: "Removed from Favorites",
                 text2: `${item.title} has been removed.`,
                 position: "top",

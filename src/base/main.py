@@ -152,7 +152,7 @@ def convert_id(doc):
 
 
 # Initialize agent
-# agent_controller = AgentController()
+agent_controller = AgentController()
 
 # =========================================================
 # ================ CLIENT (MÀN HÌNH HOME) =================
@@ -540,7 +540,7 @@ async def add_nutrition(item: NutritionItem):
 # ------------------- CHATBOT ---------------------
 
 
-# @app.post("/get-response")
-# async def get_response(input: dict):
-#     response = agent_controller.get_response(input)
-#     return {"response": response}
+@app.post("/get-response")
+async def get_response(input: dict):
+    response = agent_controller.get_response(input)
+    return {"response": response}
