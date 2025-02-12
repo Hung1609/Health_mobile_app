@@ -204,6 +204,7 @@ const Chat = () => {
                   renderItem={renderItem}
                   keyExtractor={(item) => item.id.toString()}
                   className="px-4 mt-10 mb-10"
+                  keyboardShouldPersistTaps="handled"
                 />
               </View>
 
@@ -244,14 +245,6 @@ const Chat = () => {
                     />
 
                     <View className="flex-row">
-                      <TouchableOpacity activeOpacity={0.7} className="mr-2">
-                        <Icon name="microphone" size={20} color="dodgerblue" />
-                      </TouchableOpacity>
-
-                      <TouchableOpacity activeOpacity={0.7} className="mr-3">
-                        <Icon name="camera" size={20} color="dodgerblue" />
-                      </TouchableOpacity>
-
                       <TouchableOpacity
                         activeOpacity={0.7}
                         onPress={sendMessage}

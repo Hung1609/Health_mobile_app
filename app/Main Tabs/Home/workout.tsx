@@ -51,7 +51,7 @@ const Workout = () => {
         if (isFavorite) {
             removeFavorite(item.id);
             Toast.show({
-                type: "success",
+                type: "error",
                 text1: "Removed from Favorites",
                 text2: `${item.title} has been removed.`,
                 position: "top",
@@ -221,6 +221,11 @@ const Workout = () => {
                                                         </Text>
                                                     </View>
                                                 </View>
+
+                                                <View className="flex-row items-center gap-1">
+                                                    <Icon name="barbell-sharp" color="gray" />
+                                                    <Text className="text-gray-500 text-sm">{item.exercises}</Text>
+                                                </View>
                                             </View>
                                         </TouchableOpacity>
                                     ))}
@@ -293,6 +298,11 @@ const Workout = () => {
                                                         {item.calories}
                                                     </Text>
                                                 </View>
+                                            </View>
+
+                                            <View className="flex-row items-center gap-1">
+                                                <Icon name="barbell-sharp" color="gray" />
+                                                <Text className="text-gray-500 text-sm">{item.exercises}</Text>
                                             </View>
                                         </View>
                                     </TouchableOpacity>

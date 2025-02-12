@@ -9,7 +9,7 @@ const createroutine = () => {
     const navigation = useNavigation();
     const params = useLocalSearchParams();
     const workout = params.workout ? JSON.parse(params.workout as string) : null;
-
+    
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const { details } = workout;
@@ -47,7 +47,7 @@ const createroutine = () => {
 
                                 {/* Description */}
                                 <Text className="text-center text-gray mt-2 text-white">
-                                    Lorem Ipsum Dolor Sit Amet, Consectetur Adipisicing Elit. Sed Cursus Libero Eget.
+                                    {currentExercise.description}
                                 </Text>
 
                                 {/* Info Row */}

@@ -21,7 +21,7 @@ const Exercises = () => {
         if (isFav) {
             removeFavorite(Number(workout.id));
             Toast.show({
-                type: 'success',
+                type: 'error',
                 text1: 'Removed from Favorites',
                 text2: `${workout.title} has been removed.`,
                 position: 'top',
