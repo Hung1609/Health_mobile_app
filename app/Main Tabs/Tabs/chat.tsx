@@ -116,7 +116,7 @@ const Chat = () => {
         // Handle error
         const errorMessage = {
           id: messages.length + 2,
-          text: "Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.",
+          text: "Sorry, an error occurred. Please try again later.",
           fromBot: true,
           timestamp: new Date().toLocaleTimeString([], {
             hour: "2-digit",
