@@ -33,6 +33,7 @@ rec_collection = db["recommendations"]
 article_collection = db["articles"]
 w_collection = db["workout"]
 n_collection = db["nutrition"]
+videos_collection = db["videos"]
 
 # 3) Mô hình dữ liệu (Pydantic) dùng cho request/response (ví dụ)
 # assword Hashing
@@ -142,6 +143,13 @@ class NutritionItem(BaseModel):
     calories: str
     type: str
     ftype: str
+
+
+class WorkoutVideo(BaseModel):
+    title: str
+    duration: str
+    calories: str
+    videoId: str  # YouTube Video ID
 
 
 # Hàm tiện ích để chuyển ObjectId -> string
@@ -535,6 +543,12 @@ async def add_nutrition(item: NutritionItem):
         raise HTTPException(status_code=400, detail="Item with this ID already exists.")
     n_collection.insert_one(item.dict())
     return {"message": "Nutrition item added successfully"}
+
+
+@app.get("/videos", response_model=List[WorkoutVideo])
+def get_workout_videos():
+    videos = list(videos_collection.find({}, {"_id": 0}))  # Exclude MongoDB _id field
+    return videos
 
 
 # ------------------- CHATBOT ---------------------
