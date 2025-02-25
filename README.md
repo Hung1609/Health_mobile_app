@@ -21,3 +21,6 @@
 - uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 Note: Make sure to install some additional libraries which are used in the project.
+
+## Demo Video
+https://drive.google.com/file/d/1LHrprylIDOMqW_KuTnmDQpJEYlYKF25J/view?usp=sharing
