@@ -58,12 +58,25 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+# For workout progression
+class WorkoutProgression(BaseModel):
+    id: str
+    title: str
+    time: Optional[str] = None
+    calories: Optional[int] = None
+    level: Optional[str] = None
+    date: str
 
 class UserOut(BaseModel):
     id: str
     full_name: str
     email: EmailStr
+    progress: Optional[List[WorkoutProgression]] = None # New field for workout progression
 
+# Model for updating workout progression
+class UpdateProgression(BaseModel):
+    email: EmailStr
+    progress: List[WorkoutProgression]
 
 class UserGender(BaseModel):
     email: EmailStr
@@ -151,7 +164,6 @@ class WorkoutVideo(BaseModel):
     calories: str
     videoId: str  # YouTube Video ID
 
-
 # Hàm tiện ích để chuyển ObjectId -> string
 def convert_id(doc):
     if "_id" in doc:
@@ -185,6 +197,7 @@ def sign_up(user: UserCreate):
         "full_name": user.full_name,
         "email": user.email,
         "password": hashed_pw,
+        "progress": [],
     }
 
     # Insert into MongoDB
@@ -362,6 +375,7 @@ def get_user_info(user_req: GetUserInfo):
         "birthday": user.get("birthday"),
         "goals": user.get("goals"),
         "level": user.get("level"),
+        "progress": user.get("progress", []),
         # ...any other fields...
     }
 
@@ -374,6 +388,29 @@ def get_user(username: str):
         raise HTTPException(status_code=404, detail="User not found")
     convert_id(user)
     return user
+
+# Save workout context data
+@app.post("/save_workout_context")
+def save_workout_context(data: UpdateProgression):
+    # 1. Find the user by email
+    existing_user = users_collection.find_one({"email": data.email})
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    # 2. Update the user's workoutContext field
+    update_result = users_collection.update_one(
+        {"email": data.email},
+        {"$set": {"progress": [workout.dict() for workout in data.progress]}}
+    )
+
+    # 3. Check if the update was successful
+    if update_result.modified_count == 0:
+        return {
+            "message": "No changes were made. Possibly the user already has this workout context or was not found."
+        }
+
+    return {"message": "Workout context successfully updated."}
+
 
 
 # ------------------- RECOMMENDATIONS ---------------------
