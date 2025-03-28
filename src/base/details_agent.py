@@ -25,7 +25,7 @@ class DetailsAgent():
         self.pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
         self.index_name = os.getenv("PINECONE_INDEX_NAME")
         
-    def get_closest_results(self, index_name, input_embedding, k=2):
+    def get_closest_results(self, index_name, input_embedding, k=7):
         index = self.pc.Index(index_name)
         
         results = index.query(

@@ -13,18 +13,19 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUser } from "../Log In/UserContext";
 
-interface UserData {
-    full_name?: string;
-    email?: string;
-    gender?: string;
-    age?: number;
-    height?: number;
-    weight?: number;
-    birthday?: string;
-    goals?: string[];
-    level?: string;
-}
+// interface UserData {
+//     full_name?: string;
+//     email?: string;
+//     gender?: string;
+//     age?: number;
+//     height?: number;
+//     weight?: number;
+//     birthday?: string;
+//     goals?: string[];
+//     level?: string;
+// }
 
 // Calculate BMI
 const BMIBar = ({ weight, height }: any) => {
@@ -46,7 +47,7 @@ const BMIBar = ({ weight, height }: any) => {
         <View className="px-4">
             {/* BMI Label */}
             <Text className="text-gray-700 text-center font-bold">
-                Your BMI: <Text className="text-blue-500">{bmi ? bmi.toFixed(1) : "N/A"}</Text>
+                Your BMI (kg/cm^2): <Text className="text-blue-500">{bmi ? bmi.toFixed(1) : "N/A"}</Text>
             </Text>
 
             {/* BMI Bar */}
@@ -95,50 +96,10 @@ const BMIBar = ({ weight, height }: any) => {
 
 const Profile = () => {
     const navigation = useNavigation();
-    const [userData, setUserData] = useState<UserData>({});
+    const { userData, fetchUserData } = useUser(); // Get data and function from context
 
-    // 1. Fetch user data on mount
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                // Retrieve email from AsyncStorage
-                const userEmail = await AsyncStorage.getItem("userEmail");
-                if (!userEmail) {
-                    Alert.alert(
-                        "Error",
-                        "No userEmail found. Please login again."
-                    );
-                    return;
-                }
-
-                // 2. Call /get_user_info
-                const response = await fetch(
-                    "http://192.168.1.148:8000/get_user_info",
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ email: userEmail }),
-                    }
-                );
-
-                const data = await response.json();
-                if (!response.ok) {
-                    Alert.alert(
-                        "Error",
-                        data.detail || "Failed to retrieve user info."
-                    );
-                    return;
-                }
-
-                // 3. If successful, store data in state
-                setUserData(data);
-            } catch (err) {
-                console.error(err);
-                Alert.alert("Network Error", "Unable to fetch user data.");
-            }
-        };
-
-        fetchUserData();
+        fetchUserData(); // Fetch user data when the component mounts
     }, []);
 
     return (
@@ -163,17 +124,17 @@ const Profile = () => {
 
                     {/* User Info */}
                     <Text className="text-white text-xl font-bold mt-2">
-                        {userData.full_name || "Name not set"}
+                        {userData?.full_name || "Name not set"}
                     </Text>
                     <Text className="text-white text-sm">
-                        {userData.email || ""}
+                        {userData?.email || ""}
                     </Text>
 
                     {/* Stats Section */}
                     <View className="flex-row justify-around w-full border-2 border-white rounded-xl py-3 mt-4">
                         <View className="items-center">
                             <Text className="text-white text-lg font-bold">
-                                {userData.weight
+                                {userData?.weight
                                     ? `${userData.weight} kg`
                                     : "N/A"}
                             </Text>
@@ -181,7 +142,7 @@ const Profile = () => {
                         </View>
                         <View className="items-center">
                             <Text className="text-white text-lg font-bold">
-                                {userData.age || "N/A"}
+                                {userData?.age || "N/A"}
                             </Text>
                             <Text className="text-white text-xs">
                                 Years Old
@@ -189,7 +150,7 @@ const Profile = () => {
                         </View>
                         <View className="items-center">
                             <Text className="text-white text-lg font-bold">
-                                {userData.height
+                                {userData?.height
                                     ? `${userData.height} cm`
                                     : "N/A"}
                             </Text>
@@ -200,7 +161,7 @@ const Profile = () => {
 
                 {/* Menu Section */}
                 <View className="p-3">
-                    <BMIBar weight={userData.weight} height={userData.height} />
+                    <BMIBar weight={userData?.weight} height={userData?.height} />
                     
                     <TouchableOpacity
                         activeOpacity={0.7}

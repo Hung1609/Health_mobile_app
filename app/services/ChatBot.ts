@@ -1,10 +1,11 @@
 import axios from "axios";
 import { ChatMessage } from "./types";
+import { IP, PORT } from "@env";
 
 async function callChatBotAPI(messages: ChatMessage[]): Promise<ChatMessage> {
   try {
     const response = await axios.post(
-      "http://192.168.1.148:8000/get-response",
+      `${IP}:${PORT}/get-response`,
       {
         input: { messages },
       },

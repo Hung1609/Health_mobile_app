@@ -205,6 +205,7 @@ const Chat = () => {
                   keyExtractor={(item) => item.id.toString()}
                   className="px-4 mt-10 mb-10"
                   keyboardShouldPersistTaps="handled"
+                  showsVerticalScrollIndicator={false}
                 />
               </View>
 

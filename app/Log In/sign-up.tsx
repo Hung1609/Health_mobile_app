@@ -14,10 +14,11 @@ import { useUser, UserProvider } from "./UserContext";
 import axios from "axios";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IP, PORT } from "@env";
 
 const SignUp = () => {
   const router = useRouter();
-  const { setUserData } = useUser();
+  const { userData } = useUser();
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState(true);
   const [fullName, setFullName] = useState("");
@@ -27,7 +28,7 @@ const SignUp = () => {
   const handleContinue = async () => {
     router.push("/Log In/Set Up/gender");
     try {
-      const response = await fetch("http://192.168.1.148:8000/signup", {
+      const response = await fetch(`${IP}:${PORT}/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
