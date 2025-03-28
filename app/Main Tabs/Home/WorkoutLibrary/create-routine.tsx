@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, Image, Pressable, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, ScrollView, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useNavigation } from '@react-navigation/native';
 import { router, useLocalSearchParams } from "expo-router";
+import { Image } from "expo-image";
 
 const createroutine = () => {
     const navigation = useNavigation();
@@ -32,13 +33,12 @@ const createroutine = () => {
         <SafeAreaProvider>
             <SafeAreaView className='flex-1 bg-white px-4'>
                 <ScrollView>
-                    <View className="my-4">
-                            <Image
-                                source={{
-                                    uri: "https://via.placeholder.com/300x150",
-                                }}
-                                className="w-full h-60 rounded-3xl"
-                            />
+                    <View className="my-4 items-center">
+                        <Image
+                            source={{ uri: currentExercise.video }}
+                            contentFit="contain"
+                            style={{ width: 300, height: 200 }}
+                        />
                             <View className="bg-blue-500 rounded-3xl p-4 my-10">
                                 {/* Title */}
                                 <Text className="text-center text-2xl font-bold text-white">

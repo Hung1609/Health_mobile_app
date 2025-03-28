@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import axios from "axios";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IP, PORT } from "@env";
 
 const LogIn = () => {
   const router = useRouter();
@@ -35,7 +36,7 @@ const LogIn = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.1.148:8000/login", {
+      const response = await fetch(`${IP}:${PORT}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,7 +142,7 @@ const LogIn = () => {
               </View>
 
               <TouchableOpacity
-                onPress={handleLogin}
+                onPress={handlePass}
                 className="bg-blue-500 py-3 rounded-lg mt-5"
                 activeOpacity={0.7}
               >

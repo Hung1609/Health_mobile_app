@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import { Calendar, DateData } from "react-native-calendars";
 import { BarChart } from 'react-native-chart-kit';
 import { useWorkout } from "./WorkoutLibrary/WorkoutContext";
+import { useUser } from "../../Log In/UserContext";
 
 interface GroupedWorkoutData {
   calories: number;
@@ -25,6 +26,7 @@ const getToday = () => {
 
 const Progress = () => {
   const { workoutData } = useWorkout();
+  const { userData } = useUser();
   const [selectedDate, setSelectedDate] = useState<string>(getToday());
   const [currentView, setCurrentView] = useState<"calendar" | "tracking">("calendar");
 
@@ -176,24 +178,24 @@ const Progress = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView className='flex-1 bg-white'>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View className="mx-4">
             <View className="bg-blue-500 p-4 items-center mt-2 mb-2 rounded-3xl">
               {/* User Info */}
-              <Text className="text-white text-xl font-bold">Madison Smith</Text>
+              <Text className="text-white text-xl font-bold">{userData?.full_name}</Text>
 
               {/* Stats Section */}
               <View className="flex-row justify-around w-full border-2 border-white rounded-xl py-3 mt-4">
                 <View className="items-center">
-                  <Text className="text-white text-lg font-bold">75 Kg</Text>
+                  <Text className="text-white text-lg font-bold">{userData?.weight} kg</Text>
                   <Text className="text-white text-xs">Weight</Text>
                 </View>
                 <View className="items-center">
-                  <Text className="text-white text-lg font-bold">28</Text>
+                  <Text className="text-white text-lg font-bold">{userData?.age}</Text>
                   <Text className="text-white text-xs">Years Old</Text>
                 </View>
                 <View className="items-center">
-                  <Text className="text-white text-lg font-bold">1.65 CM</Text>
+                  <Text className="text-white text-lg font-bold">{userData?.height} cm</Text>
                   <Text className="text-white text-xs">Height</Text>
                 </View>
               </View>

@@ -1,15 +1,14 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "typeRoots": ["./node_modules/@types", "./types"],
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
@@ -17,6 +16,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "nativewind-env.d.ts", "app/Main Tabs/Home/workout-library",
- ]
+    "nativewind-env.d.ts",
+    "app/Main Tabs/Home/workout-library"
+  ]
 }
